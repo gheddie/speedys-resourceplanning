@@ -106,19 +106,19 @@
         <dc:Bounds height="617.0" width="1321.0" x="363.0" y="0.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="456.0" y="324.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="432.0" y="323.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="474.0" y="360.0"/>
+          <dc:Bounds height="0.0" width="0.0" x="450.0" y="359.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0r1a7j1_di" bpmnElement="Participant_0r1a7j1" isHorizontal="false">
         <dc:Bounds height="249.0" width="1321.0" x="363.0" y="640.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1man416_di" bpmnElement="SequenceFlow_1man416">
-        <di:waypoint xsi:type="dc:Point" x="492.0" y="342.0"/>
+        <di:waypoint xsi:type="dc:Point" x="468.0" y="341.0"/>
         <di:waypoint xsi:type="dc:Point" x="553.0" y="341.0"/>
         <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="0.0" x="517.0" y="332.0"/>
+          <dc:Bounds height="0.0" width="0.0" x="493.0" y="331.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="SendTask_0cd6u5e_di" bpmnElement="SendTask_0cd6u5e">
