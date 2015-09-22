@@ -9,6 +9,11 @@
 	</parent>
 	<dependencies>
 		<dependency>
+			<groupId>de.trispeedys.resourceplanning</groupId>
+			<artifactId>resourceplanning-util</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>

@@ -9,6 +9,7 @@
 		<module>../resourceplanning-bpm</module>
 		<module>../resourceplanning-entity</module>
 		<module>../resourceplanning-client</module>
+		<module>../resourceplanning-util</module>
 	</modules>
 	<dependencies>
 		<dependency>

@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.helper;
+package de.trispeedys.resourceplanning.util;
 
 import java.util.Calendar;
 import java.util.Date;
