@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
-public class RemindHelperDelegate implements JavaDelegate
+public class ConfirmHelperDelegate implements JavaDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

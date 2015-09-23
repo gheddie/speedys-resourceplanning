@@ -12,7 +12,11 @@ import de.trispeedys.resourceplanning.helper.CommitmentHelper;
 
 public class EventCommitmentTest
 {
-    /**
+    private static final String TEST_MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
+    
+    private static final String TEST_MAIL_PASSWORD = "trispeedys1234";
+
+	/**
      * Denselben Helfer in der selben Veranstaltung auf zwei Positionen bestätigen
      * 
      * @throws ResourcePlanningException
@@ -27,7 +31,7 @@ public class EventCommitmentTest
         Position position1 = EntityBuilder.buildPosition("Radverpflegung", 12).persist();
         Position position2 = EntityBuilder.buildPosition("Laufverpflegung", 16).persist();
         
-        Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", "moo@kuh.de", HelperState.ACTIVE, 13, 2, 1976).persist();
+        Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976).persist();
         
         EntityBuilder.buildEventCommitment(helper, eventOccurence, position2).persist();
         
@@ -47,7 +51,7 @@ public class EventCommitmentTest
         EventOccurence eventOccurence = EntityBuilder.buildEventOccurence("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
         
         //Helfer ist zum Datum der Veranstaltung erst 15 
-        Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", "moo@kuh.de", HelperState.ACTIVE, 23, 6, 2000).persist();
+        Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000).persist();
         
         //Position erfordert Mindest-Alter 16 Jahre
         Position position = EntityBuilder.buildPosition("Laufverpflegung", 16).persist();
