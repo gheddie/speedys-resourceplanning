@@ -10,8 +10,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import org.joda.time.DateTime;
-
 @Entity
 public class Helper extends AbstractDbObject
 {

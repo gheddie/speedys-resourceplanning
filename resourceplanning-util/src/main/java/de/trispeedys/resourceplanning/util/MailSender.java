@@ -14,7 +14,7 @@ public class MailSender
 {
     private static final String FROM = "from-email@gmail.com";
 
-    public static void main(String[] args)
+    public static void sendMail(String toAddress, String body, String subject)
     {
         final String username = "testhelper1.trispeedys@gmail.com";        
         final String password = "trispeedys1234";
@@ -35,9 +35,9 @@ public class MailSender
         {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(FROM));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("testhelper1.trispeedys@gmail.com"));
-            message.setSubject("Testing Subject");
-            message.setText("Dear Mail Crawler," + "\n\n No spam to my email, please!");
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
+            message.setSubject(subject);
+            message.setText(body);
             Transport.send(message);
             System.out.println("Done");
         }

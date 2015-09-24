@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.helper;
+package de.trispeedys.resourceplanning.logic;
 
 import java.util.List;
 

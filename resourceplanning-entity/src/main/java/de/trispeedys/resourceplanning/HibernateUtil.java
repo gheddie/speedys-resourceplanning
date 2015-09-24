@@ -1,11 +1,13 @@
 package de.trispeedys.resourceplanning;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.entity.Helper;
 
 public class HibernateUtil {
 	private static final SessionFactory sessionFactory = buildSessionFactory();
@@ -33,6 +35,7 @@ public class HibernateUtil {
 		clearTable("helper");
 		clearTable("position");
 		clearTable("event_occurence");
+		clearTable("message_queue");
 	}
 
 	private static void clearTable(String tableName) {
@@ -54,4 +57,14 @@ public class HibernateUtil {
 		session.close();
 		return entity;
 	}
+
+    @SuppressWarnings("unchecked")
+    public static <T> T findById(Class<Helper> entityClass, Long primaryKeyValue)
+    {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Query qry = session.createQuery("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue);
+        Object result = qry.list().get(0);
+        session.close();
+        return (T) result;
+    }
 }

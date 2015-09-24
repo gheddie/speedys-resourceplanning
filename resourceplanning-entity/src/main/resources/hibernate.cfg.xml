@@ -24,5 +24,6 @@
 		<mapping class="de.trispeedys.resourceplanning.entity.Position" />
 		<mapping class="de.trispeedys.resourceplanning.entity.EventOccurence" />
 		<mapping class="de.trispeedys.resourceplanning.entity.EventCommitment" />
+		<mapping class="de.trispeedys.resourceplanning.entity.MessageQueue" />
 	</session-factory>
 </hibernate-configuration>

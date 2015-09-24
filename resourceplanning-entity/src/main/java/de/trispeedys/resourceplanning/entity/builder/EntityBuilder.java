@@ -7,6 +7,7 @@ import de.trispeedys.resourceplanning.entity.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.EventOccurence;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperState;
+import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
 
 public class EntityBuilder
@@ -50,5 +51,10 @@ public class EntityBuilder
                 .withDate(dateOfOccurence.getTime())
                 .withEventKey(eventKey)
                 .build();
+    }
+
+    public static MessageQueue buildMessageQueue()
+    {
+        return new MessageQueueBuilder().withFromAddress("noreply@sternico.de").withToAddress("klaus@peter.de").withSubject("Hallo").withBody("123ß\n456\n789").build();
     }
 }

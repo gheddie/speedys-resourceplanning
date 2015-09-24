@@ -8,7 +8,7 @@ import de.trispeedys.resourceplanning.entity.HelperState;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
-import de.trispeedys.resourceplanning.helper.CommitmentHelper;
+import de.trispeedys.resourceplanning.logic.CommitmentHelper;
 
 public class EventCommitmentTest
 {
