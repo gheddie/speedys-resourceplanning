@@ -131,6 +131,9 @@
       <bpmn:messageEventDefinition messageRef="Message_2"/>
     </bpmn:intermediateCatchEvent>
     <bpmn:startEvent id="StartEvent_0ido2bu" name="MSG_HELP_TRIG">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="de.trispeedys.resourceplanning.delegate.requesthelp.CheckPreconditionsDelegate" event="start"/>
+      </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_1"/>
     </bpmn:startEvent>
@@ -138,6 +141,10 @@
       <bpmn:text>ConfirmHelperDelegate</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_5" sourceRef="TextAnnotation_5" targetRef="ServiceTask_16f9cl7"/>
+    <bpmn:textAnnotation id="TextAnnotation_1">
+      <bpmn:text>CheckPreconditionsDelegate</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1" sourceRef="TextAnnotation_1" targetRef="StartEvent_0ido2bu"/>
   </bpmn:process>
   <bpmn:message id="Message_1" name="MSG_HELP_TRIG"/>
   <bpmn:message id="Message_2" name="MSG_HELP_CALLBACK"/>
@@ -438,6 +445,13 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds height="22.0" width="16.0" x="276.0" y="622.0"/>
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_TextAnnotation_7" bpmnElement="TextAnnotation_1">
+        <dc:Bounds height="36.0" width="195.0" x="565.0" y="504.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_Association_1" bpmnElement="Association_1" sourceElement="_BPMNShape_TextAnnotation_7" targetElement="StartEvent_0ido2bu_di">
+        <di:waypoint xsi:type="dc:Point" x="565.0" y="538.0"/>
+        <di:waypoint xsi:type="dc:Point" x="516.0" y="546.0"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
