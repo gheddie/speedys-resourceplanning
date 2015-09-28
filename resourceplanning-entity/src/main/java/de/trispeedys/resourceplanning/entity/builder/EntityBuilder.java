@@ -2,9 +2,11 @@ package de.trispeedys.resourceplanning.entity.builder;
 
 import java.util.Calendar;
 
+import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.EventOccurence;
+import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperState;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
@@ -27,12 +29,12 @@ public class EntityBuilder
                 .build();
     }
 
-    public static EventCommitment buildEventCommitment(Helper helper, EventOccurence eventOccurence, Position position)
+    public static EventCommitment buildEventCommitment(Helper helper, EventOccurence eventOccurence, Position position, EventCommitmentState eventCommitmentState)
     {
         return new EventCommitmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEventOccurence(eventOccurence)
-                .withCommitmentState(EventCommitmentState.COMFIRMED)
+                .withCommitmentState(eventCommitmentState)
                 .build();
     }
 
@@ -56,5 +58,10 @@ public class EntityBuilder
     public static MessageQueue buildMessageQueue()
     {
         return new MessageQueueBuilder().withFromAddress("noreply@sternico.de").withToAddress("klaus@peter.de").withSubject("Hallo").withBody("123ß\n456\n789").build();
+    }
+
+    public static EventPosition buildEventPosition(EventOccurence eventOccurence, Position position)
+    {
+        return new EventPositionBuilder().withEventOccurence(eventOccurence).withPosition(position).build();
     }
 }

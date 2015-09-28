@@ -31,6 +31,7 @@ public class HibernateUtil {
 	}
 
 	public static void clearAll() {
+	    clearTable("event_position");
 		clearTable("event_commitment");
 		clearTable("helper");
 		clearTable("position");

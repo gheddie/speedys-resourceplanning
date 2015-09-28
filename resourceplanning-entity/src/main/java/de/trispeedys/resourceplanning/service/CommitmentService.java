@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.logic;
+package de.trispeedys.resourceplanning.service;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.util.DateHelper;
 
-public class CommitmentHelper
+public class CommitmentService
 {
     public static void confirmHelper(Helper helper, EventOccurence eventOccurence, Position position)
             throws ResourcePlanningException
@@ -32,7 +32,7 @@ public class CommitmentHelper
         {
             throw new ResourcePlanningException("helper is " + dayDiff + " days to young for this position!");
         }
-        EntityBuilder.buildEventCommitment(helper, eventOccurence, position).persist();
+        EntityBuilder.buildEventCommitment(helper, eventOccurence, position, EventCommitmentState.CONFIRMED).persist();
     }
 
     /**
@@ -44,7 +44,7 @@ public class CommitmentHelper
      * @throws ResourcePlanningException
      */
     @SuppressWarnings("unchecked")
-    private static boolean isHelperConfirmedForEvent(EventOccurence eventOccurence, Helper helper)
+    public static boolean isHelperConfirmedForEvent(EventOccurence eventOccurence, Helper helper)
             throws ResourcePlanningException
     {
         // get confirmed positions for this helper in this event occurence
@@ -53,11 +53,16 @@ public class CommitmentHelper
                 session.createQuery("From " +
                         EventCommitment.class.getSimpleName() +
                         " ec WHERE ec.helper = :helper AND ec.eventOccurence = :eventOccurence AND ec.commitmentState = '" +
-                        EventCommitmentState.COMFIRMED + "'");
+                        EventCommitmentState.CONFIRMED + "'");
         q.setParameter("eventOccurence", eventOccurence);
         q.setParameter("helper", helper);
         List<EventCommitment> list = q.list();
         session.close();
         return (list.size() > 0);
+    }
+
+    public static List<EventCommitment> getAllConfirmedCommitments(Long helperId)
+    {
+        return null;
     }
 }

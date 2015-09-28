@@ -17,6 +17,9 @@ public class EventCommitment extends AbstractDbObject
     @OneToOne(fetch = FetchType.EAGER)
     private Helper helper;
     
+    @Column(name = "helper_id", insertable = false, updatable = false)
+    private Long helperId;
+    
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_occurence_id")
     private EventOccurence eventOccurence;
@@ -67,5 +70,10 @@ public class EventCommitment extends AbstractDbObject
     public void setCommitmentState(EventCommitmentState commitmentState)
     {
         this.commitmentState = commitmentState;
+    }
+    
+    public Long getHelperId()
+    {
+        return helperId;
     }
 }

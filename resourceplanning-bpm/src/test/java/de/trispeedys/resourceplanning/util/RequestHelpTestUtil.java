@@ -15,24 +15,26 @@ public class RequestHelpTestUtil
 {
     /**
      * Starts process with helper and for follow up assignment (firstAssignment -> false).
-     * 
+     * @param helper 
      * @param rule
      * @param businessKey 
      */
-    public static void startProcessForFollowinAssignment(ProcessEngineRule rule, String businessKey)
+    public static void startProcessForFollowinAssignment(Helper helper, ProcessEngineRule rule, String businessKey)
     {
-        Helper helper =
-                new HelperBuilder().withFirstName("Klaus")
-                        .withLastName("Meier")
-                        .withEmail("testhelper1.trispeedys@gmail.com")
-                        .withHelperState(HelperState.ACTIVE)
-                        .build()
-                        .persist();
-
         // start process for follow up assignment
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_FIRST_ASSIGNMENT, false);
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_ID, new Long(helper.getId()));
         rule.getRuntimeService().startProcessInstanceByMessage(BpmMessages.RequestHelpHelper.MSG_HELP_TRIG, businessKey, variables);
+    }
+    
+    public static Helper createHelper()
+    {
+        return new HelperBuilder().withFirstName("Klaus")
+                        .withLastName("Meier")
+                        .withEmail("testhelper1.trispeedys@gmail.com")
+                        .withHelperState(HelperState.ACTIVE)
+                        .build()
+                        .persist();
     }
 }

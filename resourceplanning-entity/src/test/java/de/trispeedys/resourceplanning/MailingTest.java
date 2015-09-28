@@ -2,13 +2,13 @@ package de.trispeedys.resourceplanning;
 
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.logic.MessagingHelper;
+import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class MailingTest
 {
     @Test
     public void testSendMails()
     {
-        MessagingHelper.sendAllMessages();
+        MessagingService.sendAllMessages();
     }
 }

@@ -1,0 +1,40 @@
+@startuml
+
+class Helper {
+	firstName::String
+	lastName::String
+}
+
+class EventOccurence {
+}
+
+class Position {
+    description::String
+    minimalAge::int
+}
+
+class EventCommitment {
+}
+
+class EventPosition {
+}
+
+note left of EventPosition
+	Zuordnung einer Position zu
+	einer dedizierten Event-Occurence
+	(ergibt insgesamt eine M:N-Relation
+	zwischen Position und Occurence)
+end note
+
+'---Verknüpfungen---
+
+EventCommitment "1" -- "1" Helper
+
+EventCommitment "1" -- "1" EventOccurence
+
+EventCommitment "1" -- "1" Position
+
+Position "1" -- "1" EventPosition
+EventOccurence "1" -- "1" EventPosition
+
+@enduml
