@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "event")
@@ -17,8 +18,10 @@ public class Event extends AbstractDbObject
     private Date eventDate;
     
     @Column(name = "event_key")
+    @NotNull
     private String eventKey;
     
+    @NotNull
     private String description;
 
     public Date getEventDate()
@@ -49,5 +52,10 @@ public class Event extends AbstractDbObject
     public void setDescription(String description)
     {
         this.description = description;
+    }
+    
+    public String toString()
+    {
+        return getClass().getSimpleName() + " ["+description+", "+eventKey+"]";
     }
 }

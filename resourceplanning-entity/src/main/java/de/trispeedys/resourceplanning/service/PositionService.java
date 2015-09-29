@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -58,5 +59,21 @@ public class PositionService
     public static boolean isPositionScheduledForEvent(Long eventId, Position position)
     {
         return false;
+    }
+
+    /**
+     * checks if the given {@link Position} is assigned to the {@link Event} by a {@link EventPosition} entry.
+     * 
+     * @param position
+     * @param event
+     * @return
+     */
+    public static boolean isPositionPresentInEvent(Position position, Event event)
+    {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("position", position);
+        parameters.put("event", event);
+        List<?> result = HibernateUtil.fetchResults("FROM " + EventPosition.class.getSimpleName() + " ep WHERE ep.position = :position AND ep.event = :event", parameters );
+        return ((result != null) && (result.size() > 0));
     }
 }

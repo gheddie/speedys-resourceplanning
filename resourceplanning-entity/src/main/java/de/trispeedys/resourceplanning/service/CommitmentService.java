@@ -3,17 +3,15 @@ package de.trispeedys.resourceplanning.service;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.joda.time.Days;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
-import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
 import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
+import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.util.DateHelper;
 
@@ -32,7 +30,7 @@ public class CommitmentService
         {
             throw new ResourcePlanningException("helper is " + dayDiff + " days to young for this position!");
         }
-        EntityBuilder.buildEventCommitment(helper, event, position, EventCommitmentState.CONFIRMED).persist();
+        EntityFactory.buildEventCommitment(helper, event, position, EventCommitmentState.CONFIRMED).persist();
     }
 
     /**

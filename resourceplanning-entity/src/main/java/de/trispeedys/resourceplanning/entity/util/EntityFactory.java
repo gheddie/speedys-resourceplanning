@@ -1,18 +1,25 @@
-package de.trispeedys.resourceplanning.entity.builder;
+package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
 
-import de.trispeedys.resourceplanning.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.builder.EventBuilder;
+import de.trispeedys.resourceplanning.entity.builder.EventCommitmentBuilder;
+import de.trispeedys.resourceplanning.entity.builder.EventPositionBuilder;
+import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
+import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
+import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
 import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
+import de.trispeedys.resourceplanning.exception.DataModelException;
+import de.trispeedys.resourceplanning.service.PositionService;
 
-public class EntityBuilder
+public class EntityFactory
 {
     public static Helper buildHelper(String firstName, String lastName, String email, HelperState helperState,
             int dayOfBirth, int monthOfBirth, int yearOfBirth)
@@ -31,6 +38,10 @@ public class EntityBuilder
 
     public static EventCommitment buildEventCommitment(Helper helper, Event event, Position position, EventCommitmentState eventCommitmentState)
     {
+        if (!(PositionService.isPositionPresentInEvent(position, event)))
+        {
+            throw new DataModelException("helper '"+helper+"' can not be commited to position '"+position+"' as it is not present in event '"+event+"'.");
+        }
         return new EventCommitmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEvent(event)

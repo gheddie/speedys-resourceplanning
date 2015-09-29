@@ -77,5 +77,5 @@ public class EventCommitment extends AbstractDbObject
     public Long getHelperId()
     {
         return helperId;
-    }
+    }    
 }

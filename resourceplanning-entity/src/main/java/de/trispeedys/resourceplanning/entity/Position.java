@@ -30,4 +30,9 @@ public class Position extends AbstractDbObject
     {
         this.minimalAge = minimalAge;
     }
+    
+    public String toString()
+    {
+        return getClass().getSimpleName() + " ["+description+", "+minimalAge+"]";
+    }
 }
