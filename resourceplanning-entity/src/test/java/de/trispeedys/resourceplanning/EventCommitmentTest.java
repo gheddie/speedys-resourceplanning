@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Calendar;
 
@@ -118,14 +119,23 @@ public class EventCommitmentTest
     @Test    
     public void testPosAvailableForFollowingAssignment()
     {
+        //clear database
         HibernateUtil.clearAll();
         
-        //helper was assigned pos 'Laufverpflegung' in 2015...
-        Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000).persist();
+        //create a position
         Position position = EntityBuilder.buildPosition("Laufverpflegung", 16).persist();
-        EventOccurence oc2014 = EntityBuilder.buildEventOccurence("TRI-2015", "TRI-2015", 21, 6, 2015).persist();
-        EntityBuilder.buildEventCommitment(helper, oc2014, position, EventCommitmentState.CONFIRMED).persist();
         
-        HelperService.isHelperReassignableToSamePosition(oc2014, helper);
+        //helper was assigned pos 'Laufverpflegung' in 2015...
+        Helper helperToReassign = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000).persist();        
+        EventOccurence oc2015 = EntityBuilder.buildEventOccurence("TRI-2015", "TRI-2015", 21, 6, 2015).persist();
+        EntityBuilder.buildEventCommitment(helperToReassign, oc2015, position, EventCommitmentState.CONFIRMED).persist();
+        
+        //assign that position to another helper in 2016...
+        Helper blockingHelper = EntityBuilder.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980).persist();
+        EventOccurence oc2016 = EntityBuilder.buildEventOccurence("TRI-2016", "TRI-2016", 21, 6, 2016).persist();
+        EntityBuilder.buildEventCommitment(blockingHelper, oc2016, position, EventCommitmentState.CONFIRMED).persist();
+        
+        //'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
+        assertFalse(HelperService.isHelperReassignableToSamePosition(oc2016.getId(), helperToReassign.getId()));
     }
 }

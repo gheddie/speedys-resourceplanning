@@ -31,4 +31,9 @@ public class PositionService
         }
         return result;
     }
+
+    public static boolean isPositionAssigned(Long eventOccurenceId)
+    {
+        return false;
+    }
 }

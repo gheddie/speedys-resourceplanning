@@ -17,8 +17,10 @@ import de.trispeedys.resourceplanning.entity.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.EventOccurence;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperCallback;
+import de.trispeedys.resourceplanning.entity.HelperState;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventCommitmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventOccurenceBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
@@ -41,6 +43,12 @@ public class RequestHelpTest
     {
         // ...
     }
+    
+    @Test
+    public void testBusinessKeyGeneration()
+    {
+        assertEquals("bkRequestHelpHelperProcess_helper:123||occurence:456", ResourcePlanningUtil.generateRequestHelpBusinessKey(new Long(123), new Long(456)));
+    }
 
     /**
      * trying to start process without passing a business key
@@ -51,7 +59,8 @@ public class RequestHelpTest
     {
         HibernateUtil.clearAll();
 
-        RequestHelpTestUtil.startProcessForFollowinAssignment(RequestHelpTestUtil.createHelper(), rule, null);
+        RequestHelpTestUtil.startProcessForFollowinAssignment(RequestHelpTestUtil.createHelper(),
+                RequestHelpTestUtil.createEventOccurence(), rule, null);
     }
 
     @Test
@@ -60,8 +69,15 @@ public class RequestHelpTest
     {
         HibernateUtil.clearAll();
 
-        RequestHelpTestUtil.startProcessForFollowinAssignment(RequestHelpTestUtil.createHelper(), rule,
-                ResourcePlanningUtil.generateRequestHelpBusinessKey());
+        Position position = EntityBuilder.buildPosition("Moo", 12).persist();
+        EventOccurence eventOccurence = EntityBuilder.buildEventOccurence("TRI", "TRI", 21, 6, 2012).persist();
+        Helper helper =
+                EntityBuilder.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
+        // create preconditions (this must be a follow up assignment)
+        EntityBuilder.buildEventCommitment(helper, eventOccurence, position, EventCommitmentState.CONFIRMED).persist();
+
+        RequestHelpTestUtil.startProcessForFollowinAssignment(helper, eventOccurence, rule,
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(null, null));
 
         // mail must have been sent
         List<MessageQueue> messages = MessagingService.findAllMessages();
@@ -76,9 +92,9 @@ public class RequestHelpTest
     @Deployment(resources = "RequestHelp.bpmn")
     public void testFollowingAssigmnmentForPosition()
     {
+        //clear all tables in db
         HibernateUtil.clearAll();
-
-        // helper was assigned to position 'Radeinfahrt Helmkontrolle' the year before...
+        // helper was assigned to position 'Radeinfahrt Helmkontrolle' the year before (2014)...
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, 21);
         cal.set(Calendar.MONTH, 5);
@@ -90,19 +106,10 @@ public class RequestHelpTest
                         .build()
                         .persist();
         Helper createdHelper = RequestHelpTestUtil.createHelper();
-        Position pos =
-                new PositionBuilder().withDescription("Radeinfahrt Helmkontrolle").withMinimalAge(12).build().persist();
-        new EventCommitmentBuilder().withCommitmentState(EventCommitmentState.CONFIRMED)
-                .withEventOccurence(occurence)
-                .withHelper(createdHelper)
-                .withPosition(pos)
-                .build()
-                .persist();
-
-        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey();
-
-        RequestHelpTestUtil.startProcessForFollowinAssignment(createdHelper, rule, businessKey);
-
+        Position pos = EntityBuilder.buildPosition("Radeinfahrt Helmkontrolle", 12).persist();
+        EntityBuilder.buildEventCommitment(createdHelper, occurence, pos, EventCommitmentState.CONFIRMED).persist();
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(null, null);
+        RequestHelpTestUtil.startProcessForFollowinAssignment(createdHelper, occurence, rule, businessKey);
         // correlate callback message
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);

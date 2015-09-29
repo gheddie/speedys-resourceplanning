@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class HelperTest
 {
     @Test
-    public void testFIrstAssignment()
+    public void testFirstAssignment()
     {
         HibernateUtil.clearAll();
         

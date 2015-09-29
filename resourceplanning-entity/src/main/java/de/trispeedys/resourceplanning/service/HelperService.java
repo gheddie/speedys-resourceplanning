@@ -32,14 +32,23 @@ public class HelperService
         return (EventCommitment) list.get(0)[0];
     }
 
-    public static void isHelperReassignableToSamePosition(EventOccurence eventOccurence, Helper helper)
+    /**
+     * Finds the last confirmed assignment for the given helper an checks whether the helper can be reassigned in the same
+     * position in the given event occurence (if the positions still exists and if it is not not already occupied).
+     * 
+     * @param eventOccurence
+     * @param helper
+     */
+    public static boolean isHelperReassignableToSamePosition(Long eventOccurenceId, Long helperId)
     {
-        EventCommitment lastConfirmedAssignment = getLastConfirmedAssignmentForHelper(helper.getId());
+        EventCommitment lastConfirmedAssignment = getLastConfirmedAssignmentForHelper(helperId);
+        //is the position of the last assignment available for this occurence? 
+        return PositionService.isPositionAssigned(eventOccurenceId);
     }
 
     public static boolean isFirstAssignment(Long helperId)
     {
-        CommitmentService.getAllConfirmedCommitments(helperId);
-        return false;
+        List<EventCommitment> commitments = CommitmentService.getAllCommitmentsByState(helperId, EventCommitmentState.CONFIRMED);
+        return ((commitments == null) || (commitments.size() == 0));
     }
 }

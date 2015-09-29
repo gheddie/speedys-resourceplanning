@@ -1,6 +1,5 @@
 package de.trispeedys.resourceplanning.entity.builder;
 
-import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 
 public class PositionBuilder extends AbstractEntityBuilder<Position>

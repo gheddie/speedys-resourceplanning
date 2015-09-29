@@ -61,8 +61,34 @@ public class CommitmentService
         return (list.size() > 0);
     }
 
-    public static List<EventCommitment> getAllConfirmedCommitments(Long helperId)
+    @SuppressWarnings("unchecked")
+    public static List<EventCommitment> getAllCommitmentsByState(Long helperId,
+            EventCommitmentState eventCommitmentState)
     {
-        return null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String queryString = null;
+        if (eventCommitmentState != null)
+        {
+            // query for commitments with a state
+            queryString =
+                    "From " +
+                            EventCommitment.class.getSimpleName() +
+                            " ec WHERE ec.helperId = :helperId AND ec.commitmentState = :commitmentState AND ec.commitmentState = '" +
+                            eventCommitmentState + "'";
+        }
+        else
+        {
+            // query for commitments without a state (by helper only)
+            queryString = "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId";
+        }
+        Query q = session.createQuery(queryString);
+        q.setParameter("helperId", helperId);
+        if (eventCommitmentState != null)
+        {
+            q.setParameter("commitmentState", eventCommitmentState);
+        }
+        List<EventCommitment> list = q.list();
+        session.close();
+        return list;
     }
 }

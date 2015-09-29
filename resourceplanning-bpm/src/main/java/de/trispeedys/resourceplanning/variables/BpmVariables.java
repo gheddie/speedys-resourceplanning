@@ -9,5 +9,9 @@ public class BpmVariables
         public static final String VAR_HELPER_ID = "helperId";
 
         public static final String VAR_HELPER_CALLBACK = "helperCallback";
+
+        public static final String VAR_EVENT_OCCURENCE_ID = "eventOccurenceId";
+
+        public static final String VAR_POS_AVAILABLE_TO_REASSIGN = "posAvailable";
     }
 }
