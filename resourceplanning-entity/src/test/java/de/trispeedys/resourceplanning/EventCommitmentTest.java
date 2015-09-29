@@ -16,7 +16,6 @@ import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.CommitmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
-import de.trispeedys.resourceplanning.util.exception.DataModelException;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class EventCommitmentTest
@@ -179,7 +178,7 @@ public class EventCommitmentTest
     /**
      * Assign a helper to a position in an event WITHOUT the position being part of that event
      */
-    @Test(expected = DataModelException.class)
+    @Test(expected = ResourcePlanningException.class)
     public void testInvalidCommitment()
     {
         //clear db

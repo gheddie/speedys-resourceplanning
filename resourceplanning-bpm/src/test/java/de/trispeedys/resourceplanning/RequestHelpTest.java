@@ -27,6 +27,7 @@ import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.tasks.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class RequestHelpTest extends GenericBpmTest
@@ -56,7 +57,7 @@ public class RequestHelpTest extends GenericBpmTest
     /**
      * trying to start process without passing a business key
      */
-    @Test(expected = PvmException.class)
+    @Test(expected = ResourcePlanningException.class)
     @Deployment(resources = "RequestHelp.bpmn")
     public void testStartWithoutBusinessKey()
     {

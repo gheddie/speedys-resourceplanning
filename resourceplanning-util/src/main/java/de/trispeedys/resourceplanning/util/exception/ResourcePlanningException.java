@@ -1,9 +1,9 @@
 package de.trispeedys.resourceplanning.util.exception;
 
-public class ResourcePlanningException extends Exception
+public class ResourcePlanningException extends RuntimeException
 {
-    private static final long serialVersionUID = -7859556619635127470L;
-    
+    private static final long serialVersionUID = 2172910676953853161L;
+
     public ResourcePlanningException(String message)
     {
         super(message);
