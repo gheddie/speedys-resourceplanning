@@ -17,7 +17,6 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
-import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
@@ -81,7 +80,7 @@ public class RequestHelpTest
         DataModelUtil.relatePositionsToEvent(event, position);
 
         // create preconditions (this must be a follow up assignment)
-        EntityFactory.buildEventCommitment(helper, event, position, EventCommitmentState.CONFIRMED).persist();
+        EntityFactory.buildEventCommitment(helper, event, position).persist();
 
         RequestHelpTestUtil.startHelperRequestProcess(helper, event,
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(null, null), rule);
@@ -117,16 +116,12 @@ public class RequestHelpTest
                 EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
         Helper blockingHelper =
                 EntityFactory.buildHelper("Blocking", "Helper", "", HelperState.ACTIVE, 1, 1, 1990).persist();
-
         // assign position to event
         DataModelUtil.relateEventsToPosition(positionBikeEntry, evt2014, evt2015);
-
         // assign helper to position in 2014
-        EntityFactory.buildEventCommitment(createdHelper, evt2014, positionBikeEntry, EventCommitmentState.CONFIRMED)
-                .persist();
+        EntityFactory.buildEventCommitment(createdHelper, evt2014, positionBikeEntry).persist();
         // assign position to another helper in 2015
-        EntityFactory.buildEventCommitment(blockingHelper, evt2015, positionBikeEntry, EventCommitmentState.CONFIRMED)
-                .persist();
+        EntityFactory.buildEventCommitment(blockingHelper, evt2015, positionBikeEntry).persist();
         // start request process for 2015...
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(null, null);
         RequestHelpTestUtil.startHelperRequestProcess(createdHelper, evt2015, businessKey, rule);

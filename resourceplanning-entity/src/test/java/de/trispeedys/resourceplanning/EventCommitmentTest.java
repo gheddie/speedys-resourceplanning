@@ -11,7 +11,6 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
-import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
@@ -46,7 +45,7 @@ public class EventCommitmentTest
         
         Helper helper = EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976).persist();
         
-        EntityFactory.buildEventCommitment(helper, event, position2, EventCommitmentState.CONFIRMED).persist();
+        EntityFactory.buildEventCommitment(helper, event, position2).persist();
         
         //confirm helper for another position of the same event
         CommitmentService.confirmHelper(helper, event, position1);
@@ -89,8 +88,7 @@ public class EventCommitmentTest
         //relate position to both events
         DataModelUtil.relateEventsToPosition(position, evt2012, evt2014);
         
-        EntityFactory.buildEventCommitment(helper, evt2012, position, EventCommitmentState.CONFIRMED).persist();
-        EntityFactory.buildEventCommitment(helper, evt2014, position, EventCommitmentState.PROPOSED).persist();
+        EntityFactory.buildEventCommitment(helper, evt2012, position).persist();
         
         //last confirmed commitment should be in 2012
         EventCommitment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
@@ -116,10 +114,7 @@ public class EventCommitmentTest
         //assign position to event
         DataModelUtil.relatePositionsToEvent(event2012, position);
         DataModelUtil.relatePositionsToEvent(event2014, position);
-        
-        EntityFactory.buildEventCommitment(helper, event2012, position, EventCommitmentState.PROPOSED).persist();
-        EntityFactory.buildEventCommitment(helper, event2014, position, EventCommitmentState.PROPOSED).persist();
-        
+                
         //last confirmed commitment shuold be in 2012
         EventCommitment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
         
@@ -146,7 +141,7 @@ public class EventCommitmentTest
         //assign position to event
         DataModelUtil.relatePositionsToEvent(event2015, position);
         
-        EntityFactory.buildEventCommitment(helperToReassign, event2015, position, EventCommitmentState.CONFIRMED).persist();
+        EntityFactory.buildEventCommitment(helperToReassign, event2015, position).persist();
         
         //assign that position to another helper in 2016...
         Helper blockingHelper = EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980).persist();
@@ -155,7 +150,7 @@ public class EventCommitmentTest
         //assign position to event
         DataModelUtil.relatePositionsToEvent(event2016, position);
         
-        EntityFactory.buildEventCommitment(blockingHelper, event2016, position, EventCommitmentState.CONFIRMED).persist();
+        EntityFactory.buildEventCommitment(blockingHelper, event2016, position).persist();
         
         //'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
         assertFalse(HelperService.isHelperReassignableToSamePosition(event2016.getId(), helperToReassign.getId()));
@@ -178,7 +173,7 @@ public class EventCommitmentTest
         //assign position to event
         EntityFactory.buildEventPosition(event, position).persist();
         //commit helper
-        EntityFactory.buildEventCommitment(helper, event, position, EventCommitmentState.CONFIRMED);
+        EntityFactory.buildEventCommitment(helper, event, position);
     }
     
     /**
@@ -196,6 +191,6 @@ public class EventCommitmentTest
         //position
         Position position = EntityFactory.buildPosition("A", 10).persist();
         //commit helper (position is not present in the event)
-        EntityFactory.buildEventCommitment(helper, event, position, EventCommitmentState.CONFIRMED);
+        EntityFactory.buildEventCommitment(helper, event, position);
     }    
 }

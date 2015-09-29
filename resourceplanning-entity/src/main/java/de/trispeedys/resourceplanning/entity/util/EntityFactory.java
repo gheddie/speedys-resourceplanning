@@ -14,7 +14,6 @@ import de.trispeedys.resourceplanning.entity.builder.EventPositionBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
-import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.exception.DataModelException;
 import de.trispeedys.resourceplanning.service.PositionService;
@@ -36,7 +35,7 @@ public class EntityFactory
                 .build();
     }
 
-    public static EventCommitment buildEventCommitment(Helper helper, Event event, Position position, EventCommitmentState eventCommitmentState)
+    public static EventCommitment buildEventCommitment(Helper helper, Event event, Position position)
     {
         if (!(PositionService.isPositionPresentInEvent(position, event)))
         {
@@ -45,7 +44,6 @@ public class EntityFactory
         return new EventCommitmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEvent(event)
-                .withCommitmentState(eventCommitmentState)
                 .build();
     }
 

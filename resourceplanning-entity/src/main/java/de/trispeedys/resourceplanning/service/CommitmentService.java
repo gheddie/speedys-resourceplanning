@@ -10,7 +10,6 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
-import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.util.DateHelper;
@@ -30,7 +29,7 @@ public class CommitmentService
         {
             throw new ResourcePlanningException("helper is " + dayDiff + " days to young for this position!");
         }
-        EntityFactory.buildEventCommitment(helper, event, position, EventCommitmentState.CONFIRMED).persist();
+        EntityFactory.buildEventCommitment(helper, event, position).persist();
     }
 
     /**
@@ -45,10 +44,8 @@ public class CommitmentService
     public static boolean isHelperConfirmedForEvent(Event event, Helper helper) throws ResourcePlanningException
     {
         // get confirmed positions for this helper in this event
-        String queryString = "From " +
-                EventCommitment.class.getSimpleName() +
-                " ec WHERE ec.helper = :helper AND ec.event = :event AND ec.commitmentState = '" +
-                EventCommitmentState.CONFIRMED + "'";
+        String queryString =
+                "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.helper = :helper AND ec.event = :event";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("event", event);
         parameters.put("helper", helper);
@@ -57,30 +54,12 @@ public class CommitmentService
     }
 
     @SuppressWarnings("unchecked")
-    public static List<EventCommitment> getAllCommitmentsByState(Long helperId,
-            EventCommitmentState eventCommitmentState)
+    public static List<EventCommitment> getAllCommitments(Long helperId)
     {
         String queryString = null;
         List<EventCommitment> list = null;
-        if (eventCommitmentState != null)
-        {
-            // query for commitments with a state
-            queryString =
-                    "From " +
-                            EventCommitment.class.getSimpleName() +
-                            " ec WHERE ec.helperId = :helperId AND ec.commitmentState = :commitmentState AND ec.commitmentState = '" +
-                            eventCommitmentState + "'";
-            HashMap<String, Object> parameters = new HashMap<String, Object>();
-            parameters.put("commitmentState", eventCommitmentState);
-            parameters.put("helperId", helperId);
-            list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, parameters);
-        }
-        else
-        {
-            // query for commitments without a state (by helper only)
-            queryString = "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId";
-            list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, "helperId", helperId);
-        }
+        queryString = "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId";
+        list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, "helperId", helperId);
         return list;
     }
 }
