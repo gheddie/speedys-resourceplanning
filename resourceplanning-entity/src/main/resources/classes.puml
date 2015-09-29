@@ -1,26 +1,31 @@
 @startuml
 
 class Helper {
-	firstName::String
-	lastName::String
+	firstName : String
+	lastName : String
 }
 
 class Event {
+	eventDate : Date
+	eventKey : String
+	description : String
 }
 
 class Position {
-    description::String
-    minimalAge::int
+    description : String
+    minimalAge : int
 }
 
 class EventCommitment {
-	helper::Helper
-	helperId::Long
-	event::Event
-	position::Position
+	helper : Helper
+	helperId : Long
+	event : Event
+	position : Position
 }
 
 class EventPosition {
+	position : Position
+	event : Event
 }
 
 note left of EventPosition
@@ -29,6 +34,14 @@ note left of EventPosition
 	(ergibt insgesamt eine M:N-Relation
 	zwischen Position und Event)
 end note
+
+class MessageQueue {
+	fromAddress : String
+	toAddress : String
+	subject : String
+	body : String
+	messagingState : MessagingState
+}
 
 '---Verknüpfungen---
 

@@ -79,9 +79,9 @@
       <bpmn:incoming>flowPosOccupied</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_13o1cty</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_13o1cty" sourceRef="ExclusiveGateway_0cp8ghy" targetRef="UserTask_0htyumw"/>
-    <bpmn:sequenceFlow id="SequenceFlow_0t1lj96" sourceRef="UserTask_0htyumw" targetRef="EndEvent_1w4djnx"/>
-    <bpmn:userTask id="UserTask_0htyumw" name="Neu zuweisen">
+    <bpmn:sequenceFlow id="SequenceFlow_13o1cty" sourceRef="ExclusiveGateway_0cp8ghy" targetRef="UserTaskManualAssignment"/>
+    <bpmn:sequenceFlow id="SequenceFlow_0t1lj96" sourceRef="UserTaskManualAssignment" targetRef="EndEvent_1w4djnx"/>
+    <bpmn:userTask id="UserTaskManualAssignment" name="Neu zuweisen">
       <bpmn:incoming>SequenceFlow_13o1cty</bpmn:incoming>
       <bpmn:incoming>flowFirstAssignment</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0t1lj96</bpmn:outgoing>
@@ -104,7 +104,7 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_0ido2bu" targetRef="ServiceTask_150zqc3"/>
     <bpmn:sequenceFlow id="flowFollowingAssignment" name="nein" sourceRef="ExclusiveGateway_2" targetRef="ExclusiveGateway_0qo5s18"/>
-    <bpmn:sequenceFlow id="flowFirstAssignment" name="ja" sourceRef="ExclusiveGateway_2" targetRef="UserTask_0htyumw">
+    <bpmn:sequenceFlow id="flowFirstAssignment" name="ja" sourceRef="ExclusiveGateway_2" targetRef="UserTaskManualAssignment">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${firstAssignment==true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:eventBasedGateway id="EventBasedGateway_1kzg3ch">
@@ -324,7 +324,7 @@
           <dc:Bounds height="0.0" width="0.0" x="1295.0" y="830.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_0htyumw_di" bpmnElement="UserTask_0htyumw">
+      <bpmndi:BPMNShape id="UserTask_0htyumw_di" bpmnElement="UserTaskManualAssignment">
         <dc:Bounds height="80.0" width="100.0" x="1154.0" y="800.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_06pmtwc_di" bpmnElement="flowPosOccupied">
