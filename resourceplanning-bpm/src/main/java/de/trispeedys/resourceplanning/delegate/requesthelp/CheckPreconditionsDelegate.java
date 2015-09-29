@@ -22,10 +22,10 @@ public class CheckPreconditionsDelegate implements JavaDelegate
             throw new ResourcePlanningException("can not start request help process without a helper id set!!");
         }
 
-        // (3) check if event occurence id is set
-        if (execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_OCCURENCE_ID) == null)
+        // (3) check if event id is set
+        if (execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID) == null)
         {
-            throw new ResourcePlanningException("can not start request help process without a event occurence id set!!");
+            throw new ResourcePlanningException("can not start request help process without a event id set!!");
         }
     }
 }

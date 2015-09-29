@@ -1,5 +1,8 @@
 package de.trispeedys.resourceplanning;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,7 +10,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.entity.Helper;
 
 public class HibernateUtil {
 	private static final SessionFactory sessionFactory = buildSessionFactory();
@@ -35,12 +37,12 @@ public class HibernateUtil {
 		clearTable("event_commitment");
 		clearTable("helper");
 		clearTable("position");
-		clearTable("event_occurence");
+		clearTable("event");
 		clearTable("message_queue");
 	}
 
 	private static void clearTable(String tableName) {
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		String queryString = "delete from " + tableName;
 
@@ -49,23 +51,55 @@ public class HibernateUtil {
 		session.close();
 	}
 
-	public static AbstractDbObject persistSimple(AbstractDbObject entity) {
+	@SuppressWarnings("unchecked")
+    public static <T> T persistSimple(AbstractDbObject entity) {
 		Transaction tx = null;
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = getSessionFactory().openSession();
 		tx = session.beginTransaction();
 		session.save(entity);
 		tx.commit();
 		session.close();
-		return entity;
+		return (T) entity;
 	}
 
     @SuppressWarnings("unchecked")
-    public static <T> T findById(Class<Helper> entityClass, Long primaryKeyValue)
+    public static <T> T findById(Class<? extends AbstractDbObject> entityClass, Long primaryKeyValue)
     {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Query qry = session.createQuery("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue);
-        Object result = qry.list().get(0);
-        session.close();
-        return (T) result;
+        return (T) fetchResults("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue).get(0);
     }
+    
+    @SuppressWarnings("rawtypes")
+    public static List<?> fetchResults(String qryString, HashMap<String, Object> parameters)
+    {
+        Session session = getSessionFactory().openSession();
+        Query q =
+                session.createQuery(qryString);
+        if (parameters != null)
+        {
+            for (String key : parameters.keySet())
+            {
+                q.setParameter(key, parameters.get(key));   
+            }   
+        }       
+        List result = q.list();
+        session.close();
+        return result;
+    }
+    
+    public static List<?> fetchResults(String qryString)
+    {
+        return fetchResults(qryString, null);
+    }
+
+    public static List<?> fetchResults(String qryString, String paramaterName, Object paramaterObject)
+    {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(paramaterName, paramaterObject);
+        return fetchResults(qryString, parameters);
+    }
+
+    public static List<?> fetchResults(Class<? extends AbstractDbObject> clazz)
+    {
+        return fetchResults("FROM " + clazz.getSimpleName());
+    }    
 }

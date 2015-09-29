@@ -12,7 +12,7 @@ public class CheckAvailabiliyDelegate implements JavaDelegate
     {
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_POS_AVAILABLE_TO_REASSIGN,
                 HelperService.isHelperReassignableToSamePosition(
-                        (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_OCCURENCE_ID),
+                        (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID),
                         (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID)));
     }
 }

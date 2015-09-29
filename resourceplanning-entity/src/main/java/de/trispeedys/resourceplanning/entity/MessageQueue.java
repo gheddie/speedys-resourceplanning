@@ -6,6 +6,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import de.trispeedys.resourceplanning.entity.misc.MessagingState;
+
 @Entity
 @Table(name = "message_queue")
 public class MessageQueue extends AbstractDbObject

@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.entity;
+package de.trispeedys.resourceplanning.entity.misc;
 
 public enum HelperCallback
 {

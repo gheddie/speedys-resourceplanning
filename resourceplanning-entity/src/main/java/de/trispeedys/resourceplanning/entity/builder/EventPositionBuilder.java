@@ -1,6 +1,6 @@
 package de.trispeedys.resourceplanning.entity.builder;
 
-import de.trispeedys.resourceplanning.entity.EventOccurence;
+import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Position;
 
@@ -8,11 +8,11 @@ public class EventPositionBuilder extends AbstractEntityBuilder<EventPosition>
 {
     private Position position;
     
-    private EventOccurence eventOccurence;
+    private Event event;
 
-    public EventPositionBuilder withEventOccurence(EventOccurence aEventOccurence)
+    public EventPositionBuilder withEvent(Event aEvent)
     {
-        eventOccurence = aEventOccurence;
+        event = aEvent;
         return this;
     }
 
@@ -26,7 +26,7 @@ public class EventPositionBuilder extends AbstractEntityBuilder<EventPosition>
     {
         EventPosition eventPosition = new EventPosition();
         eventPosition.setPosition(position);
-        eventPosition.setEventOccurence(eventOccurence);
+        eventPosition.setEvent(event);
         return eventPosition;
     }
 }

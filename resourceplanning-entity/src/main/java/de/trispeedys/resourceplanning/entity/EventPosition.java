@@ -5,6 +5,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+/**
+ * Realtion betweeb {@link Event} and {@link Position}.
+ * 
+ * @author Stefan.Schulz
+ *
+ */
 @Entity
 @Table(name = "event_position")
 public class EventPosition extends AbstractDbObject
@@ -14,8 +20,8 @@ public class EventPosition extends AbstractDbObject
     private Position position;
     
     @OneToOne
-    @JoinColumn(name = "event_occurence_id")
-    private EventOccurence eventOccurence;
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     public Position getPosition()
     {
@@ -27,13 +33,13 @@ public class EventPosition extends AbstractDbObject
         this.position = position;
     }
 
-    public EventOccurence getEventOccurence()
+    public Event getEvent()
     {
-        return eventOccurence;
+        return event;
     }
 
-    public void setEventOccurence(EventOccurence eventOccurence)
+    public void setEvent(Event event)
     {
-        this.eventOccurence = eventOccurence;
+        this.event = event;
     } 
 }

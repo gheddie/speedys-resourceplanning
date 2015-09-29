@@ -1,7 +1,7 @@
 package de.trispeedys.resourceplanning.entity.builder;
 
 import de.trispeedys.resourceplanning.entity.MessageQueue;
-import de.trispeedys.resourceplanning.entity.MessagingState;
+import de.trispeedys.resourceplanning.entity.misc.MessagingState;
 
 public class MessageQueueBuilder extends AbstractEntityBuilder<MessageQueue>
 {

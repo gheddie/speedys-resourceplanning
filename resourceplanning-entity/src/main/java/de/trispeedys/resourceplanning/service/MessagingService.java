@@ -2,9 +2,6 @@ package de.trispeedys.resourceplanning.service;
 
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.util.MailSender;
@@ -14,13 +11,7 @@ public class MessagingService
     @SuppressWarnings("unchecked")
     public static List<MessageQueue> findAllMessages()
     {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Query q =
-                session.createQuery("From " +
-                        MessageQueue.class.getSimpleName() + " mq");
-        List<MessageQueue> messages = q.list();
-        session.close();
-        return messages;
+        return (List<MessageQueue>) HibernateUtil.fetchResults(MessageQueue.class);
     }
 
     public static void sendAllMessages()

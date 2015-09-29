@@ -1,12 +1,8 @@
 package de.trispeedys.resourceplanning;
 
-import java.util.List;
-
-import de.trispeedys.resourceplanning.webservice.EventCommitmentDTO;
-import de.trispeedys.resourceplanning.webservice.ResourceInfo;
-import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
 import de.trispeedys.resourceplanning.webservice.SomeTestService;
 import de.trispeedys.resourceplanning.webservice.SomeTestServiceService;
+
 
 /**
  * wsimport -keep -verbose http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/SomeTestServiceWs?wsdl
@@ -22,11 +18,11 @@ public class ResourcePlanningClient
     {
         System.out.println("moo");
         
-//        SomeTestService testPort = new SomeTestServiceService().getSomeTestServicePort();        
-//        testPort.testStartProcess();
+        SomeTestService testPort = new SomeTestServiceService().getSomeTestServicePort();        
+        testPort.testStartProcess();
         
-        ResourceInfo resourceInfoService = new ResourceInfoService().getResourceInfoPort();
-        List<EventCommitmentDTO> commitments = resourceInfoService.queryCommitments("moo", "mee").getItem();
-        System.out.println(commitments.size() + " commitments queried.");
+//        ResourceInfo resourceInfoService = new ResourceInfoService().getResourceInfoPort();
+//        List<EventCommitmentDTO> commitments = resourceInfoService.queryCommitments("moo", "mee").getItem();
+//        System.out.println(commitments.size() + " commitments queried.");
     }
 }

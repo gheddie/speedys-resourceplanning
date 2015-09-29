@@ -8,12 +8,12 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.EventCommitment;
-import de.trispeedys.resourceplanning.entity.EventCommitmentState;
-import de.trispeedys.resourceplanning.entity.EventOccurence;
+import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.HelperState;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
+import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.service.CommitmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
@@ -34,17 +34,17 @@ public class EventCommitmentTest
     {
         HibernateUtil.clearAll();
         
-        EventOccurence eventOccurence = EntityBuilder.buildEventOccurence("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
+        Event event = EntityBuilder.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
         
         Position position1 = EntityBuilder.buildPosition("Radverpflegung", 12).persist();
         Position position2 = EntityBuilder.buildPosition("Laufverpflegung", 16).persist();
         
         Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976).persist();
         
-        EntityBuilder.buildEventCommitment(helper, eventOccurence, position2, EventCommitmentState.CONFIRMED).persist();
+        EntityBuilder.buildEventCommitment(helper, event, position2, EventCommitmentState.CONFIRMED).persist();
         
         //confirm helper for another position of the same event
-        CommitmentService.confirmHelper(helper, eventOccurence, position1);
+        CommitmentService.confirmHelper(helper, event, position1);
     }
     
     /**
@@ -56,7 +56,7 @@ public class EventCommitmentTest
     {
         HibernateUtil.clearAll();
         
-        EventOccurence eventOccurence = EntityBuilder.buildEventOccurence("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
+        Event event = EntityBuilder.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
         
         //Helfer ist zum Datum der Veranstaltung erst 15 
         Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000).persist();
@@ -65,7 +65,7 @@ public class EventCommitmentTest
         Position position = EntityBuilder.buildPosition("Laufverpflegung", 16).persist();
         
         //Muss zu Ausnahme führen
-        CommitmentService.confirmHelper(helper, eventOccurence, position);
+        CommitmentService.confirmHelper(helper, event, position);
     }
     
     @Test    
@@ -73,9 +73,9 @@ public class EventCommitmentTest
     {
         HibernateUtil.clearAll();
         
-        //create some occurences
-        EventOccurence oc2012 = EntityBuilder.buildEventOccurence("TRI-2012", "TRI-2012", 21, 6, 2012).persist();
-        EventOccurence oc2014 = EntityBuilder.buildEventOccurence("TRI-2012", "TRI-2014", 21, 6, 2014).persist();
+        //create some events
+        Event oc2012 = EntityBuilder.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012).persist();
+        Event oc2014 = EntityBuilder.buildEvent("TRI-2012", "TRI-2014", 21, 6, 2014).persist();
         
         //helper was confirmed for a position in 2012, but only proposed for one in 2014...
         Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000).persist();
@@ -87,7 +87,7 @@ public class EventCommitmentTest
         EventCommitment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
         
         Calendar cal = Calendar.getInstance();
-        cal.setTime(lastConfirmedAssignment.getEventOccurence().getEventDate());
+        cal.setTime(lastConfirmedAssignment.getEvent().getEventDate());
         assertEquals(2012, cal.get(Calendar.YEAR));
     }
     
@@ -96,9 +96,9 @@ public class EventCommitmentTest
     {
         HibernateUtil.clearAll();
         
-        //create some occurences
-        EventOccurence oc2012 = EntityBuilder.buildEventOccurence("TRI-2012", "TRI-2012", 21, 6, 2012).persist();
-        EventOccurence oc2014 = EntityBuilder.buildEventOccurence("TRI-2014", "TRI-2014", 21, 6, 2014).persist();
+        //create some events
+        Event oc2012 = EntityBuilder.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012).persist();
+        Event oc2014 = EntityBuilder.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014).persist();
         
         //helper was confirmed for a position in 2012, but only proposed for one in 2014...
         Helper helper = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000).persist();
@@ -127,12 +127,12 @@ public class EventCommitmentTest
         
         //helper was assigned pos 'Laufverpflegung' in 2015...
         Helper helperToReassign = EntityBuilder.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000).persist();        
-        EventOccurence oc2015 = EntityBuilder.buildEventOccurence("TRI-2015", "TRI-2015", 21, 6, 2015).persist();
+        Event oc2015 = EntityBuilder.buildEvent("TRI-2015", "TRI-2015", 21, 6, 2015).persist();
         EntityBuilder.buildEventCommitment(helperToReassign, oc2015, position, EventCommitmentState.CONFIRMED).persist();
         
         //assign that position to another helper in 2016...
         Helper blockingHelper = EntityBuilder.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980).persist();
-        EventOccurence oc2016 = EntityBuilder.buildEventOccurence("TRI-2016", "TRI-2016", 21, 6, 2016).persist();
+        Event oc2016 = EntityBuilder.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016).persist();
         EntityBuilder.buildEventCommitment(blockingHelper, oc2016, position, EventCommitmentState.CONFIRMED).persist();
         
         //'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...

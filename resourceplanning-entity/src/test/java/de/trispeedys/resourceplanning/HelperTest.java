@@ -3,10 +3,9 @@ package de.trispeedys.resourceplanning;
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.HelperState;
 import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.service.HelperService;
-
 import static org.junit.Assert.assertEquals;
 
 public class HelperTest

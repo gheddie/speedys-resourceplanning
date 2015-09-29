@@ -124,7 +124,7 @@
       <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_1"/>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="ServiceTask_3" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.CheckAvailabiliyDelegate" name="Verfügung prüfen">
+    <bpmn:serviceTask id="ServiceTask_3" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.CheckAvailabiliyDelegate" name="Verfügbarkeit prüfen">
       <bpmn:incoming>flowAsLastTime</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -163,6 +163,10 @@
       <bpmn:text>CheckPriorAssignmentsDelegate</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_7" sourceRef="TextAnnotation_7" targetRef="ServiceTask_150zqc3"/>
+    <bpmn:textAnnotation id="TextAnnotation_8">
+      <bpmn:text>Muss testen, ob Position noch vorhanden und noch nicht vergeben</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_8" sourceRef="TextAnnotation_8" targetRef="ServiceTask_3"/>
   </bpmn:process>
   <bpmn:message id="Message_1" name="MSG_HELP_TRIG"/>
   <bpmn:message id="Message_2" name="MSG_HELP_CALLBACK"/>
@@ -500,6 +504,13 @@
       <bpmndi:BPMNEdge id="BPMNEdge_Association_7" bpmnElement="Association_7" sourceElement="_BPMNShape_TextAnnotation_9" targetElement="ServiceTask_150zqc3_di">
         <di:waypoint xsi:type="dc:Point" x="437.0" y="643.0"/>
         <di:waypoint xsi:type="dc:Point" x="384.0" y="643.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_TextAnnotation_10" bpmnElement="TextAnnotation_8">
+        <dc:Bounds height="76.0" width="141.0" x="784.0" y="909.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_Association_8" bpmnElement="Association_8" sourceElement="_BPMNShape_TextAnnotation_10" targetElement="_BPMNShape_ServiceTask_4">
+        <di:waypoint xsi:type="dc:Point" x="877.0" y="909.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1005.0" y="693.0"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

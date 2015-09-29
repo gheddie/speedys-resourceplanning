@@ -5,11 +5,11 @@ import java.util.Map;
 
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 
-import de.trispeedys.resourceplanning.entity.EventOccurence;
+import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.HelperState;
 import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
@@ -22,13 +22,13 @@ public class RequestHelpTestUtil
      * @param rule
      * @param businessKey
      */
-    public static void startProcessForFollowinAssignment(Helper helper, EventOccurence eventOccurence,
+    public static void startProcessForFollowinAssignment(Helper helper, Event event,
             ProcessEngineRule rule, String businessKey)
     {
         // start process for follow up assignment
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_ID, new Long(helper.getId()));
-        variables.put(BpmVariables.RequestHelpHelper.VAR_EVENT_OCCURENCE_ID, new Long(eventOccurence.getId()));
+        variables.put(BpmVariables.RequestHelpHelper.VAR_EVENT_ID, new Long(event.getId()));
         rule.getRuntimeService().startProcessInstanceByMessage(BpmMessages.RequestHelpHelper.MSG_HELP_TRIG,
                 businessKey, variables);
     }
@@ -43,8 +43,8 @@ public class RequestHelpTestUtil
                 .persist();
     }
 
-    public static EventOccurence createEventOccurence()
+    public static Event createEvent()
     {
-        return EntityBuilder.buildEventOccurence("Tirathlon 2015", "TRI-2014", 21, 6, 2014).persist();
+        return EntityBuilder.buildEvent("Tirathlon 2015", "TRI-2014", 21, 6, 2014).persist();
     }
 }

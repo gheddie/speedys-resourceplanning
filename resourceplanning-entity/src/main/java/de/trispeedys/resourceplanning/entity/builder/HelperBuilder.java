@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.entity.builder;
 import java.util.Date;
 
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.HelperState;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class HelperBuilder extends AbstractEntityBuilder<Helper>
 {

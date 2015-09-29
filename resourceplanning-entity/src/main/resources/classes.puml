@@ -5,7 +5,7 @@ class Helper {
 	lastName::String
 }
 
-class EventOccurence {
+class Event {
 }
 
 class Position {
@@ -21,20 +21,20 @@ class EventPosition {
 
 note left of EventPosition
 	Zuordnung einer Position zu
-	einer dedizierten Event-Occurence
+	einem dedizierten Event
 	(ergibt insgesamt eine M:N-Relation
-	zwischen Position und Occurence)
+	zwischen Position und Event)
 end note
 
 '---Verknüpfungen---
 
 EventCommitment "1" -- "1" Helper
 
-EventCommitment "1" -- "1" EventOccurence
+EventCommitment "1" -- "1" Event
 
 EventCommitment "1" -- "1" Position
 
 Position "1" -- "1" EventPosition
-EventOccurence "1" -- "1" EventPosition
+Event "1" -- "1" EventPosition
 
 @enduml

@@ -9,8 +9,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "event_occurence")
-public class EventOccurence extends AbstractDbObject
+@Table(name = "event")
+public class Event extends AbstractDbObject
 {
     @Temporal(TemporalType.DATE)
     @Column(name = "event_date")

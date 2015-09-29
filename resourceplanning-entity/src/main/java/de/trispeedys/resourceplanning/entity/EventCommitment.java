@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
+
 @Entity
 @Table(name = "event_commitment")
 public class EventCommitment extends AbstractDbObject
@@ -21,8 +23,8 @@ public class EventCommitment extends AbstractDbObject
     private Long helperId;
     
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "event_occurence_id")
-    private EventOccurence eventOccurence;
+    @JoinColumn(name = "event_id")
+    private Event event;
     
     @OneToOne(fetch = FetchType.EAGER)
     private Position position;
@@ -42,14 +44,14 @@ public class EventCommitment extends AbstractDbObject
         this.helper = helper;
     }
 
-    public EventOccurence getEventOccurence()
+    public Event getEvent()
     {
-        return eventOccurence;
+        return event;
     }
 
-    public void setEventOccurence(EventOccurence eventOccurence)
+    public void setEvent(Event event)
     {
-        this.eventOccurence = eventOccurence;
+        this.event = event;
     }
 
     public Position getPosition()

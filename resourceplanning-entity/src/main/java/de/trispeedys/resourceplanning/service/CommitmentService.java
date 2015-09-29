@@ -1,5 +1,6 @@
 package de.trispeedys.resourceplanning.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -8,56 +9,52 @@ import org.joda.time.Days;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
-import de.trispeedys.resourceplanning.entity.EventCommitmentState;
-import de.trispeedys.resourceplanning.entity.EventOccurence;
+import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.builder.EntityBuilder;
+import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.util.DateHelper;
 
 public class CommitmentService
 {
-    public static void confirmHelper(Helper helper, EventOccurence eventOccurence, Position position)
-            throws ResourcePlanningException
+    public static void confirmHelper(Helper helper, Event event, Position position) throws ResourcePlanningException
     {
-        if (isHelperConfirmedForEvent(eventOccurence, helper))
+        if (isHelperConfirmedForEvent(event, helper))
         {
             throw new ResourcePlanningException("helper is already confirmed for another position!");
         }
         int dayDiff =
-                Days.daysBetween(DateHelper.toDateTime(eventOccurence.getEventDate()),
+                Days.daysBetween(DateHelper.toDateTime(event.getEventDate()),
                         DateHelper.toDateTime(helper.getDateOfBirth()).plusYears(position.getMinimalAge())).getDays();
         if (dayDiff > 0)
         {
             throw new ResourcePlanningException("helper is " + dayDiff + " days to young for this position!");
         }
-        EntityBuilder.buildEventCommitment(helper, eventOccurence, position, EventCommitmentState.CONFIRMED).persist();
+        EntityBuilder.buildEventCommitment(helper, event, position, EventCommitmentState.CONFIRMED).persist();
     }
 
     /**
      * Ist der Helfer für irgendeine Position im gegebenen Event bestätigt?
      * 
-     * @param eventOccurence
+     * @param event
      * @param helper
      * @return
      * @throws ResourcePlanningException
      */
     @SuppressWarnings("unchecked")
-    public static boolean isHelperConfirmedForEvent(EventOccurence eventOccurence, Helper helper)
-            throws ResourcePlanningException
+    public static boolean isHelperConfirmedForEvent(Event event, Helper helper) throws ResourcePlanningException
     {
-        // get confirmed positions for this helper in this event occurence
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Query q =
-                session.createQuery("From " +
-                        EventCommitment.class.getSimpleName() +
-                        " ec WHERE ec.helper = :helper AND ec.eventOccurence = :eventOccurence AND ec.commitmentState = '" +
-                        EventCommitmentState.CONFIRMED + "'");
-        q.setParameter("eventOccurence", eventOccurence);
-        q.setParameter("helper", helper);
-        List<EventCommitment> list = q.list();
-        session.close();
+        // get confirmed positions for this helper in this event
+        String queryString = "From " +
+                EventCommitment.class.getSimpleName() +
+                " ec WHERE ec.helper = :helper AND ec.event = :event AND ec.commitmentState = '" +
+                EventCommitmentState.CONFIRMED + "'";
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("event", event);
+        parameters.put("helper", helper);
+        List<EventCommitment> list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, parameters);
         return (list.size() > 0);
     }
 
@@ -65,8 +62,8 @@ public class CommitmentService
     public static List<EventCommitment> getAllCommitmentsByState(Long helperId,
             EventCommitmentState eventCommitmentState)
     {
-        Session session = HibernateUtil.getSessionFactory().openSession();
         String queryString = null;
+        List<EventCommitment> list = null;
         if (eventCommitmentState != null)
         {
             // query for commitments with a state
@@ -75,20 +72,17 @@ public class CommitmentService
                             EventCommitment.class.getSimpleName() +
                             " ec WHERE ec.helperId = :helperId AND ec.commitmentState = :commitmentState AND ec.commitmentState = '" +
                             eventCommitmentState + "'";
+            HashMap<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("commitmentState", eventCommitmentState);
+            parameters.put("helperId", helperId);
+            list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, parameters);
         }
         else
         {
             // query for commitments without a state (by helper only)
             queryString = "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId";
+            list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, "helperId", helperId);
         }
-        Query q = session.createQuery(queryString);
-        q.setParameter("helperId", helperId);
-        if (eventCommitmentState != null)
-        {
-            q.setParameter("commitmentState", eventCommitmentState);
-        }
-        List<EventCommitment> list = q.list();
-        session.close();
         return list;
     }
 }

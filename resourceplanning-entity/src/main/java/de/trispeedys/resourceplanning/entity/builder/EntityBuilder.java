@@ -4,13 +4,13 @@ import java.util.Calendar;
 
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
-import de.trispeedys.resourceplanning.entity.EventCommitmentState;
-import de.trispeedys.resourceplanning.entity.EventOccurence;
+import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.HelperState;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventCommitmentState;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class EntityBuilder
 {
@@ -29,11 +29,11 @@ public class EntityBuilder
                 .build();
     }
 
-    public static EventCommitment buildEventCommitment(Helper helper, EventOccurence eventOccurence, Position position, EventCommitmentState eventCommitmentState)
+    public static EventCommitment buildEventCommitment(Helper helper, Event event, Position position, EventCommitmentState eventCommitmentState)
     {
         return new EventCommitmentBuilder().withHelper(helper)
                 .withPosition(position)
-                .withEventOccurence(eventOccurence)
+                .withEvent(event)
                 .withCommitmentState(eventCommitmentState)
                 .build();
     }
@@ -43,14 +43,14 @@ public class EntityBuilder
         return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).build();
     }
 
-    public static EventOccurence buildEventOccurence(String description, String eventKey, int day, int month, int year)
+    public static Event buildEvent(String description, String eventKey, int day, int month, int year)
     {
-        Calendar dateOfOccurence = Calendar.getInstance();
-        dateOfOccurence.set(Calendar.DAY_OF_MONTH, day);
-        dateOfOccurence.set(Calendar.MONTH, month - 1);
-        dateOfOccurence.set(Calendar.YEAR, year);
-        return new EventOccurenceBuilder().withDescription(description)
-                .withDate(dateOfOccurence.getTime())
+        Calendar eventDate = Calendar.getInstance();
+        eventDate.set(Calendar.DAY_OF_MONTH, day);
+        eventDate.set(Calendar.MONTH, month - 1);
+        eventDate.set(Calendar.YEAR, year);
+        return new EventBuilder().withDescription(description)
+                .withDate(eventDate.getTime())
                 .withEventKey(eventKey)
                 .build();
     }
@@ -60,8 +60,8 @@ public class EntityBuilder
         return new MessageQueueBuilder().withFromAddress("noreply@sternico.de").withToAddress("klaus@peter.de").withSubject("Hallo").withBody("123ß\n456\n789").build();
     }
 
-    public static EventPosition buildEventPosition(EventOccurence eventOccurence, Position position)
+    public static EventPosition buildEventPosition(Event event, Position position)
     {
-        return new EventPositionBuilder().withEventOccurence(eventOccurence).withPosition(position).build();
+        return new EventPositionBuilder().withEvent(event).withPosition(position).build();
     }
 }
