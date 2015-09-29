@@ -2,7 +2,7 @@ package de.trispeedys.resourceplanning.util;
 
 import java.text.MessageFormat;
 
-import de.trispeedys.resourceplanning.exception.DataModelException;
+import de.trispeedys.resourceplanning.util.exception.DataModelException;
 
 public class ResourcePlanningUtil
 {

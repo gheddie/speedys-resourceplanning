@@ -14,10 +14,10 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import de.trispeedys.resourceplanning.exception.DataModelException;
-import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.service.CommitmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
+import de.trispeedys.resourceplanning.util.exception.DataModelException;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class EventCommitmentTest
 {

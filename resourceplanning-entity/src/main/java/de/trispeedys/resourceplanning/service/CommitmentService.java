@@ -11,8 +11,8 @@ import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.util.DateHelper;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class CommitmentService
 {

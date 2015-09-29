@@ -15,8 +15,8 @@ import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
-import de.trispeedys.resourceplanning.exception.DataModelException;
 import de.trispeedys.resourceplanning.service.PositionService;
+import de.trispeedys.resourceplanning.util.exception.DataModelException;
 
 public class EntityFactory
 {

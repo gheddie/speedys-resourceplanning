@@ -22,7 +22,6 @@ public class RequestHelpTestUtil
     public static void startHelperRequestProcess(Helper helper, Event event,
             String businessKey, ProcessEngineRule rule)
     {
-        // start process for follow up assignment
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_ID, new Long(helper.getId()));
         variables.put(BpmVariables.RequestHelpHelper.VAR_EVENT_ID, new Long(event.getId()));

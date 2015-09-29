@@ -7,4 +7,11 @@
 		<artifactId>resourceplanning-master</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>de.trispeedys.resourceplanning</groupId>
+			<artifactId>resourceplanning-entity</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

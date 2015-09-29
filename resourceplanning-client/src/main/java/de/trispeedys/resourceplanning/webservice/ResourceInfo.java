@@ -38,4 +38,19 @@ public interface ResourceInfo {
         @WebParam(name = "arg1", partName = "arg1")
         String arg1);
 
+    /**
+     * 
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void startHelperRequestProcess(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        long arg1,
+        @WebParam(name = "arg2", partName = "arg2")
+        String arg2);
+
 }

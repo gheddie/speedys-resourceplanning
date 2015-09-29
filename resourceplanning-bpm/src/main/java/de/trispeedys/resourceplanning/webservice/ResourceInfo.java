@@ -1,13 +1,19 @@
 package de.trispeedys.resourceplanning.webservice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
+import org.camunda.bpm.BpmPlatform;
+
 import de.trispeedys.resourceplanning.dto.EventCommitmentDTO;
+import de.trispeedys.resourceplanning.messages.BpmMessages;
+import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 @SuppressWarnings("restriction")
 @WebService
@@ -18,5 +24,14 @@ public class ResourceInfo
     {
         List<EventCommitmentDTO> commitmentList = new ArrayList<EventCommitmentDTO>();
         return commitmentList.toArray(new EventCommitmentDTO[commitmentList.size()]);
+    }
+    
+    public void startHelperRequestProcess(Long helperId, Long eventId, String businessKey)
+    {
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_ID, new Long(helperId));
+        variables.put(BpmVariables.RequestHelpHelper.VAR_EVENT_ID, new Long(eventId));
+        BpmPlatform.getDefaultProcessEngine().getRuntimeService().startProcessInstanceByMessage(BpmMessages.RequestHelpHelper.MSG_HELP_TRIG,
+                businessKey, variables);
     }
 }

@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.exception;
+package de.trispeedys.resourceplanning.util.exception;
 
 public class DataModelException extends RuntimeException
 {
