@@ -40,6 +40,12 @@ public interface ResourceInfo {
 
     /**
      * 
+     */
+    @WebMethod
+    public void testExternalCall();
+
+    /**
+     * 
      * @param arg2
      * @param arg1
      * @param arg0
@@ -52,5 +58,11 @@ public interface ResourceInfo {
         long arg1,
         @WebParam(name = "arg2", partName = "arg2")
         String arg2);
+
+    /**
+     * 
+     */
+    @WebMethod
+    public void sendMessages();
 
 }

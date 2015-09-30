@@ -5,7 +5,8 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
+import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class SendReminderMailDelegate implements JavaDelegate
@@ -16,13 +17,23 @@ public class SendReminderMailDelegate implements JavaDelegate
         Helper helper =
                 HibernateUtil.findById(Helper.class,
                         (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
-
+        String helperId = String.valueOf((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
+        String eventId = String.valueOf((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
         // write mail
-        new MessageQueueBuilder().withFromAddress("noreply@tri-speedys.de")
-                .withToAddress(helper.getEmail())
-                .withSubject("123")
-                .withBody("456")
-                .build()
-                .persist();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
+                "Helfermeldung zum Triathlon 2016", generateReminderBody(helperId, eventId)).persist();
+    }
+
+    private String generateReminderBody(String helperId, String eventId)
+    {
+        StringBuffer buffer = new StringBuffer();
+        for (HelperCallback value : HelperCallback.values())
+        {
+            buffer.append("http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=" +
+                    value.toString() + "&helperId=" + helperId + "&eventId=" + eventId);
+            buffer.append("\n\n");
+            buffer.append("Eure Speedys");
+        }
+        return buffer.toString();
     }
 }

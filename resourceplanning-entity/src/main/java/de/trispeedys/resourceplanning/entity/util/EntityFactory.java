@@ -66,9 +66,9 @@ public class EntityFactory
                 .build();
     }
 
-    public static MessageQueue buildMessageQueue()
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body)
     {
-        return new MessageQueueBuilder().withFromAddress("noreply@sternico.de").withToAddress("klaus@peter.de").withSubject("Hallo").withBody("123ß\n456\n789").build();
+        return new MessageQueueBuilder().withFromAddress(fromAddress).withToAddress(toAddress).withSubject(subject).withBody(body).build();
     }
 
     public static EventPosition buildEventPosition(Event event, Position position)

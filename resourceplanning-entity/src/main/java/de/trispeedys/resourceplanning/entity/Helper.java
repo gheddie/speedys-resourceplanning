@@ -30,6 +30,7 @@ public class Helper extends AbstractDbObject
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
     
+    @NotNull
     private String email;
     
     @Enumerated(EnumType.STRING)
