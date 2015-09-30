@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
+import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.PositionService;
@@ -24,9 +26,10 @@ public class PositionTest
         Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
 
         // some positions
-        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12).persist();
-        Position position3 = EntityFactory.buildPosition("Irgendwas kontrollieren", 12).persist();
-        Position position4 = EntityFactory.buildPosition("Gut aussehen", 12).persist();
+        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
+        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain).persist();
+        Position position3 = EntityFactory.buildPosition("Irgendwas kontrollieren", 12, defaultDomain).persist();
+        Position position4 = EntityFactory.buildPosition("Gut aussehen", 12, defaultDomain).persist();
 
         // some links between event 1 and positions
         EntityFactory.buildEventPosition(event1, position1).persist();
@@ -55,9 +58,10 @@ public class PositionTest
         Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013).persist();
         Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014).persist();
         // create positions
-        Position posA = EntityFactory.buildPosition("A", 12).persist();
-        Position posB = EntityFactory.buildPosition("B", 12).persist();
-        Position posC = EntityFactory.buildPosition("C", 12).persist();
+        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
+        Position posA = EntityFactory.buildPosition("A", 12, defaultDomain).persist();
+        Position posB = EntityFactory.buildPosition("B", 12, defaultDomain).persist();
+        Position posC = EntityFactory.buildPosition("C", 12, defaultDomain).persist();
         // event 2013 has positions (A,B,C)
         EntityFactory.buildEventPosition(evt2013, posA).persist();
         EntityFactory.buildEventPosition(evt2013, posB).persist();

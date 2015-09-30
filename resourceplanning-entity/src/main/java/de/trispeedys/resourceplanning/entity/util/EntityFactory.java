@@ -2,12 +2,14 @@ package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
 
+import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.builder.DomainBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventCommitmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventPositionBuilder;
@@ -47,9 +49,9 @@ public class EntityFactory
                 .build();
     }
 
-    public static Position buildPosition(String description, int minimalAge)
+    public static Position buildPosition(String description, int minimalAge, Domain domain)
     {
-        return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).build();
+        return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).build();
     }
 
     public static Event buildEvent(String description, String eventKey, int day, int month, int year)
@@ -73,4 +75,17 @@ public class EntityFactory
     {
         return new EventPositionBuilder().withEvent(event).withPosition(position).build();
     }
+    
+    public static Domain buildDomain(String name, int domainNumber, Helper leader)
+    {
+        if (leader == null)
+        {
+            throw new ResourcePlanningException("leading helper must be set in order to create a domain!!.");
+        }
+        if (!(leader.isActive()))
+        {
+            throw new ResourcePlanningException("helper '"+leader+"' can not be the leader of a domain is he is not active!!.");
+        }
+        return new DomainBuilder().withDomainNumber(domainNumber).withName(name).withLeader(leader).build();
+    }    
 }

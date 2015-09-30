@@ -91,4 +91,9 @@ public class Helper extends AbstractDbObject
     {
         return getClass().getSimpleName() + " ["+lastName+", "+firstName+"]";
     }
+
+    public boolean isActive()
+    {
+        return (helperState.equals(HelperState.ACTIVE));
+    }
 }

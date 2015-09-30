@@ -19,6 +19,7 @@ import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
+import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
@@ -74,7 +75,7 @@ public class RequestHelpTest extends GenericBpmTest
     {
         HibernateUtil.clearAll();
 
-        Position position = EntityFactory.buildPosition("Moo", 12).persist();
+        Position position = EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain()).persist();
         Event event = EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012).persist();
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
@@ -125,7 +126,7 @@ public class RequestHelpTest extends GenericBpmTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create position
-        Position positionBikeEntry = EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12).persist();
+        Position positionBikeEntry = EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain()).persist();
         // create events
         Event evt2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014).persist();
         Event evt2015 = EntityFactory.buildEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).persist();

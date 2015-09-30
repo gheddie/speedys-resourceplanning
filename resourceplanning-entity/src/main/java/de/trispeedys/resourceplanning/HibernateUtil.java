@@ -34,9 +34,10 @@ public class HibernateUtil {
 
 	public static void clearAll() {
 	    clearTable("event_position");
-		clearTable("event_commitment");
-		clearTable("helper");
-		clearTable("position");
+	    clearTable("event_commitment");
+	    clearTable("position");
+	    clearTable("domain");	    	    
+		clearTable("helper");		
 		clearTable("event");
 		clearTable("message_queue");
 	}

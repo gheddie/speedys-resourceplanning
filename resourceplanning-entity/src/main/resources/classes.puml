@@ -12,9 +12,22 @@ class Event {
 }
 
 class Position {
-    description : String
-    minimalAge : int
+	description : String
+	minimalAge : int
+	domain : Domain
 }
+
+class Domain {
+	name : String
+	leader : Helper
+	domainNumber : int
+}
+
+note left of Domain
+	Fasst mehrere Positionen
+	zu einer übergeortneten
+	Einheit zusammen
+end note
 
 class EventCommitment {
 	helper : Helper
@@ -22,6 +35,11 @@ class EventCommitment {
 	event : Event
 	position : Position
 }
+
+note left of EventCommitment
+	Zuordnung eines Helfers zu einer
+	zu besetzenden Position
+end note
 
 class EventPosition {
 	position : Position
@@ -53,5 +71,9 @@ EventCommitment "1" -- "1" Position
 
 Position "1" -- "1" EventPosition
 Event "1" -- "1" EventPosition
+
+Position "1..n" -- "1" Domain
+
+Domain "1" -- "1" Helper : Leitung des Teilbereiches
 
 @enduml

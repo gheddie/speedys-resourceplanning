@@ -8,6 +8,7 @@ import java.util.HashMap;
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
 public class HibernateUtilTest
@@ -20,7 +21,7 @@ public class HibernateUtilTest
         // create positions
         for (int i = 1; i <= 10; i++)
         {
-            EntityFactory.buildPosition("Pos" + i, i).persist();
+            EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain()).persist();
         }
         //fetch w/o parameters (all entries)
         assertEquals(10, HibernateUtil.fetchResults("FROM " + Position.class.getSimpleName()).size());
@@ -42,7 +43,7 @@ public class HibernateUtilTest
         // clear db
         HibernateUtil.clearAll();
         //create position
-        Position pos = EntityFactory.buildPosition("Pos", 87).persist();
+        Position pos = EntityFactory.buildPosition("Pos", 87, SpeedyTestUtil.buildDefaultDomain()).persist();
         //find by id
         Position foundPosition = HibernateUtil.findById(Position.class, pos.getId());
         assertTrue(foundPosition != null);

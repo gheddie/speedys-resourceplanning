@@ -26,5 +26,6 @@
 		<mapping class="de.trispeedys.resourceplanning.entity.EventCommitment" />
 		<mapping class="de.trispeedys.resourceplanning.entity.MessageQueue" />
 		<mapping class="de.trispeedys.resourceplanning.entity.EventPosition" />
+		<mapping class="de.trispeedys.resourceplanning.entity.Domain" />
 	</session-factory>
 </hibernate-configuration>

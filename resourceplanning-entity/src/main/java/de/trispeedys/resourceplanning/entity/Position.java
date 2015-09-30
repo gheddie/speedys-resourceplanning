@@ -2,6 +2,7 @@ package de.trispeedys.resourceplanning.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Position extends AbstractDbObject
@@ -10,6 +11,9 @@ public class Position extends AbstractDbObject
     
     @Column(name = "minimal_age")
     private int minimalAge;
+    
+    @ManyToOne
+    private Domain domain;
 
     public String getDescription()
     {
@@ -34,5 +38,15 @@ public class Position extends AbstractDbObject
     public String toString()
     {
         return getClass().getSimpleName() + " ["+description+", "+minimalAge+"]";
+    }
+    
+    public Domain getDomain()
+    {
+        return domain;
+    }
+    
+    public void setDomain(Domain domain)
+    {
+        this.domain = domain;
     }
 }
