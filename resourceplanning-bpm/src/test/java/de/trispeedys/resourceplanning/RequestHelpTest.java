@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
@@ -54,6 +53,8 @@ public class RequestHelpTest extends GenericBpmTest
     {
         assertEquals("bkRequestHelpHelperProcess_helper:123||event:456",
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(new Long(123), new Long(456)));
+        assertEquals("bkRequestHelpHelperProcess_helper:10861||event:10862",
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(new Long(10861), new Long(10862)));
     }
 
     /**
@@ -241,9 +242,7 @@ public class RequestHelpTest extends GenericBpmTest
             RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         }
         // a mail for every helper must have been sent
-        assertEquals(5, DatasourceRegistry.getDatasource(MessageQueue.class)
-                .find(MessageQueue.class)
-                .size());
+        assertEquals(5, DatasourceRegistry.getDatasource(MessageQueue.class).find(MessageQueue.class).size());
         // three manual assignment tasks must have been generated
         assertEquals(
                 3,
@@ -253,5 +252,76 @@ public class RequestHelpTest extends GenericBpmTest
                                 BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT)
                         .list()
                         .size());
+    }
+
+    /**
+     * tests the deactivation of a helper not respondig to any reminder mail.
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testNotCooperativeHelper()
+    {
+        // clear all tables in db
+        HibernateUtil.clearAll();
+        // create 'little' event for 2015
+        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        // duplicate event
+        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        // start request process for every helper
+        List<Helper> activeHelpers =
+                DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
+        String businessKey = null;
+        Helper notCooperativeHelper = activeHelpers.get(0);
+        businessKey =
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(notCooperativeHelper.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(notCooperativeHelper, event2016, businessKey, rule);
+        // a mail for every helper must have been sent
+        assertEquals(1, RequestHelpTestUtil.countMails());
+        // one week is gone...
+        rule.getManagementService().executeJob(rule.getManagementService().createJobQuery().list().get(0).getId());
+        // there is a second mail
+        assertEquals(2, RequestHelpTestUtil.countMails());
+        // two week are gone...
+        rule.getManagementService().executeJob(rule.getManagementService().createJobQuery().list().get(0).getId());
+        // there is a third mail
+        assertEquals(3, RequestHelpTestUtil.countMails());
+        // two week are gone (no more mails, please...)...
+        rule.getManagementService().executeJob(rule.getManagementService().createJobQuery().list().get(0).getId());
+        // user should now be deactived and process instance should be gone...
+        assertEquals(3, RequestHelpTestUtil.countMails());
+        assertEquals(
+                HelperState.INACTIVE,
+                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class,
+                        notCooperativeHelper.getId())).getHelperState());
+        assertEquals(0, rule.getRuntimeService().createExecutionQuery().list().size());
+    }
+
+    /**
+     * Helper wants to be assigned on the same position as before, which is available, so he gets assigned to it by the
+     * system without human interaction.
+     */
+    //@Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testAutonomicBooking()
+    {
+        // clear all tables in db
+        HibernateUtil.clearAll();
+        // create 'minimal' event for 2015
+        Long eventId2015 = TestDataProvider.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        // duplicate event
+        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        // select created helper
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).find(Helper.class).get(0);
+        // start process
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
+        //answer to mail
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
+        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey,
+                variables);
+        //helper should be booked to the same position as in 2015 now...
+        assertEquals(1, 2);
     }
 }

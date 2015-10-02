@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
@@ -57,5 +58,14 @@ public class HelperService
             result.add(((AbstractDbObject) helper).getId());
         }        
         return result ;       
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void deactivateHelper(Long helperId)
+    {
+        DefaultDatasource datasource = DatasourceRegistry.getDatasource(Helper.class);
+        Helper helper = (Helper) datasource.findById(Helper.class, helperId);
+        helper.setHelperState(HelperState.INACTIVE);
+        datasource.saveOrUpdate(helper);
     }
 }

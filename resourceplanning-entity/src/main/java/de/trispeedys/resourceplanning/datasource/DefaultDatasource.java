@@ -60,12 +60,19 @@ public class DefaultDatasource<T> implements IDatasource
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T save(AbstractDbObject entity)
+    public <T> T saveOrUpdate(AbstractDbObject entity)
     {
         Transaction tx = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         tx = session.beginTransaction();
-        session.save(entity);
+        if (entity.isNew())
+        {
+            session.save(entity);   
+        }        
+        else
+        {
+            session.update(entity);
+        }
         tx.commit();
         session.close();
         return (T) entity;

@@ -7,7 +7,7 @@ import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 
 public interface IDatasource
 {
-    public <T> T save(AbstractDbObject dbObject);
+    public <T> T saveOrUpdate(AbstractDbObject dbObject);
     
     public List<?> find(String qryString, HashMap<String, Object> parameters);
     

@@ -49,9 +49,9 @@
   <bpmn:process id="RequestHelpHelperProcess" isExecutable="true">
     <bpmn:sequenceFlow id="SequenceFlow_1daxqc1" sourceRef="ServiceTask_150zqc3" targetRef="ExclusiveGateway_2"/>
     <bpmn:sequenceFlow id="flowFollowingAssignment" name="nein" sourceRef="ExclusiveGateway_2" targetRef="ExclusiveGateway_0qo5s18"/>
-    <bpmn:sequenceFlow id="SequenceFlow_08rsl0r" sourceRef="IntermediateCatchEvent_0xpcwv2" targetRef="ExclusiveGateway_0qo5s18"/>
+    <bpmn:sequenceFlow id="SequenceFlow_08rsl0r" sourceRef="HelperReminderTimer" targetRef="ExclusiveGateway_0qo5s18"/>
     <bpmn:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_0ido2bu" targetRef="ServiceTask_150zqc3"/>
-    <bpmn:sequenceFlow id="SequenceFlow_089yocf" sourceRef="EventBasedGateway_1kzg3ch" targetRef="IntermediateCatchEvent_0xpcwv2"/>
+    <bpmn:sequenceFlow id="SequenceFlow_089yocf" sourceRef="EventBasedGateway_1kzg3ch" targetRef="HelperReminderTimer"/>
     <bpmn:sequenceFlow id="SequenceFlow_0t24iq2" sourceRef="EventBasedGateway_1kzg3ch" targetRef="IntermediateCatchEvent_0nsbtey"/>
     <bpmn:sequenceFlow id="SequenceFlow_1hvnbk6" sourceRef="ServiceTask_18wp3hd" targetRef="EventBasedGateway_1kzg3ch"/>
     <bpmn:sequenceFlow id="flowMailAttemptsOk" sourceRef="ExclusiveGateway_0qo5s18" targetRef="ServiceTask_18wp3hd"/>
@@ -59,7 +59,6 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${firstAssignment==true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_13o1cty" sourceRef="ExclusiveGateway_0cp8ghy" targetRef="UserTaskManualAssignment"/>
-    <bpmn:sequenceFlow id="SequenceFlow_0t1lj96" sourceRef="UserTaskManualAssignment" targetRef="EndEvent_1w4djnx"/>
     <bpmn:sequenceFlow id="SequenceFlow_1i23znt" sourceRef="ServiceTask_1vlfs5f" targetRef="EndEvent_141mia6"/>
     <bpmn:sequenceFlow id="SequenceFlow_0ixgx3q" sourceRef="ServiceTask_16f9cl7" targetRef="EndEvent_1gc8yi9"/>
     <bpmn:sequenceFlow id="flowPosOccupied" name="nein" sourceRef="ExclusiveGateway_02izwmg" targetRef="ExclusiveGateway_0cp8ghy">
@@ -99,24 +98,22 @@
       <bpmn:incoming>flowPauseMe</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1i23znt</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="UserTaskManualAssignment" name="Neu zuweisen">
+    <bpmn:userTask id="UserTaskManualAssignment" camunda:assignee="demo" name="Neu zuweisen">
       <bpmn:incoming>SequenceFlow_13o1cty</bpmn:incoming>
       <bpmn:incoming>flowFirstAssignment</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0t1lj96</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0cp8ghy">
       <bpmn:incoming>flowChangeMe</bpmn:incoming>
       <bpmn:incoming>flowPosOccupied</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_13o1cty</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="EndEvent_1w4djnx">
-      <bpmn:incoming>SequenceFlow_0t1lj96</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:endEvent id="EndEvent_141mia6">
       <bpmn:incoming>SequenceFlow_1i23znt</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="ServiceTask_16f9cl7" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.ConfirmHelperDelegate" name="Helfer buchen">
       <bpmn:incoming>flowPosAvailable</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ixgx3q</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="EndEvent_1gc8yi9">
@@ -138,7 +135,7 @@
       <bpmn:outgoing>SequenceFlow_1t0gg03</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_2"/>
     </bpmn:intermediateCatchEvent>
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0xpcwv2" name="1 Woche">
+    <bpmn:intermediateCatchEvent id="HelperReminderTimer" name="1 Woche">
       <bpmn:incoming>SequenceFlow_089yocf</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_08rsl0r</bpmn:outgoing>
       <bpmn:timerEventDefinition>
@@ -180,6 +177,7 @@
     <bpmn:endEvent id="EndEvent_1mpz71b">
       <bpmn:incoming>SequenceFlow_1htezwe</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="" sourceRef="UserTaskManualAssignment" targetRef="ServiceTask_16f9cl7"/>
     <bpmn:association id="Association_7" sourceRef="TextAnnotation_7" targetRef="ServiceTask_150zqc3"/>
     <bpmn:association id="Association_8" sourceRef="TextAnnotation_8" targetRef="ServiceTask_3"/>
     <bpmn:association id="Association_1" sourceRef="TextAnnotation_1" targetRef="StartEvent_0ido2bu"/>
@@ -284,12 +282,6 @@
           <dc:Bounds height="22.0" width="90.0" x="819.0" y="655.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1w4djnx_di" bpmnElement="EndEvent_1w4djnx">
-        <dc:Bounds height="36.0" width="36.0" x="1336.0" y="822.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="90.0" x="1309.0" y="858.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0doay83_di" bpmnElement="flowChangeMe">
         <di:waypoint xsi:type="dc:Point" x="804.0" y="680.0"/>
         <di:waypoint xsi:type="dc:Point" x="804.0" y="840.0"/>
@@ -344,13 +336,6 @@
           <dc:Bounds height="0.0" width="90.0" x="1135.0" y="830.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0t1lj96_di" bpmnElement="SequenceFlow_0t1lj96">
-        <di:waypoint xsi:type="dc:Point" x="1254.0" y="840.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1336.0" y="840.0"/>
-        <bpmndi:BPMNLabel>
-          <dc:Bounds height="0.0" width="90.0" x="1250.0" y="830.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_0htyumw_di" bpmnElement="UserTaskManualAssignment">
         <dc:Bounds height="80.0" width="100.0" x="1154.0" y="800.0"/>
       </bpmndi:BPMNShape>
@@ -384,7 +369,7 @@
           <dc:Bounds height="0.0" width="90.0" x="554.0" y="860.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="IntermediateCatchEvent_0xpcwv2_di" bpmnElement="IntermediateCatchEvent_0xpcwv2">
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0xpcwv2_di" bpmnElement="HelperReminderTimer">
         <dc:Bounds height="36.0" width="36.0" x="591.0" y="845.0"/>
         <bpmndi:BPMNLabel>
           <dc:Bounds height="22.0" width="90.0" x="564.0" y="881.0"/>
@@ -615,6 +600,15 @@
       <bpmndi:BPMNEdge id="BPMNEdge_Association_10" bpmnElement="Association_10" sourceElement="_BPMNShape_TextAnnotation_12" targetElement="Task_1luwru0_di">
         <di:waypoint xsi:type="dc:Point" x="1406.0" y="909.0"/>
         <di:waypoint xsi:type="dc:Point" x="1428.0" y="940.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_3" sourceElement="UserTask_0htyumw_di" targetElement="ServiceTask_16f9cl7_di">
+        <di:waypoint xsi:type="dc:Point" x="1254.0" y="840.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1305.0" y="840.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1405.0" y="840.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1406.0" y="696.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="1394.0" y="840.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

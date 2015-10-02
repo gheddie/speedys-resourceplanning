@@ -27,6 +27,11 @@ public abstract class AbstractDbObject
     public <T> T persist()
     {
         DefaultDatasource datasource = DatasourceRegistry.getDatasource(this.getClass());
-        return (T) datasource.save(this);
+        return (T) datasource.saveOrUpdate(this);
+    }
+
+    public boolean isNew()
+    {
+        return (id == null);
     }
 }

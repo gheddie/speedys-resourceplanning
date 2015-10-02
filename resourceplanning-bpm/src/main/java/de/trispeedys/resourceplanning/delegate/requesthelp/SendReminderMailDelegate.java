@@ -22,6 +22,9 @@ public class SendReminderMailDelegate implements JavaDelegate
         // write mail
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
                 "Helfermeldung zum Triathlon 2016", generateReminderBody(helperId, eventId)).persist();
+        //increase attempts
+        int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
+        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue+1));
     }
 
     private String generateReminderBody(String helperId, String eventId)

@@ -5,8 +5,10 @@ import java.util.Map;
 
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
@@ -36,5 +38,12 @@ public class RequestHelpTestUtil
     public static void startTriggerHelperProcess(ProcessEngineRule rule)
     {
         rule.getRuntimeService().startProcessInstanceByKey(PROCESS_DEFINITION_KEY_SYSTEM_PROCESS);
+    }
+    
+    public static int countMails()
+    {
+        return DatasourceRegistry.getDatasource(MessageQueue.class)
+                .find(MessageQueue.class)
+                .size();
     }
 }

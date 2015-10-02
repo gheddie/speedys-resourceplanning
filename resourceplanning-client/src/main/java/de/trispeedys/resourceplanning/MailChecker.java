@@ -24,10 +24,10 @@ public class MailChecker
 
     private static void startLittleEventProcess()
     {
-        Long helperId = new Long(6569);
-        Long eventId = new Long(6589);
-        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-        new ResourceInfoService().getResourceInfoPort().startHelperRequestProcess(helperId, eventId, businessKey);
+//        Long helperId = new Long(15106);
+//        Long eventId = new Long(15111);
+//        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+//        new ResourceInfoService().getResourceInfoPort().startHelperRequestProcess(helperId, eventId, businessKey);
         new ResourceInfoService().getResourceInfoPort().sendMessages();
     }
 
