@@ -1,0 +1,400 @@
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Startunterlagen Samstag (Abend, Judith) 1
+@------------------------------------------------------------------------------------------------------------------------------------
+Abend 				Judith							01			Aufgabeneinweisung vor Ort
+Scharke				Simone							02			Aufgabeneinweisung vor Ort
+Elsner				Conny							03			Aufgabeneinweisung vor Ort
+Krohne				Kiki							04			Aufgabeneinweisung vor Ort
+Wackerhage 			Tanja							05			Aufgabeneinweisung vor Ort
+Homann				Carolin							06			Aufgabeneinweisung vor Ort
+Kessler				Elke							07			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Startunterlagen Sonntag (Abend, Judith) 1
+@------------------------------------------------------------------------------------------------------------------------------------
+Abend				Judith							01			Aufgabeneinweisung vor Ort
+Fornefett			Iris 							02			Aufgabeneinweisung vor Ort
+Elsner				Conny							03			Aufgabeneinweisung vor Ort
+Krohne				Kiki							04			Aufgabeneinweisung vor Ort
+André				Ingrid							05			Aufgabeneinweisung vor Ort
+André				Jakob							06			Aufgabeneinweisung vor Ort
+Homann				Carolin							07			Aufgabeneinweisung vor Ort
+Kessler				Elke							08			Aufgabeneinweisung vor Ort
+Obi-Popadic			Ifeoma 							09			Hand- bzw. Wadenbeschriftung
+Popadic				Niko							10			Hand- bzw. Wadenbeschriftung
+Scharke				Thomas							11			Hand- bzw. Wadenbeschriftung
+Amrhein-Thomala	May-Britt							12			Hand- bzw. Wadenbeschriftung
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Parkplatz (Reinsch, Hans) 2
+@------------------------------------------------------------------------------------------------------------------------------------
+Reinsch				Hans							01			Parkplatz-Pelikan morgens absperren bis BBZ voll
+Obst				Stefan							02			Parkplatz-BBZ einweisen
+Weidlich			Dieter							03			Parkplatz-BBZ einweisen
+Althans				Mark 							04			Parkplatz-BBZ einweisen
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Schwimmen (Sonnenberg, Jan) 3
+@------------------------------------------------------------------------------------------------------------------------------------
+Sonnenberg			Jan								01			Startschuss/Koordinator
+Möller				Melanie							02			Aufgabeneinweisung vor Ort
+Zimmermann			Elke							03			Aufgabeneinweisung vor Ort
+Liedtke				Thomas							04			Aufgabeneinweisung vor Ort
+Take				Andreas							05			Aufgabeneinweisung vor Ort
+Schmidt				Klaus							06			Aufgabeneinweisung vor Ort
+Schmidt				Karsten							07			Aufgabeneinweisung vor Ort
+Hoffmann			Bettina							08			Aufgabeneinweisung vor Ort
+Faltbootabteilung	Vater Jahn						09			Paddeln-Aufgabeneinweisung vor Ort
+Faltbootabteilung	Vater Jahn						10			Paddeln-Aufgabeneinweisung vor Ort
+Faltbootabteilung	Vater Jahn						11			Paddeln-Aufgabeneinweisung vor Ort
+Faltbootabteilung	Vater Jahn						12			Paddeln-Aufgabeneinweisung vor Ort
+Faltbootabteilung	Vater Jahn						13			Paddeln-Aufgabeneinweisung vor Ort
+Abend 				Michael							14			Sprecher
+Hoff				Hanjo							15			Sprecher
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Verkaufstand am See (Szelag, Mirja) 4
+@------------------------------------------------------------------------------------------------------------------------------------
+Szelag				Mirja							01			Aufgabeneinweisung vor Ort
+Dietrich			Rüdiger						02			Aufgabeneinweisung vor Ort
+Stolze				Michael							03			Aufgabeneinweisung vor Ort
+Spötter				Andrea						04			Aufgabeneinweisung vor Ort
+Liesegang			Doris							05			Aufgabeneinweisung vor Ort
+Seeck				Virginia						06			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------WZ See (Bosse, Andree) 5
+@------------------------------------------------------------------------------------------------------------------------------------
+Bosse				Andree							01			Koordinator
+Jansen				Malte							02			Aufgabeneinweisung vor Ort
+Dörries				Dennis						03			LKW Fahrer Härke-LKW
+Engel 				Carsten  						04			LKW Fahrer Küchenhaus B1-LKW
+Deyhle				Ingo							05			Aufgabeneinweisung vor Ort
+Klinker				Rudi							06			Aufsteigen
+Kaiser				Didi							07			Aufsteigen
+Wittek				Dennis							08			Aufsteigen
+Heuer				Sven							09			Aufgabeneinweisung vor Ort
+Zogbaum				Dirk							10			Aufgabeneinweisung vor Ort
+Fortune				Denise							11			Kistentransport-Aufgabeneinweisung vor Ort
+Fortune				Laura							12			Kistentransport-Aufgabeneinweisung vor Ort
+Deyhle				Christoph						13			Kistentransport-Aufgabeneinweisung vor Ort
+Heuer				Tom								14			Kistentransport-Aufgabeneinweisung vor Ort
+Abend				Moritz							15			Kistentransport-Aufgabeneinweisung vor Ort
+Abend				Jonas							16			Kistentransport-Aufgabeneinweisung vor Ort
+Kaiser				Kevin							17			Kistentransport-Aufgabeneinweisung vor Ort
+Bosse				Timon							18			Kistentransport-Aufgabeneinweisung vor Ort
+Schareina			Tobias							19			Kistentransport-Aufgabeneinweisung vor Ort
+Zogbaum				Kevin							20			Kistentransport-Aufgabeneinweisung vor Ort
+Rademacher			Yannik							21			Kistentransport-Aufgabeneinweisung vor Ort
+Weidlich			Nils							22			Kistentransport-Aufgabeneinweisung vor Ort
+Thomala				Nils							23			Kistentransport-Aufgabeneinweisung vor Ort
+Thomala				Robin							24			Kistentransport-Aufgabeneinweisung vor Ort
+Kaiser				Emily							25			Hand- u. Wadenbeschriftung/anschließend Kistentransport
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Motorradfahrer (Beer, Roland) 6
+@------------------------------------------------------------------------------------------------------------------------------------
+Moorider			Moorider						01			Kampfrichter fahren 
+Moorider	 		Moorider						02			Kampfrichter fahren 
+Moorider	 		Moorider						03			Kampfrichter fahren 
+Päge				Denny							04			Kampfrichter fahren 
+Dombrowski			Markus							05			Führungsmotorrad 1. Volks und 1. Kurz
+Hauschild			Eike							06			Besenmotorrad letzter Volks u.  Kurz auf 2. Runde (Streckenposten informieren)
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Radstrecke 1 (Beer, Roland) 7
+@------------------------------------------------------------------------------------------------------------------------------------
+Duran				Elif							01			1. Kurve nach 1. Wz. Signal geben Weg freihalten 
+Grabbe				Jimi							02			Beginn Radfahren
+Özay				Irem							03			Beginn Radfahren
+Depenau				Sebastian						04			DLRG-Haus/Einbahnstraßenregelung durchsetzen
+Jung				Martin							05			Zuschauerleitung "Am Mühlenberg" in Eixe  oben
+Schmidt				Sabine							06			Zuschauerleitung "Am Mühlenberg" in Eixe  oben
+Meitzner			Daniela							07			Straßenteilung vor Im Neuen Lande
+Elsner				Conny							08			Teerplatz
+Schmidt				Axel							09			Teerplatz
+André				Jannes							10			Teerplatz
+Beer				Andreas							11			Teerplatz
+Dedek				Frauke							12			Teerplatz
+Homann				Hans-Walter						13			rechts Abbiegen auf die Hauptstaße sichern - Abbensen T-Kreuzung
+Klüngler			Kurt							14			Fußgängerüberweg sichern -Abbensen
+Ristig				Reinhold						15			Durchfahrt Kreisel sichern -Abbensen
+Tostmann			Gisela							16			Abzweig Groß Oedesse Videokontrolle
+Tostmann			Wilhelm							17			Abzweig Groß Oedesse Videokontrolle
+Tapke-Jost 			Alfons 							18			Durchfahrt Kreisel sichern - Edemissen Ortseingang
+Wesner				Jürgen							19			rechts Abbiegen auf die B 444 sichern - Ampelkreuzung Edemissen 
+Bielefeld			Heiko							20			Durchfahrt Kreisel sichern - Stederdorf
+Pritzel				Michael 						21			rechts Abbiegen in "Zum Luhberg " einweisen - Festplatz Stederdorf
+Zellmann			Heike							22			Verkehr regeln/Straßen evtl. absperren - "Ernst-Barlach-.Str."
+Zellmann			Ulrich							23			Verkehr regeln/Straßen evtl. absperren - "Im Lah"
+Zellmann			Lena							24			Verkehr regeln/Straßen evtl. absperren - "Emil-Nolde-Str."
+Burgdorf			Nele							25			Verkehr regeln/Straßen evtl. absperren - "Zum Westerholz"
+Erber				Dirk 							26			Verkehr regeln/Straßen evtl. absperren -Käthe-Kollwitz-Str. 
+Fredrich			Jörn							27			rechts Abbiegen sichern u. einweisen - Sundern/Luhberg
+Scharke				Thomas							28			rechts Abbiegen sichern u. einweisen - Sundern/Luhberg
+Naue				Carlo							29			Ostparkplatz Eixer See auf Einbahnstraße hinweisen, Autos anhalten
+Unverzagt 			Holger							30			Gänse-Übergang
+Schlaphoff			Petra							31			Gänse-Übergang
+Jung				Martin							32			Zuschauerleitung "Am Mühlenberg" unten Zuschauer und Athleten lenken
+Schmidt				Sabine							33			Zuschauerleitung "Am Mühlenberg" unten Zuschauer und Athleten lenken
+Haase				Norbert							34			Kreuzung (ehemals NP-Markt)
+Hilarius			David							35			Kreuzung (ehemals NP-Markt)
+Hoff				Henning							36			Kreuzung (ehemals NP-Markt)
+Frühling			Janika							37			Kreuzung Buschweg/Schwicheldter Str.
+Frühling			Kerstin							38			Kreuzung Buschweg/Schwicheldter Str.
+Frühling			Henrik							39			Kreuzung Buschweg/Schwicheldter Str.
+Beer				Roland							47			Vor 1. Volks und 1. Kurz Helfer wecken
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Radstrecke 2 (Arndt, Niklas) 7
+@------------------------------------------------------------------------------------------------------------------------------------
+Weidlich			Dieter							40			rechts Abbiegen zum BBZ Zuschauer einweisen
+Reinsch				Hans							41			rechts Abbiegen zum BBZ Teilnehmer einweisen
+Momberg				Michael							42			rechts Abbiegen zum BBZ Teilnehmer einweisen
+Strub				Marita							43			Einweisen - Radkanal freihalten
+Straten				Cordula							44			Einweisen - Radkanal freihalten
+Althans				Mark 							45			Zuschauerübergang/Radeinfahrt BBZ
+Gotthardt			Stefan							46			Zuschauerübergang/Radeinfahrt BBZ
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------WZ Stadion (Beyer, Lars) 8
+@------------------------------------------------------------------------------------------------------------------------------------
+Beyer				Lars							01			Aufgabeneinweisung vor Ort
+Reuter				Ingmar							02			Aufgabeneinweisung vor Ort
+Knaurek				Jupp							03			Aufgabeneinweisung vor Ort
+Lühring				Joachim						04			Aufgabeneinweisung vor Ort
+Gaus				Jan								05			Aufgabeneinweisung vor Ort
+Fella-Bulega 		Annette							06			Aufgabeneinweisung vor Ort
+Fella-Bulega 		Finn							07			Aufgabeneinweisung vor Ort
+Hellwig				Oliver							08			Aufgabeneinweisung vor Ort
+Strohbecke			Sophie							09			Aufgabeneinweisung vor Ort
+Müller				Nele							10			Aufgabeneinweisung vor Ort
+Treu				Melissa							11			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Laufstrecke (Schulz, Stefan) 9
+@------------------------------------------------------------------------------------------------------------------------------------
+Schulz				Stefan 							01			Führungsradfahrer
+Gahre				Julian							02			Absperrung/Laufübergang Herrenfeldstr.
+Lüddecke			Sönke							03			Absperrung/Laufübergang Herrenfeldstr.
+Hilbert				Niklas							04			Absperrung/Laufübergang Herrenfeldstr.
+Schulz				Diana							05			Abzweig zum Ziel
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Bandausgabe (Homann, Carolin) 10
+@------------------------------------------------------------------------------------------------------------------------------------
+Homann				Carolin							01			Wendepunkt Bandausgabe/Bänder vom Ziel holen
+Wackerhage			Finja							02			Wendepunkt Bandausgabe 
+Abend				Marie							03			Wendepunkt Bandausgabe 
+Franzke				Svenja 							04			Wendepunkt Bandausgabe 
+Borsum				Maja							05			Wendepunkt Bandausgabe 
+Hellwig				Emelie							06			Wendepunkt Bandausgabe 
+Tillmann			Andreas							07			Wendepunkt Bandausgabe 
+Teichmann			Anna							08			Wendepunkt Bandausgabe
+Popke				Katharina						09			Wendepunkt Bandausgabe
+Kortz				Pascal							10			Wendepunkt Bandausgabe
+Schiller			Kai								11			Wendepunkt Bandausgabe
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Laufverpflegung Park (Pokrandt, Kirsten) 11
+@------------------------------------------------------------------------------------------------------------------------------------
+Pokrandt			Kirsten							01			Aufgabeneinweisung vor Ort
+Pokrandt			Pascal							02			Aufgabeneinweisung vor Ort
+Pokrandt			Sabrina							03			Aufgabeneinweisung vor Ort
+Plümecke			Charis							04			Aufgabeneinweisung vor Ort
+Plümecke			Joel							05			Aufgabeneinweisung vor Ort
+Plümecke			Maren							06			Aufgabeneinweisung vor Ort
+Plümecke			Phil							07			Aufgabeneinweisung vor Ort
+Plümecke			Ralf							08			Aufgabeneinweisung vor Ort
+Thierse				Ulrich 							09			Aufgabeneinweisung vor Ort
+Thierse				Nils							10			Aufgabeneinweisung vor Ort
+Thierse				Silke							11			Aufgabeneinweisung vor Ort
+Thierse				Felix							12			Aufgabeneinweisung vor Ort
+Wüntsch				Rita						13			Aufgabeneinweisung vor Ort
+Friehe				Petra							14			Aufgabeneinweisung vor Ort
+Dill				Sinja							15			Aufgabeneinweisung vor Ort
+Harms				Saskia							16			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Laufverpflegung Stadion (Aumüller, Svenja) 12
+@------------------------------------------------------------------------------------------------------------------------------------
+Aumüller			Svenja 							01			Aufgabeneinweisung vor Ort
+Busse				Robin 							02			Aufgabeneinweisung vor Ort
+Busse				Silke							03			Aufgabeneinweisung vor Ort
+Busse				Thorsten						04			Aufgabeneinweisung vor Ort
+Krohne				Ole								05			Aufgabeneinweisung vor Ort
+Krohne				Jarne							06			Aufgabeneinweisung vor Ort
+Wackerhage			Arne							07			Aufgabeneinweisung vor Ort
+Schulz				Tim								08			Aufgabeneinweisung vor Ort
+Zogbaum				Bianca							09			Aufgabeneinweisung vor Ort
+Zogbaum				Florian							10			Aufgabeneinweisung vor Ort
+Kessler				Elke							11			Aufgabeneinweisung vor Ort
+Kessler				Robin							12			Aufgabeneinweisung vor Ort
+Exner				Alina							13			Aufgabeneinweisung vor Ort
+Exner				Gerrit							14			Aufgabeneinweisung vor Ort
+Exner				Maren							15			Aufgabeneinweisung vor Ort
+Deyhle				Susanne							16			Aufgabeneinweisung vor Ort
+Deyhle				Jannik							17			Aufgabeneinweisung vor Ort
+Althans 			Maria							18			Aufgabeneinweisung vor Ort
+Dietrich			Anja							19			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Zielbereich (Arndt, Niklas) 13
+@------------------------------------------------------------------------------------------------------------------------------------
+Arndt				Niklas							01			Koordinator-Stadion
+Schönebeck			Rainer							02			Aufgabeneinweisung vor Ort
+Obst				Stefan							03			Sprecher
+Zeiler				Franziska						06			Haargummi abnehmen/DM Hawaii-Kränze umhängen
+Janecke				Alessa							07			Haargummi abnehmen/DM Hawaii-Kränze umhängen
+Janecke				Lara							08			Haargummi abnehmen/DM Hawaii-Kränze umhängen
+Volney				Valeska							09			Haargummi abnehmen/DM Hawaii-Kränze umhängen
+Lupp				Karen							08			T-Shirt-Ausgabe
+Franke				Isabell							09			T-Shirt-Ausgabe
+Franke-Beyer		Denise							10			T-Shirt-Ausgabe
+Raulfs				Henning							12			Ziel Zeitnahmebox
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Zeitnahme (Krohne, Holger) 14
+@------------------------------------------------------------------------------------------------------------------------------------
+Krohne				Holger							01			Auswertung
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Zielverpflegung (Wackerhage, Tanja) 15
+@------------------------------------------------------------------------------------------------------------------------------------
+Wackerhage			Tanja							01			Getränke/Verpflegung (Verpflegung einteilen!)
+Löwe				Ilona							02			Getränke/Verpflegung
+Gotthardt			Daniela							03			Getränke/Verpflegung
+Fredrich			Brigitte						04			Getränke/Verpflegung
+Bufé				Gaby 							05			Getränke/Verpflegung
+Gotthardt			Giuliana 						06			Getränke/Verpflegung
+Ahrens				Gunda							07			Getränke/Verpflegung
+Ammen				Heike							08			Getränke/Verpflegung
+Habich				Michaela						09			Getränke/Verpflegung
+Trappe				Ines							10			Getränke/Verpflegung
+Sorkalla			Simone							12			Getränke/Verpflegung
+Franke				Petra							13			Getränke/Verpflegung
+Kuck				Lena							14			Getränke/Verpflegung
+Kuck				Leo								15			Getränke/Verpflegung
+Lack				Marit							16			Getränke/Verpflegung
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Massage (Schröder, Franziska) 16
+@------------------------------------------------------------------------------------------------------------------------------------
+Schröder			Franziska						01			Massieren
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Kistenausgabe (Hoff, Hinnerk) 17
+@------------------------------------------------------------------------------------------------------------------------------------
+Hoff				Hinnerk 						01			Aufgabeneinweisung vor Ort
+Abend				Judith							02			Aufgabeneinweisung vor Ort
+Geckler				Marcus							03			Aufgabeneinweisung vor Ort
+Franzke				Andreas 						04			Aufgabeneinweisung vor Ort
+Borrmann			Felix							05			Aufgabeneinweisung vor Ort
+Bielefeld   		Tim								06			Aufgabeneinweisung vor Ort
+Homann				Hannelore						07			Aufgabeneinweisung vor Ort
+Redecke				Margitta						08			Aufgabeneinweisung vor Ort
+Bendorf				Cord							09			Aufgabeneinweisung vor Ort
+Pruski				Victoria						10			Aufgabeneinweisung vor Ort
+Renz				Anna							11			Aufgabeneinweisung vor Ort
+Neu					Michelle						12			Aufgabeneinweisung vor Ort
+Bessing				Wiebke							13			Aufgabeneinweisung vor Ort
+Helmedag			Emily							14			Aufgabeneinweisung vor Ort
+Helmecke			Daria							15			Aufgabeneinweisung vor Ort
+Kanning				Astrid							16			Aufgabeneinweisung vor Ort
+Kanning				Alena							17			Aufgabeneinweisung vor Ort
+Kanning 			Jens							18			Aufgabeneinweisung vor Ort
+Kanning				Jan-Bennet						19			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Siegerehrung (Krohne, Kirsten) 18
+@------------------------------------------------------------------------------------------------------------------------------------
+Abend				Michael							01			Sprecher Volks und Staffel
+Perlebach			Sandra							03			Ehren Volks Kurz
+Krohne				Kirsten							04			Ehren Kurz
+Lindemann			Thore							05			Sprecher Kurz
+Weidlich			Marc 							06			Fotografieren Volks 
+Spötter				Ole							07			Fotografieren Kurz
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Kuchenverkauf (Weidlich, Martina) 19
+@------------------------------------------------------------------------------------------------------------------------------------
+Weidlich			Martina							1			Aufgabeneinweisung vor Ort
+Abend				Helga							2			Aufgabeneinweisung vor Ort
+Abend				Werner							3			Aufgabeneinweisung vor Ort
+Schiewe				Heidi 							4			Aufgabeneinweisung vor Ort
+Ley					Elke							5			Aufgabeneinweisung vor Ort
+Panchyrz			Reinhild						6			Aufgabeneinweisung vor Ort
+Breskot				Gerlinde						7			Aufgabeneinweisung vor Ort
+Ristock				Rolf							8			Aufgabeneinweisung vor Ort
+Wedemann			Kim								9			Aufgabeneinweisung vor Ort
+Franke				Micaela							10			Aufgabeneinweisung vor Ort
+Tirtje				Heike							11			Aufgabeneinweisung vor Ort
+Köhler				Rita							12			Aufgabeneinweisung vor Ort
+Köhler				Lily							13			Aufgabeneinweisung vor Ort
+Köhler				Cindy							14			Aufgabeneinweisung vor Ort
+Haase				Renate							15			Aufgabeneinweisung vor Ort
+Grobe				Christine						16			Aufgabeneinweisung vor Ort
+Renno				Iris							17			Aufgabeneinweisung vor Ort
+Wiese				Sabine							18			Aufgabeneinweisung vor Ort
+Weidlich			Jan Erik						19			Aufgabeneinweisung vor Ort
+Wackerhage			Karin 							20			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Grillstand (Krohne, Kirsten) 20
+@------------------------------------------------------------------------------------------------------------------------------------
+Eckert				Peter							01			Aufgabeneinweisung vor Ort
+Mehnert				Vanessa							02			Aufgabeneinweisung vor Ort
+Jacob				Pascale							03			Aufgabeneinweisung vor Ort
+Sch�neberg-Hansen	Angela							04			Aufgabeneinweisung vor Ort
+von Linden			Cordula							05			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Getränkestand (Stolze, Heike) 21
+@------------------------------------------------------------------------------------------------------------------------------------
+Stolze				Heike							01			Getränke verkaufen
+Wilhelm				Jennifer						02			Getränke verkaufen
+Wilhelm				Florian							03			Getränke verkaufen
+Malethan			Anke							04			Getränke verkaufen
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Pannen-Abholservice (Beer, Roland) 22
+@------------------------------------------------------------------------------------------------------------------------------------
+Kessler				Andreas							01			Starter mit Radpanne abholen
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Bus-Shuttle (Kessler, Andreas) 23
+@------------------------------------------------------------------------------------------------------------------------------------
+Kessler				Andreas							01			Zuschauertransport
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Rennarzt (ASB) 24
+@------------------------------------------------------------------------------------------------------------------------------------
+ASB	 				ASB								01			Ärztliche Versorgung 
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Kampfrichter (Wackerhage, Holger) 25
+@------------------------------------------------------------------------------------------------------------------------------------
+Wackerhage			Holger							01			Ansprechpartner für die Kampfrichter
+Messe (Weidlich, Marc) 26
+Weidlich			Marc							01			Messe betreuen
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Video/Foto (Weidlich, Marc) 27
+@------------------------------------------------------------------------------------------------------------------------------------
+Weidlich			Marc							01			Filmen
+Spötter				Ole							02			Fotografieren
+Nolden				Karl Heinz						03			Fotografieren
+B�gershausen		Sven 							04			Fotografieren
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Musik etc. (Lindemann, Thore) 28
+@------------------------------------------------------------------------------------------------------------------------------------
+Lindemann			Thore							01			Technik
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Kinderbetreuung/Hüpfburg (Weidlich, Marc) 29
+@------------------------------------------------------------------------------------------------------------------------------------
+Stephan				Merle							01			Aufsicht 
+Althans				Eileen							02			Aufsicht 
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Nudelparty 1 (Sandra/Susanne/Andrea) 30
+@------------------------------------------------------------------------------------------------------------------------------------
+Perlebach			Sandra							01			Aufgabeneinweisung vor Ort
+Hellwig				Susanne							02			Aufgabeneinweisung vor Ort
+Spötter				Andrea						03			Aufgabeneinweisung vor Ort
+Deyhle				Susanne							04			Aufgabeneinweisung vor Ort
+Lack				Diane							05			Aufgabeneinweisung vor Ort
+Bielefeld			Ina								06			Aufgabeneinweisung vor Ort
+Althans				Eileen							07			Aufgabeneinweisung vor Ort
+Zogbaum				Bianca							08			Aufgabeneinweisung vor Ort
+Busse				Silke							09			Aufgabeneinweisung vor Ort
+Stephan				Kerstin							10			Aufgabeneinweisung vor Ort
+Scharke				Simone							11			Aufgabeneinweisung vor Ort
+Schulz				Diana							12			Aufgabeneinweisung vor Ort
+Kretzschmann		Ricarda							13			Aufgabeneinweisung vor Ort
+Fredrich			Jörn							14			Aufgabeneinweisung vor Ort
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Nudelparty 2 (Abend, Michael) 30
+@------------------------------------------------------------------------------------------------------------------------------------
+Schmidt				Harald							15			VIP-Betreuung
+Momberg				Michael							16			VIP-Betreuung
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Wettkampfbesprechung (Abend, Michael) 33
+@------------------------------------------------------------------------------------------------------------------------------------
+Lindemann			Thore							01			Aufbau/Betreuung
+Abend				Michael							02			Moderation
+@------------------------------------------------------------------------------------------------------------------------------------
+@-------------------Gesamtorga (Abend, Michael) 32
+@------------------------------------------------------------------------------------------------------------------------------------
+Abend				Michael							01			Hauptansprechpartner

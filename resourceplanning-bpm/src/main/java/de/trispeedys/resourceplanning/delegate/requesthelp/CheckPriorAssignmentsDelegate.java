@@ -14,5 +14,7 @@ public class CheckPriorAssignmentsDelegate implements JavaDelegate
         execution.setVariable(
                 BpmVariables.RequestHelpHelper.VAR_FIRST_ASSIGNMENT,
                 firstAssignment);
+        //set mails attempts to 0
+        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, 0);
     }
 }

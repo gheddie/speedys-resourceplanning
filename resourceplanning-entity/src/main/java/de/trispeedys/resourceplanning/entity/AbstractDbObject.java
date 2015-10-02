@@ -4,7 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import de.trispeedys.resourceplanning.HibernateUtil;
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 
 @MappedSuperclass
 public abstract class AbstractDbObject
@@ -26,6 +26,7 @@ public abstract class AbstractDbObject
     @SuppressWarnings("unchecked")
     public <T> T persist()
     {
-        return (T) HibernateUtil.persistSimple(this);
+        DefaultDatasource datasource = DatasourceRegistry.getDatasource(this.getClass());
+        return (T) datasource.save(this);
     }
 }

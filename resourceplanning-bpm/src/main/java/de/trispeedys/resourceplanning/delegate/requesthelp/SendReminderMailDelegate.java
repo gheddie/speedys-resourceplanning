@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
-import de.trispeedys.resourceplanning.HibernateUtil;
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
@@ -15,8 +15,8 @@ public class SendReminderMailDelegate implements JavaDelegate
     {
         // find helper
         Helper helper =
-                HibernateUtil.findById(Helper.class,
-                        (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
+                (Helper) DatasourceRegistry.getDatasource(null).findById(Helper.class,
+                (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
         String helperId = String.valueOf((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
         String eventId = String.valueOf((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
         // write mail

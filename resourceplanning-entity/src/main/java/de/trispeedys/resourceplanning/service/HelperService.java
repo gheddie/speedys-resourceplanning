@@ -1,10 +1,14 @@
 package de.trispeedys.resourceplanning.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.trispeedys.resourceplanning.HibernateUtil;
+import de.trispeedys.resourceplanning.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
+import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class HelperService
 {
@@ -17,7 +21,7 @@ public class HelperService
                         " ec INNER JOIN ec.event eo WHERE ec.helperId = :helperId ORDER BY eo.eventDate DESC";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("helperId", helperId);
-        List<Object[]> list = (List<Object[]>) HibernateUtil.fetchResults(queryString, parameters);
+        List<Object[]> list = (List<Object[]>) DatasourceRegistry.getDatasource(null).find(queryString, parameters);
         if (list.size() == 0)
         {
             return null;
@@ -43,5 +47,15 @@ public class HelperService
         List<EventCommitment> commitments =
                 CommitmentService.getAllCommitments(helperId);
         return ((commitments == null) || (commitments.size() == 0));
+    }
+
+    public static List<Long> queryActiveHelperIds()
+    {
+        List<Long> result = new ArrayList<Long>();
+        for (Object helper : DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE))
+        {
+            result.add(((AbstractDbObject) helper).getId());
+        }        
+        return result ;       
     }
 }

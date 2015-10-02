@@ -15,9 +15,20 @@ public class MailChecker
 {
     public static void main(String[] args)
     {
-        startProcess();
+//        startProcess();
         
 //        sendMails();
+        
+        startLittleEventProcess();
+    }
+
+    private static void startLittleEventProcess()
+    {
+        Long helperId = new Long(6569);
+        Long eventId = new Long(6589);
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+        new ResourceInfoService().getResourceInfoPort().startHelperRequestProcess(helperId, eventId, businessKey);
+        new ResourceInfoService().getResourceInfoPort().sendMessages();
     }
 
     private static void sendMails()

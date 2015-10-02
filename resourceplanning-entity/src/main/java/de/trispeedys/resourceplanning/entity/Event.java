@@ -1,9 +1,13 @@
 package de.trispeedys.resourceplanning.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +27,10 @@ public class Event extends AbstractDbObject
     
     @NotNull
     private String description;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "event_id")
+    private List<EventPosition> eventPositions;
 
     public Date getEventDate()
     {
@@ -52,6 +60,16 @@ public class Event extends AbstractDbObject
     public void setDescription(String description)
     {
         this.description = description;
+    }
+    
+    public List<EventPosition> getEventPositions()
+    {
+        return eventPositions;
+    }
+    
+    public void setEventPositions(List<EventPosition> eventPositions)
+    {
+        this.eventPositions = eventPositions;
     }
     
     public String toString()

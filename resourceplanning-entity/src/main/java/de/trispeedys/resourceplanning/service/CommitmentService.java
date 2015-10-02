@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joda.time.Days;
 
-import de.trispeedys.resourceplanning.HibernateUtil;
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -49,7 +49,7 @@ public class CommitmentService
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("event", event);
         parameters.put("helper", helper);
-        List<EventCommitment> list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, parameters);
+        List<EventCommitment> list = (List<EventCommitment>) DatasourceRegistry.getDatasource(EventCommitment.class).find(queryString, parameters);
         return (list.size() > 0);
     }
 
@@ -59,7 +59,7 @@ public class CommitmentService
         String queryString = null;
         List<EventCommitment> list = null;
         queryString = "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId";
-        list = (List<EventCommitment>) HibernateUtil.fetchResults(queryString, "helperId", helperId);
+        list = (List<EventCommitment>) DatasourceRegistry.getDatasource(null).find(queryString, "helperId", helperId);
         return list;
     }
 }

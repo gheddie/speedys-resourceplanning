@@ -78,13 +78,13 @@ public class EntityFactory
     
     public static Domain buildDomain(String name, int domainNumber, Helper leader)
     {
-        if (leader == null)
+        //if a leader is set for the domain, he must be an active helper!!
+        if (leader != null)
         {
-            throw new ResourcePlanningException("leading helper must be set in order to create a domain!!.");
-        }
-        if (!(leader.isActive()))
-        {
-            throw new ResourcePlanningException("helper '"+leader+"' can not be the leader of a domain is he is not active!!.");
+            if (!(leader.isActive()))
+            {
+                throw new ResourcePlanningException("helper '"+leader+"' can not be the leader of a domain is he is not active!!.");
+            }
         }
         return new DomainBuilder().withDomainNumber(domainNumber).withName(name).withLeader(leader).build();
     }    

@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning.entity.util;
 
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 
 public class DataModelUtil
@@ -19,5 +20,13 @@ public class DataModelUtil
         {
             EntityFactory.buildEventPosition(event, position).persist();
         }
+    }
+
+    public static void assignHelperToPositions(Helper helper, Event event, Position... positions)
+    {
+        for (Position position : positions)
+        {
+            EntityFactory.buildEventCommitment(helper, event, position).persist();
+        }       
     }
 }

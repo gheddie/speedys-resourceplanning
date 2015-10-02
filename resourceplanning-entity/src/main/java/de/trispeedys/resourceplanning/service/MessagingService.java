@@ -2,7 +2,7 @@ package de.trispeedys.resourceplanning.service;
 
 import java.util.List;
 
-import de.trispeedys.resourceplanning.HibernateUtil;
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.util.MailSender;
 
@@ -11,7 +11,7 @@ public class MessagingService
     @SuppressWarnings("unchecked")
     public static List<MessageQueue> findAllMessages()
     {
-        return (List<MessageQueue>) HibernateUtil.fetchResults(MessageQueue.class);
+        return (List<MessageQueue>) DatasourceRegistry.getDatasource(null).find(MessageQueue.class);
     }
 
     public static void sendAllMessages()

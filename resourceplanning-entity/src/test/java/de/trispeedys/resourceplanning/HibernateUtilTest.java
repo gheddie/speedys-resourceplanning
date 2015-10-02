@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
@@ -24,17 +25,17 @@ public class HibernateUtilTest
             EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain()).persist();
         }
         //fetch w/o parameters (all entries)
-        assertEquals(10, HibernateUtil.fetchResults("FROM " + Position.class.getSimpleName()).size());
+        assertEquals(10, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName()).size());
         //fetch with class (all entries)
-        assertEquals(10, HibernateUtil.fetchResults(Position.class).size());
+        assertEquals(10, DatasourceRegistry.getDatasource(null).find(Position.class).size());
         //fetch with query string
-        assertEquals(1, HibernateUtil.fetchResults("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
-        assertEquals(4, HibernateUtil.fetchResults("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());        
+        assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
+        assertEquals(4, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());        
         //fetch with parameters
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("minimalAge", 5);
-        assertEquals(1, HibernateUtil.fetchResults("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", parameters).size());
-        assertEquals(1, HibernateUtil.fetchResults("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", "minimalAge", 5).size());
+        assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", parameters).size());
+        assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", "minimalAge", 5).size());
     }
     
     @Test
@@ -45,7 +46,7 @@ public class HibernateUtilTest
         //create position
         Position pos = EntityFactory.buildPosition("Pos", 87, SpeedyTestUtil.buildDefaultDomain()).persist();
         //find by id
-        Position foundPosition = HibernateUtil.findById(Position.class, pos.getId());
+        Position foundPosition = (Position) DatasourceRegistry.getDatasource(null).findById(Position.class, pos.getId());
         assertTrue(foundPosition != null);
         assertEquals(87, foundPosition.getMinimalAge());
     }

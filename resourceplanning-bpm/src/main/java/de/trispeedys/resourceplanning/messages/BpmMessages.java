@@ -6,6 +6,8 @@ public class BpmMessages
     {
         public static final String MSG_HELP_TRIG = "MSG_HELP_TRIG";
         
+        public static final String MSG_START_REMINDERS = "MSG_START_REMINDERS";
+        
         public static final String MSG_HELP_CALLBACK = "MSG_HELP_CALLBACK";
     }
 }

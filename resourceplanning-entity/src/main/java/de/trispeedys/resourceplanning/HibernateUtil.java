@@ -50,57 +50,5 @@ public class HibernateUtil {
 		session.createSQLQuery(queryString).executeUpdate();
 		tx.commit();
 		session.close();
-	}
-
-	@SuppressWarnings("unchecked")
-    public static <T> T persistSimple(AbstractDbObject entity) {
-		Transaction tx = null;
-		Session session = getSessionFactory().openSession();
-		tx = session.beginTransaction();
-		session.save(entity);
-		tx.commit();
-		session.close();
-		return (T) entity;
-	}
-
-    @SuppressWarnings("unchecked")
-    public static <T> T findById(Class<? extends AbstractDbObject> entityClass, Long primaryKeyValue)
-    {
-        return (T) fetchResults("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue).get(0);
-    }
-    
-    @SuppressWarnings("rawtypes")
-    public static List<?> fetchResults(String qryString, HashMap<String, Object> parameters)
-    {
-        Session session = getSessionFactory().openSession();
-        Query q =
-                session.createQuery(qryString);
-        if (parameters != null)
-        {
-            for (String key : parameters.keySet())
-            {
-                q.setParameter(key, parameters.get(key));   
-            }   
-        }       
-        List result = q.list();
-        session.close();
-        return result;
-    }
-    
-    public static List<?> fetchResults(String qryString)
-    {
-        return fetchResults(qryString, null);
-    }
-
-    public static List<?> fetchResults(String qryString, String paramaterName, Object paramaterObject)
-    {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(paramaterName, paramaterObject);
-        return fetchResults(qryString, parameters);
-    }
-
-    public static List<?> fetchResults(Class<? extends AbstractDbObject> clazz)
-    {
-        return fetchResults("FROM " + clazz.getSimpleName());
-    }    
+	}    
 }

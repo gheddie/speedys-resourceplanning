@@ -64,16 +64,11 @@ class MessageQueue {
 '---Verknüpfungen---
 
 EventCommitment "1" -- "1" Helper
-
 EventCommitment "1" -- "1" Event
-
 EventCommitment "1" -- "1" Position
-
 Position "1" -- "1" EventPosition
 Event "1" -- "1" EventPosition
-
 Position "1..n" -- "1" Domain
-
 Domain "1" -- "1" Helper : Leitung des Teilbereiches
 
 @enduml
