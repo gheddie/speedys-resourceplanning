@@ -301,7 +301,7 @@ public class RequestHelpTest extends GenericBpmTest
      * Helper wants to be assigned on the same position as before, which is available, so he gets assigned to it by the
      * system without human interaction.
      */
-    //@Test
+    // @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testAutonomicBooking()
     {
@@ -316,12 +316,12 @@ public class RequestHelpTest extends GenericBpmTest
         // start process
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
-        //answer to mail
+        // answer to mail
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
         rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey,
                 variables);
-        //helper should be booked to the same position as in 2015 now...
+        // helper should be booked to the same position as in 2015 now...
         assertEquals(1, 2);
     }
 }
