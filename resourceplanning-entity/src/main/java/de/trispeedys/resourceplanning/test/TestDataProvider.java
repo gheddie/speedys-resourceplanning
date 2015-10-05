@@ -12,6 +12,40 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 public class TestDataProvider
 {
     private static final String MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
+    
+    /**
+     * creates an {@link Event} like {@link TestDataProvider#createMinimalEvent(String, String, int, int, int)},
+     * but without assignments of positions to helpers.
+     * 
+     * @return
+     */
+    public static Event createSimpleUnassignedEvent(String description, String eventKey, int day, int month, int year)
+    {
+        // build event
+        Event myLittleEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
+        
+        // create helpers
+        Helper helper1 =
+                EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
+                        .persist();
+        Helper helper3 =
+                EntityFactory.buildHelper("H3_First", "H3_Last", MAIL_ADDRESS, HelperState.ACTIVE, 3, 1, 1980)
+                        .persist();
+        
+        // build domains
+        Domain domain1 = EntityFactory.buildDomain("D1", 1, null).persist();
+        Domain domain2 = EntityFactory.buildDomain("D2", 1, null).persist();
+        // build positions
+        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1).persist();
+        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1).persist();
+        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2).persist();
+        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2).persist();
+        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2).persist();
+        // assign positions to event
+        DataModelUtil.relatePositionsToEvent(myLittleEvent, pos1, pos2, pos3, pos4, pos5);
+
+        return myLittleEvent;        
+    }
 
     /**
      * creates a litte test event ('My little event') with 2 domains D1 (positios: P1, P2) and D2 (positios: P3, P4,

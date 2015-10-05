@@ -3,6 +3,9 @@
 class Helper {
 	firstName : String
 	lastName : String
+	dateOfBirth : Date
+	email : String
+	helperState : HelperState
 }
 
 class Event {

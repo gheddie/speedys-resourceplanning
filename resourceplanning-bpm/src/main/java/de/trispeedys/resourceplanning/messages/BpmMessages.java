@@ -11,5 +11,7 @@ public class BpmMessages
         public static final String MSG_HELP_CALLBACK = "MSG_HELP_CALLBACK";
         
         public static final String MSG_DEACT_RESP = "MSG_DEACT_RESP";
+
+        public static final String MSG_POS_CHOSEN = "MSG_POS_CHOSEN";
     }
 }

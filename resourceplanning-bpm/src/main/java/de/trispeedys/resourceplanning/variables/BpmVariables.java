@@ -19,5 +19,7 @@ public class BpmVariables
         public static final String VAR_ACTIVE_HELPER_ID = "activeHelperId";
         
         public static final String VAR_MAIL_ATTEMPTS = "mailAttempts";
+        
+        public static final String VAR_CHOSEN_POSITION = "chosenPosition";
     }
 }

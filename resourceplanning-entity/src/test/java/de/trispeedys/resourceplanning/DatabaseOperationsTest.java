@@ -1,5 +1,6 @@
 package de.trispeedys.resourceplanning;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -12,6 +13,21 @@ import static org.junit.Assert.assertEquals;
 
 public class DatabaseOperationsTest
 {
+    @Test
+    public void testFetchListByQuery()
+    {        
+        //clear db
+        HibernateUtil.clearAll();
+        
+        Helper helper1 = EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+        Helper helper2 = EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.INACTIVE, 1, 1, 1980).persist();
+        
+        String qry = "FROM " + Helper.class.getSimpleName() + " h WHERE h."+Helper.ATTR_HELPER_STATE+" = :helperState";
+        HashMap parameters = new HashMap<String, Object>();
+        parameters.put(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        List<Helper> found = DatasourceRegistry.getDatasource(Helper.class).find(qry, parameters);
+    }
+    
     @Test
     public void testFetchDedicated()
     {        

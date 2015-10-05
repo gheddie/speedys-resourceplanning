@@ -67,7 +67,7 @@ public class RequestHelpTestUtil
         return true;
     }
 
-    private static boolean messageTypePresent(MessagingType type, List<MessageQueue> messages)
+    public static boolean messageTypePresent(MessagingType type, List<MessageQueue> messages)
     {
         for (MessageQueue q : messages)
         {

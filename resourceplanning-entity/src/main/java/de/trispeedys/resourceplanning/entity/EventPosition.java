@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @Table(name = "event_position")
 public class EventPosition extends AbstractDbObject
 {
+    public static final String ATTR_EVENT = "event";
+
     @OneToOne
     @JoinColumn(name = "position_id")
     private Position position;

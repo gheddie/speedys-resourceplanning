@@ -4,9 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.junit.Test;
 
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
@@ -18,6 +20,8 @@ import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.CommitmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
+import de.trispeedys.resourceplanning.service.PositionService;
+import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class EventCommitmentTest
@@ -214,5 +218,36 @@ public class EventCommitmentTest
         Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain()).persist();
         // commit helper (position is not present in the event)
         EntityFactory.buildEventCommitment(helper, event, position);
+    }
+    
+    /**
+     * Tests querying {@link Position} in an event which are not already assigned to a {@link Helper}.
+     */
+    @Test
+    public void testAvailablePositionsForEvent()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        // event
+        Event event = TestDataProvider.createSimpleUnassignedEvent("TRI-2016", "TRI-2016", 21, 6, 2016);
+        
+        // helpers
+        Helper helper1 =
+                EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
+                        .persist();
+        Helper helper2 =
+                EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
+                        .persist();        
+        
+        //we have 5 positions...
+        List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);        
+        
+        //...and assign 2 of them...
+        EntityFactory.buildEventCommitment(helper1, event, positions.get(0)).persist();
+        EntityFactory.buildEventCommitment(helper2, event, positions.get(1)).persist();
+        
+        //..and we expect 3 of them to be unassigned!!
+        assertEquals(3, PositionService.findUnassignedPositionsInEvent(event).size());
     }
 }
