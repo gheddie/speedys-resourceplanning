@@ -34,14 +34,14 @@ public class DatasourceRegistry
         return DatasourceRegistry.instance;
     }
 
-    private DefaultDatasource datasource(Class<? extends AbstractDbObject> entityClass)
+    private <T> DefaultDatasource datasource(Class<T> entityClass)
     {
         DefaultDatasource dataSource = registeredDatasources.get(entityClass);
         return (dataSource != null ? dataSource : defaultDatasource);
     }
 
-    public static DefaultDatasource getDatasource(Class<? extends AbstractDbObject> entityClass)
+    public static <T> DefaultDatasource getDatasource(Class<T> entityClass)
     {
-        return getInstance().datasource(entityClass);
+        return getInstance().datasource((Class<? extends AbstractDbObject>) entityClass);
     }
 }

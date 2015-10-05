@@ -19,7 +19,7 @@ public class DefaultDatasource<T> implements IDatasource
     }
     
     @SuppressWarnings("rawtypes")
-    public List<?> find(String qryString, HashMap<String, Object> parameters)
+    public <T> List<T> find(String qryString, HashMap<String, Object> parameters)
     {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Query q =
@@ -36,9 +36,9 @@ public class DefaultDatasource<T> implements IDatasource
         return result;
     }
     
-    public List<?> find(String qryString)
+    public List<T> find(String qryString)
     {
-        return find(qryString, null);
+        return (List<T>) find(qryString, null);
     }
 
     public List<?> find(String qryString, String paramaterName, Object paramaterValue)
