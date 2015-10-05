@@ -36,12 +36,12 @@ public class DatasourceRegistry
 
     private <T> DefaultDatasource datasource(Class<T> entityClass)
     {
-        DefaultDatasource dataSource = registeredDatasources.get(entityClass);
+        DefaultDatasource<T> dataSource = registeredDatasources.get(entityClass);
         return (dataSource != null ? dataSource : defaultDatasource);
     }
 
     public static <T> DefaultDatasource getDatasource(Class<T> entityClass)
     {
-        return getInstance().datasource((Class<? extends AbstractDbObject>) entityClass);
+        return getInstance().datasource(entityClass);
     }
 }

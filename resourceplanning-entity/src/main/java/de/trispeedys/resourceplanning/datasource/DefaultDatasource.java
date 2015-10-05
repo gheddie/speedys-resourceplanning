@@ -72,8 +72,8 @@ public class DefaultDatasource<T> implements IDatasource
         return (T) entity;
     }
 
-    public <T> List<?> findAll(Class<T> entityClass)
+    public <T> List<T> findAll(Class<T> entityClass)
     {
-        return find("FROM " + entityClass.getSimpleName());
+        return (List<T>) find("FROM " + entityClass.getSimpleName());
     }
 }
