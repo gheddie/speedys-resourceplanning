@@ -48,14 +48,10 @@ public class DefaultDatasource<T> implements IDatasource
         return (List<?>) find(qryString, parameters);
     }
 
-    public List<?> findAll(Class<? extends de.trispeedys.resourceplanning.entity.AbstractDbObject> clazz)
+    @SuppressWarnings("unchecked")
+    public <T> List<T> find(Class<T> entityClass, String paramaterName, Object paramaterValue)
     {
-        return find("FROM " + clazz.getSimpleName());
-    }
-
-    public <T> List<?> find(Class<T> entityClass, String paramaterName, Object paramaterValue)
-    {
-        return (List<?>) find("FROM " + entityClass.getSimpleName() + " WHERE "+paramaterName+" = :" + paramaterName, paramaterName, paramaterValue);
+        return (List<T>) find("FROM " + entityClass.getSimpleName() + " WHERE "+paramaterName+" = :" + paramaterName, paramaterName, paramaterValue);
     }
 
     public <T> T saveOrUpdate(T entity)
@@ -74,5 +70,10 @@ public class DefaultDatasource<T> implements IDatasource
         tx.commit();
         session.close();
         return (T) entity;
+    }
+
+    public <T> List<?> findAll(Class<T> entityClass)
+    {
+        return find("FROM " + entityClass.getSimpleName());
     }
 }
