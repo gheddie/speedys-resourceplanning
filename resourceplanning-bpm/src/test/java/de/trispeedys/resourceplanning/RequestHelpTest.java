@@ -16,6 +16,7 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
+import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
@@ -24,6 +25,7 @@ import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.misc.GenericBpmTest;
+import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.tasks.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.test.DatabaseRoutines;
@@ -209,7 +211,7 @@ public class RequestHelpTest extends GenericBpmTest
         }
         // a mail for every helper must have been sent
         assertEquals(activeHelpers.size(), DatasourceRegistry.getDatasource(MessageQueue.class)
-                .find(MessageQueue.class)
+                .findAll(MessageQueue.class)
                 .size());
     }
 
@@ -242,7 +244,7 @@ public class RequestHelpTest extends GenericBpmTest
             RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         }
         // a mail for every helper must have been sent
-        assertEquals(5, DatasourceRegistry.getDatasource(MessageQueue.class).find(MessageQueue.class).size());
+        assertEquals(5, DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
         // three manual assignment tasks must have been generated
         assertEquals(
                 3,
@@ -255,12 +257,13 @@ public class RequestHelpTest extends GenericBpmTest
     }
 
     /**
-     * tests the deactivation of a helper not respondig to any reminder mail.
+     * tests the deactivation of a helper not respondig to any reminder mail, but in the end, he responds positive to
+     * the 'last chance' mail.
      */
     @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
-    public void testNotCooperativeHelper()
+    public void testNotCooperativeAndRecoveredHelper()
     {
         // clear all tables in db
         HibernateUtil.clearAll();
@@ -288,12 +291,16 @@ public class RequestHelpTest extends GenericBpmTest
         assertEquals(3, RequestHelpTestUtil.countMails());
         // two week are gone (no more mails, please...)...
         rule.getManagementService().executeJob(rule.getManagementService().createJobQuery().list().get(0).getId());
-        // user should now be deactived and process instance should be gone...
-        assertEquals(3, RequestHelpTestUtil.countMails());
-        assertEquals(
-                HelperState.INACTIVE,
-                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class,
-                        notCooperativeHelper.getId())).getHelperState());
+
+        // user was asked if he wants to deactivated permanently (so 3 mails
+        // [REMINDER_STEP_0-2 and DEACTIVATION_REQUEST] should be there)
+        assertTrue(RequestHelpTestUtil.checkMails(4, MessagingType.REMINDER_STEP_0, MessagingType.REMINDER_STEP_1,
+                MessagingType.REMINDER_STEP_2, MessagingType.DEACTIVATION_REQUEST));
+        
+        // answer to mail (i do not want to be deactivated)
+        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_DEACT_RESP, businessKey);        
+
+        // process must be gone (helper state remains 'ACTIVE')
         assertEquals(0, rule.getRuntimeService().createExecutionQuery().list().size());
     }
 
@@ -301,18 +308,18 @@ public class RequestHelpTest extends GenericBpmTest
      * Helper wants to be assigned on the same position as before, which is available, so he gets assigned to it by the
      * system without human interaction.
      */
-    // @Test
+    @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testAutonomicBooking()
     {
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'minimal' event for 2015
-        Long eventId2015 = TestDataProvider.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        Event event2015 = TestDataProvider.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
         // duplicate event
-        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = DatabaseRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
         // select created helper
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).find(Helper.class).get(0);
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
         // start process
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
@@ -321,7 +328,9 @@ public class RequestHelpTest extends GenericBpmTest
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
         rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey,
                 variables);
-        // helper should be booked to the same position as in 2015 now...
-        assertEquals(1, 2);
+        // position the helper was assigned to in 2015
+        Position priorPosition = HelperService.getHelperAssignment(helper, event2015);
+        // helper should be (in 2016) booked to the same position as in 2015 now...
+        assertEquals(true, HelperService.isHelperAssignedForPosition(helper, event2016, priorPosition));
     }
 }

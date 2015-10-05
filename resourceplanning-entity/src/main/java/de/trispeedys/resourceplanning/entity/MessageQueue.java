@@ -26,6 +26,10 @@ public class MessageQueue extends AbstractDbObject
     @Column(name = "messaging_state")
     private MessagingState messagingState;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "messaging_type")
+    private MessagingType messagingType;    
+    
     public String getFromAddress()
     {
         return fromAddress;
@@ -74,5 +78,20 @@ public class MessageQueue extends AbstractDbObject
     public void setMessagingState(MessagingState messagingState)
     {
         this.messagingState = messagingState;
+    }
+    
+    public MessagingType getMessagingType()
+    {
+        return messagingType;
+    }
+    
+    public void setMessagingType(MessagingType messagingType)
+    {
+        this.messagingType = messagingType;
+    }
+    
+    public String toString()
+    {
+        return getClass().getSimpleName() + " ["+messagingType+"]";
     }
 }

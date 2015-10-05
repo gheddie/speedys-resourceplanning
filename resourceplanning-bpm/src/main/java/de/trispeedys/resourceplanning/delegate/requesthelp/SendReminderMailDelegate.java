@@ -5,6 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
@@ -21,10 +22,25 @@ public class SendReminderMailDelegate implements JavaDelegate
         String eventId = String.valueOf((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
         // write mail
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
-                "Helfermeldung zum Triathlon 2016", generateReminderBody(helperId, eventId)).persist();
+                "Helfermeldung zum Triathlon 2016", generateReminderBody(helperId, eventId), getMessagingType((Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS))).persist();
         //increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue+1));
+    }
+
+    private MessagingType getMessagingType(int attempt)
+    {
+        switch (attempt)
+        {
+            case 0:                
+                return MessagingType.REMINDER_STEP_0;
+            case 1:                
+                return MessagingType.REMINDER_STEP_1;
+            case 2:                
+                return MessagingType.REMINDER_STEP_2;
+            default:
+                return MessagingType.NONE;
+        }
     }
 
     private String generateReminderBody(String helperId, String eventId)

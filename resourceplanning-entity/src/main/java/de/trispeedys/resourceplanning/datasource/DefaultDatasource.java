@@ -48,24 +48,22 @@ public class DefaultDatasource<T> implements IDatasource
         return (List<?>) find(qryString, parameters);
     }
 
-    public List<?> find(Class<? extends de.trispeedys.resourceplanning.entity.AbstractDbObject> clazz)
+    public List<?> findAll(Class<? extends de.trispeedys.resourceplanning.entity.AbstractDbObject> clazz)
     {
         return find("FROM " + clazz.getSimpleName());
     }
 
-    public List<?> find(Class<? extends de.trispeedys.resourceplanning.entity.AbstractDbObject> entityClass,
-            String paramaterName, Object paramaterValue)
+    public <T> List<?> find(Class<T> entityClass, String paramaterName, Object paramaterValue)
     {
         return (List<?>) find("FROM " + entityClass.getSimpleName() + " WHERE "+paramaterName+" = :" + paramaterName, paramaterName, paramaterValue);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T saveOrUpdate(AbstractDbObject entity)
+    public <T> T saveOrUpdate(T entity)
     {
         Transaction tx = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         tx = session.beginTransaction();
-        if (entity.isNew())
+        if (((AbstractDbObject) entity).isNew())
         {
             session.save(entity);   
         }        

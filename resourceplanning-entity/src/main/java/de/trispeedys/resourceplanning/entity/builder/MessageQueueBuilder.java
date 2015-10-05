@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning.entity.builder;
 
 import de.trispeedys.resourceplanning.entity.MessageQueue;
+import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;
 
 public class MessageQueueBuilder extends AbstractEntityBuilder<MessageQueue>
@@ -14,6 +15,8 @@ public class MessageQueueBuilder extends AbstractEntityBuilder<MessageQueue>
     private String body;
 
     private MessagingState messagingState;
+
+    private MessagingType messagingType;
 
     public MessageQueueBuilder withFromAddress(String aFromAddress)
     {
@@ -45,6 +48,12 @@ public class MessageQueueBuilder extends AbstractEntityBuilder<MessageQueue>
         return this;
     }
     
+    public MessageQueueBuilder withMessagingType(MessagingType aMessagingType)
+    {
+        messagingType = aMessagingType;
+        return this;
+    }
+    
     public MessageQueue build()
     {
         MessageQueue messageQueue = new MessageQueue();
@@ -52,12 +61,8 @@ public class MessageQueueBuilder extends AbstractEntityBuilder<MessageQueue>
         messageQueue.setToAddress(toAddress);
         messageQueue.setSubject(subject);
         messageQueue.setBody(body);
-        if (messagingState == null)
-        {
-            messagingState = MessagingState.UNPROCESSED;
-        }
-        messageQueue.setMessagingState(messagingState);
+        messageQueue.setMessagingState(MessagingState.UNPROCESSED);
+        messageQueue.setMessagingType(messagingType);
         return messageQueue;
     }
-
 }

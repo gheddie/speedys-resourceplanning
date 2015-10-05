@@ -17,7 +17,7 @@ public class DebugEvent
     {
 //        HibernateUtil.clearAll();
 //        TestDataProvider.createSimpleEvent();
-        List<Event> allEvents = (List<Event>) DatasourceRegistry.getDatasource(null).find(Event.class);
+        List<Event> allEvents = (List<Event>) DatasourceRegistry.getDatasource(null).findAll(Event.class);
         System.out.println(allEvents.size());
         for (Event ev : allEvents)
         {

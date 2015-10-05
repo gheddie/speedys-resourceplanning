@@ -11,7 +11,7 @@ public class MessagingService
     @SuppressWarnings("unchecked")
     public static List<MessageQueue> findAllMessages()
     {
-        return (List<MessageQueue>) DatasourceRegistry.getDatasource(null).find(MessageQueue.class);
+        return (List<MessageQueue>) DatasourceRegistry.getDatasource(null).findAll(MessageQueue.class);
     }
 
     public static void sendAllMessages()

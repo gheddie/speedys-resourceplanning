@@ -8,7 +8,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -18,6 +17,8 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 @Entity
 public class Helper extends AbstractDbObject
 {
+    public static final String ATTR_HELPER_STATE = "helperState";
+
     @Column(name = "first_name")
     @Length(min=2)
     private String firstName;

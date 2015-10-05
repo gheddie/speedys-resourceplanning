@@ -7,7 +7,7 @@ import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 
 public interface IDatasource
 {
-    public <T> T saveOrUpdate(AbstractDbObject dbObject);
+    public <T> T saveOrUpdate(T dbObject);
     
     public List<?> find(String qryString, HashMap<String, Object> parameters);
     
@@ -15,7 +15,7 @@ public interface IDatasource
 
     public List<?> find(String qryString, String paramaterName, Object paramaterValue);
 
-    public List<?> find(Class<? extends AbstractDbObject> clazz);
+    public List<?> findAll(Class<? extends AbstractDbObject> clazz);
 
-    public List<?> find(Class<? extends AbstractDbObject> entityClass, String paramaterName, Object paramaterValue);
+    public <T> List<?> find(Class<T> entityClass, String paramaterName, Object paramaterValue);
 }

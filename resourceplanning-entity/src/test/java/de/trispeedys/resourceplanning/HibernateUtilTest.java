@@ -27,7 +27,7 @@ public class HibernateUtilTest
         //fetch w/o parameters (all entries)
         assertEquals(10, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName()).size());
         //fetch with class (all entries)
-        assertEquals(10, DatasourceRegistry.getDatasource(null).find(Position.class).size());
+        assertEquals(10, DatasourceRegistry.getDatasource(null).findAll(Position.class).size());
         //fetch with query string
         assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
         assertEquals(4, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());        

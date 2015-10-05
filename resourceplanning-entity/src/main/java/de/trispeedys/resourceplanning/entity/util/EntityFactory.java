@@ -2,12 +2,14 @@ package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
 
+import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
+import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.builder.DomainBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventBuilder;
@@ -65,10 +67,15 @@ public class EntityFactory
                 .withEventKey(eventKey)
                 .build();
     }
-
+    
     public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body)
     {
-        return new MessageQueueBuilder().withFromAddress(fromAddress).withToAddress(toAddress).withSubject(subject).withBody(body).build();
+        return buildMessageQueue(fromAddress, toAddress, subject, body, MessagingType.NONE);
+    }
+
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingType messagingType)
+    {
+        return new MessageQueueBuilder().withFromAddress(fromAddress).withToAddress(toAddress).withSubject(subject).withBody(body).withMessagingType(messagingType).build();
     }
 
     public static EventPosition buildEventPosition(Event event, Position position)
@@ -87,5 +94,5 @@ public class EntityFactory
             }
         }
         return new DomainBuilder().withDomainNumber(domainNumber).withName(name).withLeader(leader).build();
-    }    
+    }  
 }
