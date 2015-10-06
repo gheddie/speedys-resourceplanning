@@ -33,19 +33,6 @@ public class HelperService
         return (EventCommitment) list.get(0)[0];
     }
 
-    /**
-     * Finds the last confirmed assignment for the given helper an checks whether the helper can be reassigned in the
-     * same position in the given event (if the positions still exists and if it is not not already occupied).
-     * 
-     * @param event
-     * @param helper
-     */
-    public static boolean isHelperReassignableToSamePosition(Long eventId, Long helperId)
-    {
-        // is the position of the last assignment available for this event?
-        return PositionService.isPositionAssigned(eventId, getLastConfirmedAssignmentForHelper(helperId).getPosition());
-    }
-
     public static boolean isFirstAssignment(Long helperId)
     {
         List<EventCommitment> commitments = CommitmentService.getAllCommitments(helperId);

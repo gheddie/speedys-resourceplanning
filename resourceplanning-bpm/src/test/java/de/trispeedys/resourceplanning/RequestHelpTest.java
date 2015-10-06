@@ -79,7 +79,8 @@ public class RequestHelpTest extends GenericBpmTest
     {
         HibernateUtil.clearAll();
 
-        Position position = EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain()).persist();
+        Position position =
+                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(), false).persist();
         Event event = EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012).persist();
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
@@ -122,9 +123,11 @@ public class RequestHelpTest extends GenericBpmTest
 
     /**
      * Follow up assignment -> assignment wished as before (2014), but position is already occupied in 2015 (to
-     * 'blocking helper'). In this case, the user must get a mail which proposes other assignments to hin (and also answer it).
+     * 'blocking helper'). In this case, the user must get a mail which proposes other assignments to hin (and also
+     * answer it).
      */
-    //@Test
+    // TODO fix test
+    // @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testFollowingAssigmnmentForPosition()
     {
@@ -132,7 +135,7 @@ public class RequestHelpTest extends GenericBpmTest
         HibernateUtil.clearAll();
         // create position
         Position positionBikeEntry =
-                EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain())
+                EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain(), false)
                         .persist();
         // create events
         Event evt2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014).persist();
@@ -159,10 +162,10 @@ public class RequestHelpTest extends GenericBpmTest
                 variables);
         // now the helper must choose a proposed position
         // as the desired position is blocked by 'blocking helper' in 2015...
-        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey,
-                variables);
+        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
     }
 
+    // TODO fix test
     // @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testStartReminderProcesses()
@@ -211,9 +214,8 @@ public class RequestHelpTest extends GenericBpmTest
             RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         }
         // a mail for every helper must have been sent
-        assertEquals(activeHelpers.size(), DatasourceRegistry.getDatasource(MessageQueue.class)
-                .findAll(MessageQueue.class)
-                .size());
+        assertEquals(activeHelpers.size(),
+                DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
     }
 
     /**
@@ -297,9 +299,9 @@ public class RequestHelpTest extends GenericBpmTest
         // [REMINDER_STEP_0-2 and DEACTIVATION_REQUEST] should be there)
         assertTrue(RequestHelpTestUtil.checkMails(4, MessagingType.REMINDER_STEP_0, MessagingType.REMINDER_STEP_1,
                 MessagingType.REMINDER_STEP_2, MessagingType.DEACTIVATION_REQUEST));
-        
+
         // answer to mail (i do not want to be deactivated)
-        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_DEACT_RESP, businessKey);        
+        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_DEACT_RESP, businessKey);
 
         // process must be gone (helper state remains 'ACTIVE')
         assertEquals(0, rule.getRuntimeService().createExecutionQuery().list().size());

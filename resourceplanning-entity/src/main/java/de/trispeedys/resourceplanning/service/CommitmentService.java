@@ -18,16 +18,22 @@ public class CommitmentService
 {
     public static void confirmHelper(Helper helper, Event event, Position position) throws ResourcePlanningException
     {
+        /*
         if (isHelperConfirmedForEvent(event, helper))
         {
             throw new ResourcePlanningException("helper is already confirmed for another position!");
         }
-        int dayDiff =
-                Days.daysBetween(DateHelper.toDateTime(event.getEventDate()),
-                        DateHelper.toDateTime(helper.getDateOfBirth()).plusYears(position.getMinimalAge())).getDays();
-        if (dayDiff > 0)
+        */
+        if (!(position.isAuthorityOverride()))
         {
-            throw new ResourcePlanningException("helper is " + dayDiff + " days to young for this position!");
+            //no authority override -> check age
+            int dayDiff =
+                    Days.daysBetween(DateHelper.toDateTime(event.getEventDate()),
+                            DateHelper.toDateTime(helper.getDateOfBirth()).plusYears(position.getMinimalAge())).getDays();
+            if (dayDiff > 0)
+            {
+                throw new ResourcePlanningException("helper is " + dayDiff + " days to young for this position!");
+            }
         }
         EntityFactory.buildEventCommitment(helper, event, position).persist();
     }
@@ -61,5 +67,22 @@ public class CommitmentService
         queryString = "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId";
         list = (List<EventCommitment>) DatasourceRegistry.getDatasource(null).find(queryString, "helperId", helperId);
         return list;
+    }
+
+    /**
+     * gets the (one or none) {@link EventCommitment} for the given {@link Helper} in the given year.
+     * 
+     * @param helper
+     * @param event
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static EventCommitment getHelperCommitment(Helper helper, Event event)
+    {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(EventCommitment.ATTR_HELPER, helper);
+        parameters.put(EventCommitment.ATTR_EVENT, event);
+        List<EventCommitment> commitments = DatasourceRegistry.getDatasource(EventCommitment.class).find("FROM " + EventCommitment.class.getSimpleName() + " ec WHERE ec.event = :event AND ec.helper = :helper", parameters);
+        return (commitments != null && commitments.size() == 1 ? commitments.get(0) : null);       
     }
 }

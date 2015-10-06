@@ -27,7 +27,7 @@ public class DatabaseRoutines
         {            
             oldPos = evtpos.getPosition();
             //duplicate position...
-            newPos = EntityFactory.buildPosition(oldPos.getDescription(), oldPos.getMinimalAge(), oldPos.getDomain()).persist();
+            newPos = EntityFactory.buildPosition(oldPos.getDescription(), oldPos.getMinimalAge(), oldPos.getDomain(), false).persist();
             //..and attach it to the new event
             EntityFactory.buildEventPosition(newEvent, newPos).persist();
         }

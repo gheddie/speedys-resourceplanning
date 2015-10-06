@@ -15,19 +15,28 @@ public class MailChecker
 {
     public static void main(String[] args)
     {
-//        startProcess();
+// HibernateUtil.clearAll();
+
+// startProcess();
+
+// sendMails();
         
-//        sendMails();
-        
+        /**
+         * select * from helper
+         * select * from event
+         * select * from message_queue
+         */
+
         startLittleEventProcess();
     }
 
     private static void startLittleEventProcess()
     {
-//        Long helperId = new Long(15106);
-//        Long eventId = new Long(15111);
-//        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-//        new ResourceInfoService().getResourceInfoPort().startHelperRequestProcess(helperId, eventId, businessKey);
+        Long helperId = new Long(3390);
+        Long eventId = new Long(3389);
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+        new ResourceInfoService().getResourceInfoPort().startHelperRequestProcess(helperId, eventId, businessKey);
+        
         new ResourceInfoService().getResourceInfoPort().sendMessages();
     }
 
@@ -41,13 +50,16 @@ public class MailChecker
         // clear all tables in db
         HibernateUtil.clearAll();
         // create position
-        Position positionBikeEntry = EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain()).persist();
+        Position positionBikeEntry =
+                EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain(), false)
+                        .persist();
         // create events
         Event evt2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014).persist();
         Event evt2015 = EntityFactory.buildEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).persist();
         // create helper
         Helper createdHelper =
-                EntityFactory.buildHelper("Stefan", "Schulz", "testhelper1.trispeedys@gmail.com", HelperState.ACTIVE, 1, 1, 1990).persist();
+                EntityFactory.buildHelper("Stefan", "Schulz", "testhelper1.trispeedys@gmail.com", HelperState.ACTIVE,
+                        1, 1, 1990).persist();
         Helper blockingHelper =
                 EntityFactory.buildHelper("Blocking", "Helper", "b@l.com", HelperState.ACTIVE, 1, 1, 1990).persist();
         // assign position to event
@@ -57,7 +69,8 @@ public class MailChecker
         // assign position to another helper in 2015
         EntityFactory.buildEventCommitment(blockingHelper, evt2015, positionBikeEntry).persist();
         // start request process for 2015...
-        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(createdHelper.getId(), evt2015.getId());
+        String businessKey =
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(createdHelper.getId(), evt2015.getId());
         ResourceInfo resourceInfoService = new ResourceInfoService().getResourceInfoPort();
         resourceInfoService.startHelperRequestProcess(createdHelper.getId(), evt2015.getId(), businessKey);
     }

@@ -12,10 +12,10 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 public class TestDataProvider
 {
     private static final String MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
-    
+
     /**
-     * creates an {@link Event} like {@link TestDataProvider#createMinimalEvent(String, String, int, int, int)},
-     * but without assignments of positions to helpers.
+     * creates an {@link Event} like {@link TestDataProvider#createMinimalEvent(String, String, int, int, int)}, but
+     * without assignments of positions to helpers.
      * 
      * @return
      */
@@ -23,7 +23,7 @@ public class TestDataProvider
     {
         // build event
         Event myLittleEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
-        
+
         // create helpers
         Helper helper1 =
                 EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
@@ -31,20 +31,20 @@ public class TestDataProvider
         Helper helper3 =
                 EntityFactory.buildHelper("H3_First", "H3_Last", MAIL_ADDRESS, HelperState.ACTIVE, 3, 1, 1980)
                         .persist();
-        
+
         // build domains
         Domain domain1 = EntityFactory.buildDomain("D1", 1, null).persist();
         Domain domain2 = EntityFactory.buildDomain("D2", 1, null).persist();
         // build positions
-        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1).persist();
-        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1).persist();
-        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2).persist();
-        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2).persist();
-        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2).persist();
+        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, false).persist();
+        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, false).persist();
+        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2, false).persist();
+        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2, false).persist();
+        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2, false).persist();
         // assign positions to event
         DataModelUtil.relatePositionsToEvent(myLittleEvent, pos1, pos2, pos3, pos4, pos5);
 
-        return myLittleEvent;        
+        return myLittleEvent;
     }
 
     /**
@@ -65,29 +65,29 @@ public class TestDataProvider
         Event myLittleEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
         // create helpers
         Helper helper1 =
-                EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
+                EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 2, 1980)
                         .persist();
         Helper helper2 =
-                EntityFactory.buildHelper("H2_First", "H2_Last", MAIL_ADDRESS, HelperState.ACTIVE, 2, 1, 1980)
+                EntityFactory.buildHelper("H2_First", "H2_Last", MAIL_ADDRESS, HelperState.ACTIVE, 2, 2, 1980)
                         .persist();
         Helper helper3 =
-                EntityFactory.buildHelper("H3_First", "H3_Last", MAIL_ADDRESS, HelperState.ACTIVE, 3, 1, 1980)
+                EntityFactory.buildHelper("H3_First", "H3_Last", MAIL_ADDRESS, HelperState.ACTIVE, 3, 2, 1980)
                         .persist();
         Helper helper4 =
-                EntityFactory.buildHelper("H4_First", "H4_Last", MAIL_ADDRESS, HelperState.ACTIVE, 4, 1, 1980)
+                EntityFactory.buildHelper("H4_First", "H4_Last", MAIL_ADDRESS, HelperState.ACTIVE, 4, 2, 1980)
                         .persist();
         Helper helper5 =
-                EntityFactory.buildHelper("H5_First", "H5_Last", MAIL_ADDRESS, HelperState.ACTIVE, 5, 1, 1980)
+                EntityFactory.buildHelper("H5_First", "H5_Last", MAIL_ADDRESS, HelperState.ACTIVE, 5, 2, 1980)
                         .persist();
         // build domains
         Domain domain1 = EntityFactory.buildDomain("D1", 1, helper1).persist();
         Domain domain2 = EntityFactory.buildDomain("D2", 1, helper3).persist();
         // build positions
-        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1).persist();
-        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1).persist();
-        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2).persist();
-        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2).persist();
-        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2).persist();
+        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, false).persist();
+        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, false).persist();
+        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2, false).persist();
+        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2, false).persist();
+        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2, false).persist();
         // assign positions to event
         DataModelUtil.relatePositionsToEvent(myLittleEvent, pos1, pos2, pos3, pos4, pos5);
         // assign helpers to positions
@@ -121,7 +121,7 @@ public class TestDataProvider
         // build domain
         Domain domain = EntityFactory.buildDomain("D1", 1, helper).persist();
         // build position
-        Position pos = EntityFactory.buildPosition("P1", 12, domain).persist();
+        Position pos = EntityFactory.buildPosition("P1", 12, domain, false).persist();
         // assign position to event
         DataModelUtil.relatePositionsToEvent(myMinimalEvent, pos);
         // assign helper to position
@@ -143,7 +143,7 @@ public class TestDataProvider
 // Long eventId = createMinimalEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId();
 // System.out.println(DebugEvent.debugEvent(eventId));
         // ---
-        Long evtId = createMinimalEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId();
+        Long evtId = createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId();
         DatabaseRoutines.duplicateEvent(evtId, "Triathlon 2016", "TRI-2016", 21, 6, 2016);
     }
 }

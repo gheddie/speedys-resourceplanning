@@ -22,7 +22,7 @@ public class HibernateUtilTest
         // create positions
         for (int i = 1; i <= 10; i++)
         {
-            EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain()).persist();
+            EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(), false).persist();
         }
         //fetch w/o parameters (all entries)
         assertEquals(10, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName()).size());
@@ -44,7 +44,7 @@ public class HibernateUtilTest
         // clear db
         HibernateUtil.clearAll();
         //create position
-        Position pos = EntityFactory.buildPosition("Pos", 87, SpeedyTestUtil.buildDefaultDomain()).persist();
+        Position pos = EntityFactory.buildPosition("Pos", 87, SpeedyTestUtil.buildDefaultDomain(), false).persist();
         //find by id
         Position foundPosition = (Position) DatasourceRegistry.getDatasource(null).findById(Position.class, pos.getId());
         assertTrue(foundPosition != null);

@@ -43,8 +43,8 @@ public class EventCommitmentTest
         Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
 
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
-        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain).persist();
-        Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain).persist();
+        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false).persist();
+        Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain, false).persist();
 
         // relate positions to event
         DataModelUtil.relatePositionsToEvent(event, position1, position2);
@@ -57,6 +57,31 @@ public class EventCommitmentTest
 
         // confirm helper for another position of the same event
         CommitmentService.confirmHelper(helper, event, position1);
+    }
+
+    /**
+     * Einen Helfer für eine Position bestätigen, für die er zu jung ist, aber zusammen mit einem Erziehungsberechtigten
+     * eingesetzt wird.
+     */
+    // TODO fix test
+    // @Test
+    public void testCommitmentUnderAgeAuthorityOverride()
+    {
+        HibernateUtil.clearAll();
+
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
+
+        // Helfer ist zum Datum der Veranstaltung erst 15
+        Helper helper =
+                EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
+                        .persist();
+
+        // Position erfordert Mindest-Alter 16 Jahre
+        Position position =
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), true).persist();
+
+        // Muss zu Ausnahme führen
+        CommitmentService.confirmHelper(helper, event, position);
     }
 
     /**
@@ -78,7 +103,8 @@ public class EventCommitmentTest
 
         // Position erfordert Mindest-Alter 16 Jahre
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain()).persist();
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                        .persist();
 
         // Muss zu Ausnahme führen
         CommitmentService.confirmHelper(helper, event, position);
@@ -98,7 +124,8 @@ public class EventCommitmentTest
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
                         .persist();
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain()).persist();
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                        .persist();
 
         // relate position to both events
         DataModelUtil.relateEventsToPosition(position, evt2012, evt2014);
@@ -127,7 +154,8 @@ public class EventCommitmentTest
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
                         .persist();
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain()).persist();
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                        .persist();
 
         // assign position to event
         DataModelUtil.relatePositionsToEvent(event2012, position);
@@ -150,7 +178,8 @@ public class EventCommitmentTest
 
         // create a position
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain()).persist();
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                        .persist();
 
         // helper was assigned pos 'Laufverpflegung' in 2015...
         Helper helperToReassign =
@@ -175,7 +204,9 @@ public class EventCommitmentTest
         EntityFactory.buildEventCommitment(blockingHelper, event2016, position).persist();
 
         // 'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
-        assertFalse(HelperService.isHelperReassignableToSamePosition(event2016.getId(), helperToReassign.getId()));
+        Long eventId = event2016.getId();
+        Long helperId = helperToReassign.getId();
+        assertFalse(PositionService.isPositionAssigned(eventId, HelperService.getLastConfirmedAssignmentForHelper(helperId).getPosition()));
     }
 
     /**
@@ -193,7 +224,7 @@ public class EventCommitmentTest
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .persist();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain()).persist();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(), false).persist();
         // assign position to event
         EntityFactory.buildEventPosition(event, position).persist();
         // commit helper
@@ -215,11 +246,11 @@ public class EventCommitmentTest
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .persist();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain()).persist();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(), false).persist();
         // commit helper (position is not present in the event)
         EntityFactory.buildEventCommitment(helper, event, position);
     }
-    
+
     /**
      * Tests querying {@link Position} in an event which are not already assigned to a {@link Helper}.
      */
@@ -228,26 +259,26 @@ public class EventCommitmentTest
     {
         // clear db
         HibernateUtil.clearAll();
-        
+
         // event
         Event event = TestDataProvider.createSimpleUnassignedEvent("TRI-2016", "TRI-2016", 21, 6, 2016);
-        
+
         // helpers
         Helper helper1 =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .persist();
         Helper helper2 =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
-                        .persist();        
-        
-        //we have 5 positions...
-        List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);        
-        
-        //...and assign 2 of them...
+                        .persist();
+
+        // we have 5 positions...
+        List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);
+
+        // ...and assign 2 of them...
         EntityFactory.buildEventCommitment(helper1, event, positions.get(0)).persist();
         EntityFactory.buildEventCommitment(helper2, event, positions.get(1)).persist();
-        
-        //..and we expect 3 of them to be unassigned!!
+
+        // ..and we expect 3 of them to be unassigned!!
         assertEquals(3, PositionService.findUnassignedPositionsInEvent(event).size());
     }
 }

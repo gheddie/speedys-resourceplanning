@@ -27,9 +27,9 @@ public class PositionTest
 
         // some positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
-        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain).persist();
-        Position position3 = EntityFactory.buildPosition("Irgendwas kontrollieren", 12, defaultDomain).persist();
-        Position position4 = EntityFactory.buildPosition("Gut aussehen", 12, defaultDomain).persist();
+        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false).persist();
+        Position position3 = EntityFactory.buildPosition("Irgendwas kontrollieren", 12, defaultDomain, false).persist();
+        Position position4 = EntityFactory.buildPosition("Gut aussehen", 12, defaultDomain, false).persist();
 
         // some links between event 1 and positions
         EntityFactory.buildEventPosition(event1, position1).persist();
@@ -59,9 +59,9 @@ public class PositionTest
         Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014).persist();
         // create positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
-        Position posA = EntityFactory.buildPosition("A", 12, defaultDomain).persist();
-        Position posB = EntityFactory.buildPosition("B", 12, defaultDomain).persist();
-        Position posC = EntityFactory.buildPosition("C", 12, defaultDomain).persist();
+        Position posA = EntityFactory.buildPosition("A", 12, defaultDomain, false).persist();
+        Position posB = EntityFactory.buildPosition("B", 12, defaultDomain, false).persist();
+        Position posC = EntityFactory.buildPosition("C", 12, defaultDomain, false).persist();
         // event 2013 has positions (A,B,C)
         EntityFactory.buildEventPosition(evt2013, posA).persist();
         EntityFactory.buildEventPosition(evt2013, posB).persist();

@@ -41,19 +41,21 @@ public class EntityFactory
 
     public static EventCommitment buildEventCommitment(Helper helper, Event event, Position position)
     {
+        /*
         if (!(PositionService.isPositionPresentInEvent(position, event)))
         {
             throw new ResourcePlanningException("helper '"+helper+"' can not be commited to position '"+position+"' as it is not present in event '"+event+"'.");
         }
+        */
         return new EventCommitmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEvent(event)
                 .build();
     }
 
-    public static Position buildPosition(String description, int minimalAge, Domain domain)
+    public static Position buildPosition(String description, int minimalAge, Domain domain, boolean authorityOverride)
     {
-        return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).build();
+        return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).withAuthorityOverride(authorityOverride).build();
     }
 
     public static Event buildEvent(String description, String eventKey, int day, int month, int year)

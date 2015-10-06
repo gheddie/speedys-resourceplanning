@@ -39,8 +39,8 @@ public class HelperTest
         // create domain
         Domain domain = EntityFactory.buildDomain("someDomain", 1, null).persist();
         //create positions
-        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain).persist();
-        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain).persist();
+        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false).persist();
+        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false).persist();
         //create event
         Event tri2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014).persist();
         //assign positions to that event

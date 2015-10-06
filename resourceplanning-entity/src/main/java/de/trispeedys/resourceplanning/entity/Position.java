@@ -14,6 +14,14 @@ public class Position extends AbstractDbObject
     
     @ManyToOne
     private Domain domain;
+    
+    /**
+     * If true, a helper ca be assigned to this position (even though under age)
+     * if a parent (or another person with similar authority) is assigned to a position
+     * in the same domain (and the same event).
+     */
+    @Column(name = "authority_override")
+    private boolean authorityOverride;
 
     public String getDescription()
     {
@@ -35,11 +43,6 @@ public class Position extends AbstractDbObject
         this.minimalAge = minimalAge;
     }
     
-    public String toString()
-    {
-        return getClass().getSimpleName() + " ["+description+", "+minimalAge+"]";
-    }
-    
     public Domain getDomain()
     {
         return domain;
@@ -48,5 +51,20 @@ public class Position extends AbstractDbObject
     public void setDomain(Domain domain)
     {
         this.domain = domain;
+    }
+    
+    public boolean isAuthorityOverride()
+    {
+        return this.authorityOverride;
+    }
+    
+    public void setAuthorityOverride(boolean authorityOverride)
+    {
+        this.authorityOverride = authorityOverride;
+    }
+    
+    public String toString()
+    {
+        return getClass().getSimpleName() + " ["+description+", "+minimalAge+"]";
     }
 }
