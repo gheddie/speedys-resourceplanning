@@ -17,6 +17,8 @@
 <%@ page import="de.trispeedys.resourceplanning.variables.BpmVariables"%>
 <%@ page
 	import="de.trispeedys.resourceplanning.util.ResourcePlanningUtil"%>
+<%@ page
+	import="org.camunda.bpm.engine.MismatchingMessageCorrelationException"%>
 <body>
 	<h3>Hi Stefan</h3>
 	<br>
@@ -35,9 +37,17 @@
 	            Long helperId = Long.parseLong(request.getParameter("helperId"));
 	            Long eventId = Long.parseLong(request.getParameter("eventId"));
 	            String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-	            BpmPlatform.getDefaultProcessEngine()
-	                    .getRuntimeService()
-	                    .correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variables);
+	            try
+	            {
+	                BpmPlatform.getDefaultProcessEngine()
+	                        .getRuntimeService()
+	                        .correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey,
+	                                variables);
+	            }
+	            catch (MismatchingMessageCorrelationException e)
+	            {
+	                out.println("Nachricht bereits zugestellt.");
+	            }
 	            break;
 	        case CHANGE_POS:
 	            System.out.println("the helper wants to change positions...");
