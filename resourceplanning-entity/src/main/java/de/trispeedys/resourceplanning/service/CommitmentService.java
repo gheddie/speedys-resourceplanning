@@ -70,19 +70,20 @@ public class CommitmentService
     }
 
     /**
-     * gets the (one or none) {@link EventCommitment} for the given {@link Helper} in the given year.
+     * gets the {@link EventCommitment} for the given {@link Helper} in the given year (can be more
+     * than one, as one helper can be assigned to multiple positions in one event).
      * 
      * @param helper
      * @param event
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static EventCommitment getHelperCommitment(Helper helper, Event event)
+    public static List<EventCommitment> getHelperCommitments(Helper helper, Event event)
     {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(EventCommitment.ATTR_HELPER, helper);
         parameters.put(EventCommitment.ATTR_EVENT, event);
         List<EventCommitment> commitments = DatasourceRegistry.getDatasource(EventCommitment.class).find("FROM " + EventCommitment.class.getSimpleName() + " ec WHERE ec.event = :event AND ec.helper = :helper", parameters);
-        return (commitments != null && commitments.size() == 1 ? commitments.get(0) : null);       
+        return commitments;       
     }
 }

@@ -3,6 +3,11 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
+import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.service.CommitmentService;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
@@ -15,5 +20,9 @@ public class ConfirmHelperDelegate implements JavaDelegate
         {
             throw new ResourcePlanningException("can not book helper to position for position id not set!!");
         }
+        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById(Position.class, (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION));
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
+        CommitmentService.confirmHelper(helper, event, position);
     }
 }

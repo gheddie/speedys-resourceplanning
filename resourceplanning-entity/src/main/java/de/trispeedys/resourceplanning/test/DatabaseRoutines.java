@@ -21,15 +21,12 @@ public class DatabaseRoutines
         Event newEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
         List<EventPosition> positions = (List<EventPosition>) DatasourceRegistry.getDatasource(null).find(EventPosition.class, "event", event);
         System.out.println(positions.size());
-        Position oldPos = null;
-        Position newPos = null;
+        Position newPosRelation = null;
         for (EventPosition evtpos : positions)
         {            
-            oldPos = evtpos.getPosition();
-            //duplicate position...
-            newPos = EntityFactory.buildPosition(oldPos.getDescription(), oldPos.getMinimalAge(), oldPos.getDomain(), false).persist();
-            //..and attach it to the new event
-            EntityFactory.buildEventPosition(newEvent, newPos).persist();
+            newPosRelation = evtpos.getPosition();
+            // attach every old position to the new event
+            EntityFactory.buildEventPosition(newEvent, newPosRelation).persist();
         }
         return newEvent;
     }

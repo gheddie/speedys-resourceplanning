@@ -43,27 +43,18 @@ public class PositionService
     {
         "unchecked"
     })
-    public static boolean isPositionAssigned(Long eventId, Position position)
+    public static boolean isPositionAvailable(Event event, Position position)
     {
-        if (!(isPositionScheduledForEvent(eventId, position)))
-        {
-            return false;
-        }
-        String queryString = "From " + EventCommitment.class.getSimpleName() + " ec WHERE ec.position = :position";
-        List<Object[]> list = (List<Object[]>) DatasourceRegistry.getDatasource(null).find(queryString);
-        return false;
-    }
-
-    /**
-     * Checks if the given position is present in the given event.
-     * 
-     * @param eventId
-     * @param position
-     * @return
-     */
-    public static boolean isPositionScheduledForEvent(Long eventId, Position position)
-    {
-        return false;
+        String queryString =
+                "FROM " +
+                        EventCommitment.class.getSimpleName() +
+                        " ec WHERE ec.position = :position AND ec.event = :event";
+        HashMap<String, Object> variables = new HashMap<String, Object>();
+        variables.put(EventCommitment.ATTR_EVENT, event);
+        variables.put(EventCommitment.ATTR_POSITION, position);
+        List<EventCommitment> commitments = DatasourceRegistry.getDatasource(EventCommitment.class).find(queryString, variables);
+        // no commitments -> position available
+        return ((commitments == null) || (commitments.size() == 0));
     }
 
     /**
@@ -97,8 +88,13 @@ public class PositionService
                         EventCommitment.class.getSimpleName() + " ec WHERE ec.event = :event)";
         Query q = session.createQuery(qryString);
         q.setParameter("event", event);
-        List result = q.list();
+        List<EventPosition> eventPositions = q.list();
         session.close();
+        List<Position> result = new ArrayList<Position>();
+        for (EventPosition ep : eventPositions)
+        {
+            result.add(ep.getPosition());
+        }
         return result;
     }
 }

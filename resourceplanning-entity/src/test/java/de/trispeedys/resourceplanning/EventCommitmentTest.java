@@ -204,9 +204,8 @@ public class EventCommitmentTest
         EntityFactory.buildEventCommitment(blockingHelper, event2016, position).persist();
 
         // 'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
-        Long eventId = event2016.getId();
         Long helperId = helperToReassign.getId();
-        assertFalse(PositionService.isPositionAssigned(eventId, HelperService.getLastConfirmedAssignmentForHelper(helperId).getPosition()));
+        assertFalse(PositionService.isPositionAvailable(event2016, HelperService.getLastConfirmedAssignmentForHelper(helperId).getPosition()));
     }
 
     /**

@@ -19,6 +19,8 @@ public class EventCommitment extends AbstractDbObject
     public static final String ATTR_HELPER = "helper";
     
     public static final String ATTR_EVENT = "event";
+
+    public static final String ATTR_POSITION = "position";
     
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)

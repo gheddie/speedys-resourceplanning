@@ -95,7 +95,7 @@ public class RequestHelpTest extends GenericBpmTest
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event.getId()), rule);
 
         // mail must have been sent
-        List<MessageQueue> messages = MessagingService.findAllMessages();
+        List<MessageQueue> messages = MessagingService.findAllUnprocessedMessages();
         System.out.println(messages.size() + " messages found.");
         assertEquals(1, messages.size());
     }

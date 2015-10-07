@@ -78,6 +78,6 @@ public class PositionTest
         EntityFactory.buildEventCommitment(helper, evt2013, posA);
         EntityFactory.buildEventCommitment(helper, evt2014, posC);
         // ...
-        PositionService.isPositionAssigned(evt2014.getId(), posC);
+        PositionService.isPositionAvailable(evt2014, posC);
     }
 }

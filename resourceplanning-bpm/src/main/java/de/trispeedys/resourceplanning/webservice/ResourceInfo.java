@@ -45,6 +45,6 @@ public class ResourceInfo
     public void sendMessages()
     {
         System.out.println("sending all messages...");
-        MessagingService.sendAllMessages();
+        MessagingService.sendAllUnprocessedMessages();
     }
 }
