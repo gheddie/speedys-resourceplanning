@@ -1,5 +1,7 @@
 package de.trispeedys.resourceplanning;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,7 +11,6 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import static org.junit.Assert.assertEquals;
 
 public class DatabaseOperationsTest
 {

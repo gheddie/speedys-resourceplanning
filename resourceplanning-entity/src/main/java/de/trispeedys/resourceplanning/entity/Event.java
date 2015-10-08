@@ -32,6 +32,9 @@ public class Event extends AbstractDbObject
     @JoinColumn(name = "event_id")
     private List<EventPosition> eventPositions;
 
+    @Column(name = "helpers_reminded")
+    private boolean helpersReminded;
+
     public Date getEventDate()
     {
         return eventDate;
@@ -70,6 +73,16 @@ public class Event extends AbstractDbObject
     public void setEventPositions(List<EventPosition> eventPositions)
     {
         this.eventPositions = eventPositions;
+    }
+    
+    public boolean isHelpersReminded()
+    {
+        return this.helpersReminded;        
+    }
+    
+    public void setHelpersReminded(boolean helpersReminded)
+    {
+        this.helpersReminded = helpersReminded;        
     }
     
     public String toString()

@@ -16,6 +16,8 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
     
     private String eventKey;
 
+    private boolean helpersReminded;
+
     public EventBuilder withDescription(String aDescription)
     {
         description = aDescription;
@@ -34,12 +36,19 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
         return this;
     }
     
+    public EventBuilder withHelpersReminded(boolean aHelpersReminded)
+    {
+        helpersReminded = aHelpersReminded;
+        return this;
+    }
+    
     public Event build()
     {
         Event event = new Event();
         event.setDescription(description);
         event.setEventKey(eventKey);
         event.setEventDate(eventDate);
+        event.setHelpersReminded(helpersReminded);
         return event;
     }
 }

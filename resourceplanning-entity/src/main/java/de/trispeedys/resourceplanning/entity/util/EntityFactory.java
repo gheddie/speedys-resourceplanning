@@ -55,8 +55,13 @@ public class EntityFactory
     {
         return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).withAuthorityOverride(authorityOverride).build();
     }
-
+    
     public static Event buildEvent(String description, String eventKey, int day, int month, int year)
+    {
+        return buildEvent(description, eventKey, day, month, year, false);
+    }    
+
+    public static Event buildEvent(String description, String eventKey, int day, int month, int year, boolean helpersReminded)
     {
         Calendar eventDate = Calendar.getInstance();
         eventDate.set(Calendar.DAY_OF_MONTH, day);
@@ -65,6 +70,7 @@ public class EntityFactory
         return new EventBuilder().withDescription(description)
                 .withDate(eventDate.getTime())
                 .withEventKey(eventKey)
+                .withHelpersReminded(helpersReminded)
                 .build();
     }
     

@@ -3,7 +3,6 @@ package de.trispeedys.resourceplanning.entity;
 import java.util.HashMap;
 
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
-import de.trispeedys.resourceplanning.datasource.HelperDatasource;
 
 public class DatasourceRegistry
 {
@@ -22,7 +21,7 @@ public class DatasourceRegistry
 
     private void registerDatasources()
     {
-        registeredDatasources.put(Helper.class, new HelperDatasource());
+        //...
     }
 
     private static DatasourceRegistry getInstance()
