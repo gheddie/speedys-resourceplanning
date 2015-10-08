@@ -30,19 +30,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link EventCommitmentDTOArray }
+     * Create an instance of {@link HelperAssignmentDTO }
      * 
      */
-    public EventCommitmentDTOArray createEventCommitmentDTOArray() {
-        return new EventCommitmentDTOArray();
+    public HelperAssignmentDTO createHelperAssignmentDTO() {
+        return new HelperAssignmentDTO();
     }
 
     /**
-     * Create an instance of {@link EventCommitmentDTO }
+     * Create an instance of {@link HelperAssignmentDTOArray }
      * 
      */
-    public EventCommitmentDTO createEventCommitmentDTO() {
-        return new EventCommitmentDTO();
+    public HelperAssignmentDTOArray createHelperAssignmentDTOArray() {
+        return new HelperAssignmentDTOArray();
     }
 
 }

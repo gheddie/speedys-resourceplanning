@@ -10,16 +10,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for eventCommitmentDTOArray complex type.
+ * <p>Java class for helperAssignmentDTOArray complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="eventCommitmentDTOArray">
+ * &lt;complexType name="helperAssignmentDTOArray">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="item" type="{http://webservice.resourceplanning.trispeedys.de/}eventCommitmentDTO" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="item" type="{http://webservice.resourceplanning.trispeedys.de/}helperAssignmentDTO" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,13 +29,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "eventCommitmentDTOArray", propOrder = {
+@XmlType(name = "helperAssignmentDTOArray", propOrder = {
     "item"
 })
-public class EventCommitmentDTOArray {
+public class HelperAssignmentDTOArray {
 
     @XmlElement(nillable = true)
-    protected List<EventCommitmentDTO> item;
+    protected List<HelperAssignmentDTO> item;
 
     /**
      * Gets the value of the item property.
@@ -55,13 +55,13 @@ public class EventCommitmentDTOArray {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link EventCommitmentDTO }
+     * {@link HelperAssignmentDTO }
      * 
      * 
      */
-    public List<EventCommitmentDTO> getItem() {
+    public List<HelperAssignmentDTO> getItem() {
         if (item == null) {
-            item = new ArrayList<EventCommitmentDTO>();
+            item = new ArrayList<HelperAssignmentDTO>();
         }
         return this.item;
     }

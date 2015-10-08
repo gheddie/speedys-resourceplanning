@@ -25,18 +25,9 @@ public interface ResourceInfo {
 
     /**
      * 
-     * @param arg1
-     * @param arg0
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.EventCommitmentDTOArray
      */
     @WebMethod
-    @WebResult(partName = "return")
-    public EventCommitmentDTOArray queryCommitments(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        String arg1);
+    public void sendMessages();
 
     /**
      * 
@@ -61,8 +52,17 @@ public interface ResourceInfo {
 
     /**
      * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.HelperAssignmentDTOArray
      */
     @WebMethod
-    public void sendMessages();
+    @WebResult(partName = "return")
+    public HelperAssignmentDTOArray queryHelperAssignments(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        String arg1);
 
 }

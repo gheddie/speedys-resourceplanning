@@ -7,16 +7,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for eventCommitmentDTO complex type.
+ * <p>Java class for helperAssignmentDTO complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="eventCommitmentDTO">
+ * &lt;complexType name="helperAssignmentDTO">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="commitmentState" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="assignmentState" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -26,35 +26,35 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "eventCommitmentDTO", propOrder = {
-    "commitmentState"
+@XmlType(name = "helperAssignmentDTO", propOrder = {
+    "assignmentState"
 })
-public class EventCommitmentDTO {
+public class HelperAssignmentDTO {
 
-    protected String commitmentState;
+    protected String assignmentState;
 
     /**
-     * Gets the value of the commitmentState property.
+     * Gets the value of the assignmentState property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getCommitmentState() {
-        return commitmentState;
+    public String getAssignmentState() {
+        return assignmentState;
     }
 
     /**
-     * Sets the value of the commitmentState property.
+     * Sets the value of the assignmentState property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setCommitmentState(String value) {
-        this.commitmentState = value;
+    public void setAssignmentState(String value) {
+        this.assignmentState = value;
     }
 
 }
