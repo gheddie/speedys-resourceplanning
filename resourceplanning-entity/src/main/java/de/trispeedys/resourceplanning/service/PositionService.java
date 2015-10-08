@@ -64,6 +64,7 @@ public class PositionService
      * @param event
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static boolean isPositionPresentInEvent(Position position, Event event)
     {
         HashMap<String, Object> parameters = new HashMap<String, Object>();

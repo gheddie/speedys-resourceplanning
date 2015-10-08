@@ -31,11 +31,12 @@ public class EventCommitmentTest
     private static final String TEST_MAIL_PASSWORD = "trispeedys1234";
 
     /**
-     * Denselben Helfer in der selben Veranstaltung auf zwei Positionen bestätigen
+     * Denselben Helfer in der selben Veranstaltung auf zwei Positionen bestätigen. Das ist OK
+     * möglich.
      * 
      * @throws ResourcePlanningException
      */
-    @Test(expected = ResourcePlanningException.class)
+    @Test
     public void testDuplicateCommitment() throws ResourcePlanningException
     {
         HibernateUtil.clearAll();
@@ -246,7 +247,8 @@ public class EventCommitmentTest
                         .persist();
         // position
         Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(), false).persist();
-        // commit helper (position is not present in the event)
+        
+        // commit helper (position is not present in the event) --> must throw exception
         EntityFactory.buildEventCommitment(helper, event, position);
     }
 

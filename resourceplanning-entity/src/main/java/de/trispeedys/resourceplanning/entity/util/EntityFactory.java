@@ -41,12 +41,10 @@ public class EntityFactory
 
     public static EventCommitment buildEventCommitment(Helper helper, Event event, Position position)
     {
-        /*
         if (!(PositionService.isPositionPresentInEvent(position, event)))
         {
             throw new ResourcePlanningException("helper '"+helper+"' can not be commited to position '"+position+"' as it is not present in event '"+event+"'.");
         }
-        */
         return new EventCommitmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEvent(event)

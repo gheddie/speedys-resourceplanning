@@ -1,18 +1,16 @@
 package de.trispeedys.resourceplanning;
 
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.MessagingService;
-import static org.junit.Assert.assertEquals;
 
 public class MailingTest
 {
     @SuppressWarnings("unchecked")
-    @Test
+    //@Test
     public void testSendMails()
     {
         //clear db

@@ -24,8 +24,9 @@ public class EventCommitment extends AbstractDbObject
     
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "helper_id")
     private Helper helper;
-
+    
     @Column(name = "helper_id", insertable = false, updatable = false)
     private Long helperId;
 
@@ -36,6 +37,7 @@ public class EventCommitment extends AbstractDbObject
 
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "position_id")
     private Position position;
 
     public Helper getHelper()
@@ -67,9 +69,14 @@ public class EventCommitment extends AbstractDbObject
     {
         this.position = position;
     }
-
+    
     public Long getHelperId()
     {
         return helperId;
+    }
+    
+    public void setHelperId(Long helperId)
+    {
+        this.helperId = helperId;
     }
 }
