@@ -1,5 +1,8 @@
 package de.trispeedys.resourceplanning.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +14,7 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
+import de.trispeedys.resourceplanning.jobs.BpmJobDefinitions;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
@@ -79,4 +83,37 @@ public class RequestHelpTestUtil
         // type is not there...
         return false;
     }
+
+    /**
+     * Starts a request process and fire all timers, as the given helper does not respond to any mail.
+     * 
+     * @param event
+     * @param helper
+     * @param businessKey
+     * @param processEngine
+     */
+    public static void doNotRespondToAnything(Event event, Helper helper, String businessKey, ProcessEngineRule processEngine)
+    {
+        RequestHelpTestUtil.startHelperRequestProcess(helper, event, businessKey, processEngine);
+        // a mail for every helper must have been sent
+        assertEquals(1, RequestHelpTestUtil.countMails());
+        // one week is gone...
+        fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_HELPER_REMINDER_TIMER, processEngine);
+        // there is a second mail
+        assertEquals(2, RequestHelpTestUtil.countMails());
+        fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_HELPER_REMINDER_TIMER, processEngine);
+        // there is a third mail
+        assertEquals(3, RequestHelpTestUtil.countMails());
+        fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_HELPER_REMINDER_TIMER, processEngine);
+
+        // user was asked if he wants to deactivated permanently (so 3 mails
+        // [REMINDER_STEP_0-2 and DEACTIVATION_REQUEST] should be there)
+        assertTrue(RequestHelpTestUtil.checkMails(4, MessagingType.REMINDER_STEP_0, MessagingType.REMINDER_STEP_1,
+                MessagingType.REMINDER_STEP_2, MessagingType.DEACTIVATION_REQUEST));
+    }
+
+    public static void fireTimer(String jobDefinition, ProcessEngineRule processEngine)
+    {
+        processEngine.getManagementService().executeJob(processEngine.getManagementService().createJobQuery().activityId(jobDefinition).list().get(0).getId());
+    }    
 }

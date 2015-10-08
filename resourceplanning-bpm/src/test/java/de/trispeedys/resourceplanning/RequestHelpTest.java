@@ -89,7 +89,7 @@ public class RequestHelpTest extends GenericBpmTest
         DataModelUtil.relatePositionsToEvent(event, position);
 
         // create preconditions (this must be a follow up assignment)
-        EntityFactory.buildEventCommitment(helper, event, position).persist();
+        EntityFactory.buildHelperAssignment(helper, event, position).persist();
 
         RequestHelpTestUtil.startHelperRequestProcess(helper, event,
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event.getId()), rule);
@@ -148,9 +148,9 @@ public class RequestHelpTest extends GenericBpmTest
         // assign position to event
         DataModelUtil.relateEventsToPosition(positionBikeEntry, evt2014, evt2015);
         // assign helper to position in 2014
-        EntityFactory.buildEventCommitment(createdHelper, evt2014, positionBikeEntry).persist();
+        EntityFactory.buildHelperAssignment(createdHelper, evt2014, positionBikeEntry).persist();
         // assign position to another helper in 2015
-        EntityFactory.buildEventCommitment(blockingHelper, evt2015, positionBikeEntry).persist();
+        EntityFactory.buildHelperAssignment(blockingHelper, evt2015, positionBikeEntry).persist();
         // start request process for 2015...
         String businessKey =
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(createdHelper.getId(), evt2015.getId());
@@ -257,54 +257,6 @@ public class RequestHelpTest extends GenericBpmTest
                                 BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT)
                         .list()
                         .size());
-    }
-
-    /**
-     * tests the deactivation of a helper not respondig to any reminder mail, but in the end, he responds positive to
-     * the 'last chance' mail.
-     */
-    @SuppressWarnings("unchecked")
-    @Test
-    @Deployment(resources = "RequestHelp.bpmn")
-    public void testNotCooperativeAndRecoveredHelper()
-    {
-        // clear all tables in db
-        HibernateUtil.clearAll();
-        // create 'little' event for 2015
-        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
-        // duplicate event
-        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
-        // start request process for every helper
-        List<Helper> activeHelpers =
-                DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
-        String businessKey = null;
-        Helper notCooperativeHelper = activeHelpers.get(0);
-        businessKey =
-                ResourcePlanningUtil.generateRequestHelpBusinessKey(notCooperativeHelper.getId(), event2016.getId());
-        RequestHelpTestUtil.startHelperRequestProcess(notCooperativeHelper, event2016, businessKey, rule);
-        // a mail for every helper must have been sent
-        assertEquals(1, RequestHelpTestUtil.countMails());
-        // one week is gone...
-        rule.getManagementService().executeJob(rule.getManagementService().createJobQuery().list().get(0).getId());
-        // there is a second mail
-        assertEquals(2, RequestHelpTestUtil.countMails());
-        // two week are gone...
-        rule.getManagementService().executeJob(rule.getManagementService().createJobQuery().list().get(0).getId());
-        // there is a third mail
-        assertEquals(3, RequestHelpTestUtil.countMails());
-        // two week are gone (no more mails, please...)...
-        rule.getManagementService().executeJob(rule.getManagementService().createJobQuery().list().get(0).getId());
-
-        // user was asked if he wants to deactivated permanently (so 3 mails
-        // [REMINDER_STEP_0-2 and DEACTIVATION_REQUEST] should be there)
-        assertTrue(RequestHelpTestUtil.checkMails(4, MessagingType.REMINDER_STEP_0, MessagingType.REMINDER_STEP_1,
-                MessagingType.REMINDER_STEP_2, MessagingType.DEACTIVATION_REQUEST));
-
-        // answer to mail (i do not want to be deactivated)
-        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_DEACT_RESP, businessKey);
-
-        // process must be gone (helper state remains 'ACTIVE')
-        assertEquals(0, rule.getRuntimeService().createExecutionQuery().list().size());
     }
 
     /**

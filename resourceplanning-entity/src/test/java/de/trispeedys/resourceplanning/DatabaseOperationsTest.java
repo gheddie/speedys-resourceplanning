@@ -14,19 +14,20 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
 public class DatabaseOperationsTest
 {
+    @SuppressWarnings("unchecked")
     @Test
     public void testFetchListByQuery()
     {        
         //clear db
         HibernateUtil.clearAll();
         
-        Helper helper1 = EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
-        Helper helper2 = EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.INACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.INACTIVE, 1, 1, 1980).persist();
         
         String qry = "FROM " + Helper.class.getSimpleName() + " h WHERE h."+Helper.ATTR_HELPER_STATE+" = :helperState";
-        HashMap parameters = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
-        List<Helper> found = DatasourceRegistry.getDatasource(Helper.class).find(qry, parameters);
+        DatasourceRegistry.getDatasource(Helper.class).find(qry, parameters);
     }
     
     @Test

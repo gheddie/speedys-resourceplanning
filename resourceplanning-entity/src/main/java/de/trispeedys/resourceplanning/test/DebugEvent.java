@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Position;
 
@@ -66,16 +66,16 @@ public class DebugEvent
 
     private static String getHelperString(HashMap<String, Object> variables)
     {
-        List<?> commitments =
+        List<?> helperAssignments =
                 DatasourceRegistry.getDatasource(null).find("FROM " +
-                        EventCommitment.class.getSimpleName() +
+                        HelperAssignment.class.getSimpleName() +
                         " ec WHERE ec.position = :position AND ec.event = :event", variables);
-        if ((commitments == null) || commitments.size() != 1)
+        if ((helperAssignments == null) || helperAssignments.size() != 1)
         {
             return "[UNOCCUPIED]";
         }
-        EventCommitment commitment = (EventCommitment) commitments.get(0);
-        return commitment.getHelper().toString();
+        HelperAssignment helperAssignment = (HelperAssignment) helperAssignments.get(0);
+        return helperAssignment.getHelper().toString();
     }
 
     private static String getLeveledString(int level, String s)

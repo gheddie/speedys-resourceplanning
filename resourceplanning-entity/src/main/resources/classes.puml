@@ -32,14 +32,14 @@ note left of Domain
 	Einheit zusammen
 end note
 
-class EventCommitment {
+class HelperAssignment {
 	helper : Helper
 	helperId : Long
 	event : Event
 	position : Position
 }
 
-note left of EventCommitment
+note left of HelperAssignment
 	Zuordnung eines Helfers zu einer
 	zu besetzenden Position
 end note
@@ -66,9 +66,9 @@ class MessageQueue {
 
 '---Verknüpfungen---
 
-EventCommitment "1" -- "1" Helper
-EventCommitment "1" -- "1" Event
-EventCommitment "1" -- "1" Position
+HelperAssignment "1" -- "1" Helper
+HelperAssignment "1" -- "1" Event
+HelperAssignment "1" -- "1" Position
 Position "1" -- "1" EventPosition
 Event "1" -- "1" EventPosition
 Position "1..n" -- "1" Domain

@@ -5,7 +5,7 @@ import java.util.Calendar;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
@@ -13,7 +13,7 @@ import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.builder.DomainBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventBuilder;
-import de.trispeedys.resourceplanning.entity.builder.EventCommitmentBuilder;
+import de.trispeedys.resourceplanning.entity.builder.HelperAssignmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventPositionBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
@@ -39,13 +39,13 @@ public class EntityFactory
                 .build();
     }
 
-    public static EventCommitment buildEventCommitment(Helper helper, Event event, Position position)
+    public static HelperAssignment buildHelperAssignment(Helper helper, Event event, Position position)
     {
         if (!(PositionService.isPositionPresentInEvent(position, event)))
         {
             throw new ResourcePlanningException("helper '"+helper+"' can not be commited to position '"+position+"' as it is not present in event '"+event+"'.");
         }
-        return new EventCommitmentBuilder().withHelper(helper)
+        return new HelperAssignmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEvent(event)
                 .build();

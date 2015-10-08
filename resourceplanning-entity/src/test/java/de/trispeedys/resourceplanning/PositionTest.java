@@ -75,8 +75,8 @@ public class PositionTest
         DataModelUtil.relatePositionsToEvent(evt2014, posA, posB, posC);
 
         // assign positions
-        EntityFactory.buildEventCommitment(helper, evt2013, posA);
-        EntityFactory.buildEventCommitment(helper, evt2014, posC);
+        EntityFactory.buildHelperAssignment(helper, evt2013, posA);
+        EntityFactory.buildHelperAssignment(helper, evt2014, posC);
         // ...
         PositionService.isPositionAvailable(evt2014, posC);
     }

@@ -5,7 +5,7 @@ import javax.validation.ConstraintViolationException;
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
@@ -13,15 +13,15 @@ import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
 /**
- * Tests the unique criterias for the {@link EventCommitment} entity.
+ * Tests the unique criterias for the {@link HelperAssignment} entity.
  * 
  * @author Stefan.Schulz
  *
  */
-public class EventCommitmentUniqueTest
+public class HelperAssignmentUniqueTest
 {
     /**
-     * Combination of {@link EventCommitment#getEvent()} and {@link EventCommitment#getPosition()} MUST be unique.
+     * Combination of {@link HelperAssignment#getEvent()} and {@link HelperAssignment#getPosition()} MUST be unique.
      * Otherwise, it would mean that a {@link Position} is assigned twice or more in the same {@link Event}.
      */
     @Test(expected = org.hibernate.exception.ConstraintViolationException.class)
@@ -40,7 +40,7 @@ public class EventCommitmentUniqueTest
         //assign position to event to avoid resource planning exception
         DataModelUtil.relatePositionsToEvent(event, position);
         
-        EntityFactory.buildEventCommitment(helper1, event, position).persist();
-        EntityFactory.buildEventCommitment(helper2, event, position).persist();
+        EntityFactory.buildHelperAssignment(helper1, event, position).persist();
+        EntityFactory.buildHelperAssignment(helper2, event, position).persist();
     }
 }

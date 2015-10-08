@@ -11,7 +11,7 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.camunda.bpm.BpmPlatform;
 
-import de.trispeedys.resourceplanning.dto.EventCommitmentDTO;
+import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
@@ -21,10 +21,10 @@ import de.trispeedys.resourceplanning.variables.BpmVariables;
 @SOAPBinding(style = Style.RPC)
 public class ResourceInfo
 {
-    public EventCommitmentDTO[] queryCommitments(String firstName, String lastName)
+    public HelperAssignmentDTO[] queryHelperAssignments(String firstName, String lastName)
     {
-        List<EventCommitmentDTO> commitmentList = new ArrayList<EventCommitmentDTO>();
-        return commitmentList.toArray(new EventCommitmentDTO[commitmentList.size()]);
+        List<HelperAssignmentDTO> helperAssignmentList = new ArrayList<HelperAssignmentDTO>();
+        return helperAssignmentList.toArray(new HelperAssignmentDTO[helperAssignmentList.size()]);
     }
     
     public void startHelperRequestProcess(Long helperId, Long eventId, String businessKey)

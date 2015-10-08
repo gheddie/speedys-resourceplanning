@@ -11,20 +11,20 @@ import org.junit.Test;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import de.trispeedys.resourceplanning.service.CommitmentService;
+import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
-public class EventCommitmentTest
+public class HelperAssignmentTest
 {
     public static final String TEST_MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
 
@@ -37,7 +37,7 @@ public class EventCommitmentTest
      * @throws ResourcePlanningException
      */
     @Test
-    public void testDuplicateCommitment() throws ResourcePlanningException
+    public void testDuplicateAssignment() throws ResourcePlanningException
     {
         HibernateUtil.clearAll();
 
@@ -54,10 +54,10 @@ public class EventCommitmentTest
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976)
                         .persist();
 
-        EntityFactory.buildEventCommitment(helper, event, position2).persist();
+        EntityFactory.buildHelperAssignment(helper, event, position2).persist();
 
         // confirm helper for another position of the same event
-        CommitmentService.confirmHelper(helper, event, position1);
+        AssignmentService.confirmHelper(helper, event, position1);
     }
 
     /**
@@ -66,7 +66,7 @@ public class EventCommitmentTest
      */
     // TODO fix test
     // @Test
-    public void testCommitmentUnderAgeAuthorityOverride()
+    public void testAssignmentUnderAgeAuthorityOverride()
     {
         HibernateUtil.clearAll();
 
@@ -82,7 +82,7 @@ public class EventCommitmentTest
                 EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), true).persist();
 
         // Muss zu Ausnahme führen
-        CommitmentService.confirmHelper(helper, event, position);
+        AssignmentService.confirmHelper(helper, event, position);
     }
 
     /**
@@ -91,7 +91,7 @@ public class EventCommitmentTest
      * @throws ResourcePlanningException
      */
     @Test(expected = ResourcePlanningException.class)
-    public void testCommitmentUnderAge() throws ResourcePlanningException
+    public void testAssignmentUnderAge() throws ResourcePlanningException
     {
         HibernateUtil.clearAll();
 
@@ -108,11 +108,11 @@ public class EventCommitmentTest
                         .persist();
 
         // Muss zu Ausnahme führen
-        CommitmentService.confirmHelper(helper, event, position);
+        AssignmentService.confirmHelper(helper, event, position);
     }
 
     @Test
-    public void testGetLastConfirmedCommitment()
+    public void testGetLastConfirmedHelperAssignment()
     {
         HibernateUtil.clearAll();
 
@@ -131,10 +131,10 @@ public class EventCommitmentTest
         // relate position to both events
         DataModelUtil.relateEventsToPosition(position, evt2012, evt2014);
 
-        EntityFactory.buildEventCommitment(helper, evt2012, position).persist();
+        EntityFactory.buildHelperAssignment(helper, evt2012, position).persist();
 
-        // last confirmed commitment should be in 2012
-        EventCommitment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
+        // last confirmed assignment should be in 2012
+        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(lastConfirmedAssignment.getEvent().getEventDate());
@@ -142,7 +142,7 @@ public class EventCommitmentTest
     }
 
     @Test
-    public void testNoConfirmedCommitment()
+    public void testNoConfirmedHelperAssignment()
     {
         HibernateUtil.clearAll();
 
@@ -162,8 +162,8 @@ public class EventCommitmentTest
         DataModelUtil.relatePositionsToEvent(event2012, position);
         DataModelUtil.relatePositionsToEvent(event2014, position);
 
-        // last confirmed commitment shuold be in 2012
-        EventCommitment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
+        // last confirmed assignment shuold be in 2012
+        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
 
         assertEquals(null, lastConfirmedAssignment);
     }
@@ -191,7 +191,7 @@ public class EventCommitmentTest
         // assign position to event
         DataModelUtil.relatePositionsToEvent(event2015, position);
 
-        EntityFactory.buildEventCommitment(helperToReassign, event2015, position).persist();
+        EntityFactory.buildHelperAssignment(helperToReassign, event2015, position).persist();
 
         // assign that position to another helper in 2016...
         Helper blockingHelper =
@@ -202,7 +202,7 @@ public class EventCommitmentTest
         // assign position to event
         DataModelUtil.relatePositionsToEvent(event2016, position);
 
-        EntityFactory.buildEventCommitment(blockingHelper, event2016, position).persist();
+        EntityFactory.buildHelperAssignment(blockingHelper, event2016, position).persist();
 
         // 'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
         Long helperId = helperToReassign.getId();
@@ -213,7 +213,7 @@ public class EventCommitmentTest
      * Assign a helper to a position in an event WITH the position being part of that event
      */
     @Test
-    public void testValidCommitment()
+    public void testValidAssignment()
     {
         // clear db
         HibernateUtil.clearAll();
@@ -228,14 +228,14 @@ public class EventCommitmentTest
         // assign position to event
         EntityFactory.buildEventPosition(event, position).persist();
         // commit helper
-        EntityFactory.buildEventCommitment(helper, event, position);
+        EntityFactory.buildHelperAssignment(helper, event, position);
     }
 
     /**
      * Assign a helper to a position in an event WITHOUT the position being part of that event
      */
     @Test(expected = ResourcePlanningException.class)
-    public void testInvalidCommitment()
+    public void testInvalidAssignment()
     {
         // clear db
         HibernateUtil.clearAll();
@@ -249,7 +249,7 @@ public class EventCommitmentTest
         Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(), false).persist();
         
         // commit helper (position is not present in the event) --> must throw exception
-        EntityFactory.buildEventCommitment(helper, event, position);
+        EntityFactory.buildHelperAssignment(helper, event, position);
     }
 
     /**
@@ -276,8 +276,8 @@ public class EventCommitmentTest
         List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);
 
         // ...and assign 2 of them...
-        EntityFactory.buildEventCommitment(helper1, event, positions.get(0)).persist();
-        EntityFactory.buildEventCommitment(helper2, event, positions.get(1)).persist();
+        EntityFactory.buildHelperAssignment(helper1, event, positions.get(0)).persist();
+        EntityFactory.buildHelperAssignment(helper2, event, positions.get(1)).persist();
 
         // ..and we expect 3 of them to be unassigned!!
         assertEquals(3, PositionService.findUnassignedPositionsInEvent(event).size());

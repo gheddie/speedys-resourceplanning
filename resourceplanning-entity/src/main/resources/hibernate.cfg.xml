@@ -23,7 +23,7 @@
 		<mapping class="de.trispeedys.resourceplanning.entity.Helper" />
 		<mapping class="de.trispeedys.resourceplanning.entity.Position" />
 		<mapping class="de.trispeedys.resourceplanning.entity.Event" />
-		<mapping class="de.trispeedys.resourceplanning.entity.EventCommitment" />
+		<mapping class="de.trispeedys.resourceplanning.entity.HelperAssignment" />
 		<mapping class="de.trispeedys.resourceplanning.entity.MessageQueue" />
 		<mapping class="de.trispeedys.resourceplanning.entity.EventPosition" />
 		<mapping class="de.trispeedys.resourceplanning.entity.Domain" />

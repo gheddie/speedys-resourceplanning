@@ -65,9 +65,9 @@ public class MailChecker
         // assign position to event
         DataModelUtil.relateEventsToPosition(positionBikeEntry, evt2014, evt2015);
         // assign helper to position in 2014
-        EntityFactory.buildEventCommitment(createdHelper, evt2014, positionBikeEntry).persist();
+        EntityFactory.buildHelperAssignment(createdHelper, evt2014, positionBikeEntry).persist();
         // assign position to another helper in 2015
-        EntityFactory.buildEventCommitment(blockingHelper, evt2015, positionBikeEntry).persist();
+        EntityFactory.buildHelperAssignment(blockingHelper, evt2015, positionBikeEntry).persist();
         // start request process for 2015...
         String businessKey =
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(createdHelper.getId(), evt2015.getId());

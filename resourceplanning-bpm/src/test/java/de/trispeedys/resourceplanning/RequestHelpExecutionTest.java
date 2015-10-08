@@ -1,5 +1,8 @@
 package de.trispeedys.resourceplanning;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,22 +14,21 @@ import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.jobs.BpmJobDefinitions;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
-import de.trispeedys.resourceplanning.service.CommitmentService;
+import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.DatabaseRoutines;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class RequestHelpExecutionTest
 {
@@ -66,21 +68,16 @@ public class RequestHelpExecutionTest
         Helper helperA = allHelpers.get(1);
         Helper helperB = allHelpers.get(3);
         //get assigned position for helper 'A' in 2015
-        EventCommitment commitmentA2015 = CommitmentService.getHelperCommitments(helperA, event2015).get(0);
-        CommitmentService.confirmHelper(helperB, event2016, commitmentA2015.getPosition());
+        HelperAssignment assignmentA2015 = AssignmentService.getHelperAssignments(helperA, event2015).get(0);
+        AssignmentService.confirmHelper(helperB, event2016, assignmentA2015.getPosition());
         
         // (4)
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperA.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helperA, event2016, businessKey, processEngine);
         
         // (5)
-        processEngine.getManagementService().executeJob(
-                processEngine.getManagementService()
-                        .createJobQuery()
-                        .activityId(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_HELPER_REMINDER_TIMER)
-                        .list()
-                        .get(0)
-                        .getId());
+        RequestHelpTestUtil.fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_HELPER_REMINDER_TIMER, processEngine);
+
         Map<String, Object> variablesCallback = new HashMap<String, Object>();
         variablesCallback.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
@@ -101,8 +98,8 @@ public class RequestHelpExecutionTest
         
         // (9)        
         // ...
-        List<EventCommitment> commitmentsA2016 = CommitmentService.getHelperCommitments(helperA, event2016);
-        assertEquals(1, commitmentsA2016.size());
+        List<HelperAssignment> helperAssignmentA2016 = AssignmentService.getHelperAssignments(helperA, event2016);
+        assertEquals(1, helperAssignmentA2016.size());
         
         // (10)
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
@@ -114,7 +111,7 @@ public class RequestHelpExecutionTest
      * assigned to his used position by the system.
      */
     @SuppressWarnings("unchecked")
-    //@Test
+    @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testAssignmentRequestedAsBeforeSuccesful()
     {
@@ -135,9 +132,77 @@ public class RequestHelpExecutionTest
         variablesCallback.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
         
-        List<EventCommitment> commitmentsA2016 = CommitmentService.getHelperCommitments(helperA, event2016);
-        assertEquals(1, commitmentsA2016.size());
+        List<HelperAssignment> helperAssignmentA2016 = AssignmentService.getHelperAssignments(helperA, event2016);
+        assertEquals(1, helperAssignmentA2016.size());
         
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
+    }
+    
+    /**
+     * tests the deactivation of a helper not respondig to any reminder mail, but in the end, he responds positive to
+     * the 'last chance' mail (which means that he remains {@link HelperState#ACTIVE}).
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testNotCooperativeAndRecoveredHelper()
+    {
+        // clear all tables in db
+        HibernateUtil.clearAll();
+        // create 'little' event for 2015
+        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        // duplicate event
+        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        // start request process for every helper
+        List<Helper> activeHelpers =
+                DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
+        Helper notCooperativeHelper = activeHelpers.get(0);
+        String businessKey =
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(notCooperativeHelper.getId(), event2016.getId());
+        
+        RequestHelpTestUtil.doNotRespondToAnything(event2016, notCooperativeHelper, businessKey, processEngine);
+
+        // answer to mail (i do not want to be deactivated)
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_DEACT_RESP, businessKey);
+
+        // process must be gone
+        assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
+        
+        // helper state remains 'ACTIVE'
+        assertEquals(HelperState.ACTIVE, ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, notCooperativeHelper.getId())).getHelperState());
+    }  
+    
+    /**
+     * Like {@link RequestHelpExecutionTest#testNotCooperativeAndRecoveredHelper()}, but the helper does NOT respond to the last chance mail
+     * so that the one month timer is fired. That means that the helper gets deactived.
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testCompletetlyUncooperativeHelper()
+    {
+        // clear all tables in db
+        HibernateUtil.clearAll();
+        // create 'little' event for 2015
+        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        // duplicate event
+        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        // start request process for every helper
+        List<Helper> activeHelpers =
+                DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
+        Helper notCooperativeHelper = activeHelpers.get(0);
+        String businessKey =
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(notCooperativeHelper.getId(), event2016.getId());
+        
+        RequestHelpTestUtil.doNotRespondToAnything(event2016, notCooperativeHelper, businessKey, processEngine);
+        
+        // fire the 'last chance' timer
+        RequestHelpTestUtil.fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_LAST_CHANCE_TIMER, processEngine);
+
+        // process must be gone
+        assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
+        
+        // helper state remains 'ACTIVE'
+        assertEquals(HelperState.INACTIVE, ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, notCooperativeHelper.getId())).getHelperState());
     }
 }

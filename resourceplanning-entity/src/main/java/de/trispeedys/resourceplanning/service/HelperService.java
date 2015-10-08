@@ -8,20 +8,19 @@ import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
-import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class HelperService
 {
     @SuppressWarnings("unchecked")
-    public static EventCommitment getLastConfirmedAssignmentForHelper(Long helperId)
+    public static HelperAssignment getLastConfirmedAssignmentForHelper(Long helperId)
     {
         String queryString =
                 "From " +
-                        EventCommitment.class.getSimpleName() +
+                        HelperAssignment.class.getSimpleName() +
                         " ec INNER JOIN ec.event eo WHERE ec.helperId = :helperId ORDER BY eo.eventDate DESC";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("helperId", helperId);
@@ -30,13 +29,13 @@ public class HelperService
         {
             return null;
         }
-        return (EventCommitment) list.get(0)[0];
+        return (HelperAssignment) list.get(0)[0];
     }
 
     public static boolean isFirstAssignment(Long helperId)
     {
-        List<EventCommitment> commitments = CommitmentService.getAllCommitments(helperId);
-        return ((commitments == null) || (commitments.size() == 0));
+        List<HelperAssignment> helperAssignments = AssignmentService.getAllHelperAssignments(helperId);
+        return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
 
     @SuppressWarnings("unchecked")
@@ -67,9 +66,9 @@ public class HelperService
         parameters.put("helper", helper);
         parameters.put("event", event);
         parameters.put("position", position);
-        List<EventCommitment> list = DatasourceRegistry.getDatasource(Helper.class).find(
+        List<HelperAssignment> list = DatasourceRegistry.getDatasource(Helper.class).find(
                 "FROM " +
-                        EventCommitment.class.getSimpleName() +
+                        HelperAssignment.class.getSimpleName() +
                         " ec WHERE ec.helper = :helper AND ec.event = :event AND ec.position = :position", parameters);
         return ((list != null) || (list.size() == 1));
     }
@@ -80,15 +79,15 @@ public class HelperService
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("helper", helper);
         parameters.put("event", event);
-        List<EventCommitment> commitments =
-                DatasourceRegistry.getDatasource(EventCommitment.class).find(
+        List<HelperAssignment> helperAssignments =
+                DatasourceRegistry.getDatasource(HelperAssignment.class).find(
                         "FROM " +
-                                EventCommitment.class.getSimpleName() +
+                                HelperAssignment.class.getSimpleName() +
                                 " ec WHERE ec.event = :event AND ec.helper = :helper", parameters);
-        if ((commitments == null) || (commitments.size() == 0))
+        if ((helperAssignments == null) || (helperAssignments.size() == 0))
         {
             return null;
         }
-        return commitments.get(0).getPosition();
+        return helperAssignments.get(0).getPosition();
     }
 }

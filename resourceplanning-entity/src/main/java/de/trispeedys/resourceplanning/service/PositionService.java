@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventCommitment;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Position;
 
@@ -47,14 +47,14 @@ public class PositionService
     {
         String queryString =
                 "FROM " +
-                        EventCommitment.class.getSimpleName() +
+                        HelperAssignment.class.getSimpleName() +
                         " ec WHERE ec.position = :position AND ec.event = :event";
         HashMap<String, Object> variables = new HashMap<String, Object>();
-        variables.put(EventCommitment.ATTR_EVENT, event);
-        variables.put(EventCommitment.ATTR_POSITION, position);
-        List<EventCommitment> commitments = DatasourceRegistry.getDatasource(EventCommitment.class).find(queryString, variables);
-        // no commitments -> position available
-        return ((commitments == null) || (commitments.size() == 0));
+        variables.put(HelperAssignment.ATTR_EVENT, event);
+        variables.put(HelperAssignment.ATTR_POSITION, position);
+        List<HelperAssignment> helperAssignments = DatasourceRegistry.getDatasource(HelperAssignment.class).find(queryString, variables);
+        // no helper assignments -> position available
+        return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
 
     /**
@@ -86,7 +86,7 @@ public class PositionService
                 "FROM " +
                         EventPosition.class.getSimpleName() + " ep WHERE ep." + EventPosition.ATTR_EVENT +
                         " = :event AND ep.position.id NOT IN (SELECT ec.position.id FROM " +
-                        EventCommitment.class.getSimpleName() + " ec WHERE ec.event = :event)";
+                        HelperAssignment.class.getSimpleName() + " ec WHERE ec.event = :event)";
         Query q = session.createQuery(qryString);
         q.setParameter("event", event);
         List<EventPosition> eventPositions = q.list();

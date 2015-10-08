@@ -10,11 +10,11 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "event_commitment", uniqueConstraints = @UniqueConstraint(columnNames =
+@Table(name = "helper_assignment", uniqueConstraints = @UniqueConstraint(columnNames =
 {
         "event_id", "position_id"
 }))
-public class EventCommitment extends AbstractDbObject
+public class HelperAssignment extends AbstractDbObject
 {
     public static final String ATTR_HELPER = "helper";
     

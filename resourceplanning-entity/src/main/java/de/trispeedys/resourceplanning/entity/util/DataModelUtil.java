@@ -26,7 +26,7 @@ public class DataModelUtil
     {
         for (Position position : positions)
         {
-            EntityFactory.buildEventCommitment(helper, event, position).persist();
+            EntityFactory.buildHelperAssignment(helper, event, position).persist();
         }       
     }
 }
