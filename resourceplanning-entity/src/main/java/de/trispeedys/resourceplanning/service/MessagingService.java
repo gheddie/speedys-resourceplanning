@@ -23,6 +23,8 @@ public class MessagingService
     @SuppressWarnings("unchecked")
     public static void sendAllUnprocessedMessages()
     {
+        LoggerService.log("sending all unprocessed messages...");
+        
         for (MessageQueue message : findAllUnprocessedMessages())
         {
             MailSender.sendMail(message.getToAddress(), message.getBody(), message.getSubject());

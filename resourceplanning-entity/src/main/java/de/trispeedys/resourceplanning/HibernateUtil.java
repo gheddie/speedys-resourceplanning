@@ -40,6 +40,7 @@ public class HibernateUtil {
 		clearTable("helper");		
 		clearTable("event");
 		clearTable("message_queue");
+		clearTable("database_logger");
 	}
 
 	private static void clearTable(String tableName) {

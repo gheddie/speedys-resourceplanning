@@ -3,9 +3,6 @@
   <bpmn2:process id="MailTriggerProcess" isExecutable="true">
     <bpmn2:startEvent id="StartEvent_1">
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:timerEventDefinition id="_TimerEventDefinition_2">
-        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">R/PT10S</bpmn2:timeCycle>
-      </bpmn2:timerEventDefinition>
     </bpmn2:startEvent>
     <bpmn2:serviceTask id="ServiceTask_1" camunda:class="de.trispeedys.resourceplanning.delegate.mailtrigger.SendMessagesDelegate" name="Alles senden">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>

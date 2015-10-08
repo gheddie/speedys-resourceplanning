@@ -2,6 +2,7 @@ package de.trispeedys.resourceplanning;
 
 import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
 
+
 /**
  * wsimport -keep -verbose http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/ResourceInfoWs?wsdl
  * 
@@ -13,11 +14,10 @@ public class ResourcePlanningClient
 {
     public static void main(String[] args)
     {        
-        testExternalCall();
-    }
-
-    private static void testExternalCall()
-    {
-        new ResourceInfoService().getResourceInfoPort().testExternalCall();
+//        new ResourceInfoService().getResourceInfoPort().startSomeProcesses();
+        
+        new ResourceInfoService().getResourceInfoPort().startOneProcesses();
+        
+//        new ResourceInfoService().getResourceInfoPort().sendAllMessages();
     }
 }
