@@ -9,6 +9,7 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.util.MailSender;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class SendReminderMailDelegate implements JavaDelegate
@@ -21,11 +22,16 @@ public class SendReminderMailDelegate implements JavaDelegate
         // write mail
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
         Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
-                "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event), getMessagingType((Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS))).persist();
+        sendReminderMail(helper, event, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS));
         //increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue+1));
+    }
+
+    private void sendReminderMail(Helper helper, Event event, int attemptCount)
+    {
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
+                "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event), getMessagingType(attemptCount)).persist();
     }
 
     private MessagingType getMessagingType(int attempt)
@@ -60,5 +66,16 @@ public class SendReminderMailDelegate implements JavaDelegate
         }
         buffer.append("Eure Speedys");
         return buffer.toString();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static void main(String[] args)
+    {
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, new Long(3279));
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, new Long(3257));
+        
+//        new SendReminderMailDelegate().sendReminderMail(helper, event, 0);
+        
+        MailSender.sendHtmlMail(helper.getId(), event.getId());
     }
 }

@@ -27,7 +27,19 @@ public interface ResourceInfo {
      * 
      */
     @WebMethod
+    public void startSomeProcesses();
+
+    /**
+     * 
+     */
+    @WebMethod
     public void startOneProcesses();
+
+    /**
+     * 
+     */
+    @WebMethod
+    public void sendAllMessages();
 
     /**
      * 
@@ -43,18 +55,6 @@ public interface ResourceInfo {
         String arg0,
         @WebParam(name = "arg1", partName = "arg1")
         String arg1);
-
-    /**
-     * 
-     */
-    @WebMethod
-    public void startSomeProcesses();
-
-    /**
-     * 
-     */
-    @WebMethod
-    public void sendAllMessages();
 
     /**
      * 
