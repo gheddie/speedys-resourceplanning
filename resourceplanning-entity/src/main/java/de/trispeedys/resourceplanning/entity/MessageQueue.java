@@ -6,6 +6,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;
 
 @Entity
@@ -28,7 +29,11 @@ public class MessageQueue extends AbstractDbObject
     
     @Enumerated(EnumType.STRING)
     @Column(name = "messaging_type")
-    private MessagingType messagingType;    
+    private MessagingType messagingType;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "messaging_format")
+    private MessagingFormat messagingFormat;
     
     public String getFromAddress()
     {
@@ -88,6 +93,16 @@ public class MessageQueue extends AbstractDbObject
     public void setMessagingType(MessagingType messagingType)
     {
         this.messagingType = messagingType;
+    }
+    
+    public MessagingFormat getMessagingFormat()
+    {
+        return messagingFormat;
+    }
+    
+    public void setMessagingFormat(MessagingFormat messagingFormat)
+    {
+        this.messagingFormat = messagingFormat;
     }
     
     public String toString()

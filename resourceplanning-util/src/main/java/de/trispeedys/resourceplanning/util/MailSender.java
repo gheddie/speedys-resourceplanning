@@ -48,7 +48,7 @@ public class MailSender
         }
     }
 
-    public static void sendHtmlMail(Long helperId, Long eventId)
+    public static void sendHtmlMail(String toAddress, String body, String subject)
     {
         final String username = "testhelper1.trispeedys@gmail.com";
         final String password = "trispeedys1234";
@@ -68,15 +68,9 @@ public class MailSender
         try
         {
             Message msg = new MimeMessage(session);
-            msg.setSubject("Test Notification");
-            msg.setRecipient(Message.RecipientType.TO, new InternetAddress("testhelper1.trispeedys@gmail.com", false));
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("<a href=\"http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=ASSIGNMENT_AS_BEFORE&helperId="+helperId+"&eventId="+eventId+"\">Wie immer</a>");
-            buffer.append("<br>");
-            buffer.append("<a href=\"http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=PAUSE_ME&helperId="+helperId+"&eventId="+eventId+"\">Diesmal nicht helfen</a>");
-            buffer.append("<br>");
-            buffer.append("<a href=\"http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=CHANGE_POS&helperId="+helperId+"&eventId="+eventId+"\">Auf anderer Position helfen</a>");
-            msg.setContent(buffer.toString(), "text/html; charset=utf-8");
+            msg.setSubject(subject);
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress, false));
+            msg.setContent(body, "text/html; charset=utf-8");
             msg.setSentDate(new Date());
             Transport.send(msg);
         }
@@ -84,14 +78,5 @@ public class MailSender
         {
             throw new RuntimeException(e);
         }
-    }
-    
-    //---
-    
-    public static void main(String[] args)
-    {
-        Long helperId = new Long(3084);
-        Long eventId = new Long(3083);
-        sendHtmlMail(helperId, eventId);
     }
 }

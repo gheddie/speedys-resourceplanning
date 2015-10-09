@@ -23,6 +23,7 @@ import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
+import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
@@ -78,14 +79,14 @@ public class EntityFactory
                 .build();
     }
     
-    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body)
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingFormat messagingFormat)
     {
-        return buildMessageQueue(fromAddress, toAddress, subject, body, MessagingType.NONE);
+        return buildMessageQueue(fromAddress, toAddress, subject, body, MessagingType.NONE, messagingFormat);
     }
 
-    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingType messagingType)
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingType messagingType, MessagingFormat messagingFormat)
     {
-        return new MessageQueueBuilder().withFromAddress(fromAddress).withToAddress(toAddress).withSubject(subject).withBody(body).withMessagingType(messagingType).build();
+        return new MessageQueueBuilder().withFromAddress(fromAddress).withToAddress(toAddress).withSubject(subject).withBody(body).withMessagingType(messagingType).withMessagingFormat(messagingFormat).build();
     }
 
     public static EventPosition buildEventPosition(Event event, Position position)

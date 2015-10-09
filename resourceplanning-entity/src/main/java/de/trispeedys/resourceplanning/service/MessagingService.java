@@ -27,7 +27,15 @@ public class MessagingService
         
         for (MessageQueue message : findAllUnprocessedMessages())
         {
-            MailSender.sendMail(message.getToAddress(), message.getBody(), message.getSubject());
+            switch (message.getMessagingFormat())
+            {
+                case PLAIN:
+                    MailSender.sendMail(message.getToAddress(), message.getBody(), message.getSubject());
+                    break;
+                case HTML:
+                    MailSender.sendHtmlMail(message.getToAddress(), message.getBody(), message.getSubject());
+                    break;
+            }
             message.setMessagingState(MessagingState.PROCESSED);
             DatasourceRegistry.getDatasource(MessageQueue.class).saveOrUpdate(message);
         }
