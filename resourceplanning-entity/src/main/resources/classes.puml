@@ -21,8 +21,7 @@ class Position {
 }
 
 class Domain {
-	name : String
-	leader : Helper
+	name : String	
 	domainNumber : int
 }
 
@@ -56,6 +55,16 @@ note left of EventPosition
 	zwischen Position und Event)
 end note
 
+class DomainResponsibility {
+	position : Position
+	helper : Helper
+}
+
+note left of DomainResponsibility
+	Verantwortlichkeit für einen Teilbereich,
+	der sich ggf. auf mehrere Helfer verteilen kann (M:N)
+end note
+
 class MessageQueue {
 	fromAddress : String
 	toAddress : String
@@ -72,6 +81,8 @@ HelperAssignment "1" -- "1" Position
 Position "1" -- "1" EventPosition
 Event "1" -- "1" EventPosition
 Position "1..n" -- "1" Domain
-Domain "1" -- "1" Helper : Leitung des Teilbereiches
+
+Helper "1" -- "1" DomainResponsibility : Leitung des Teilbereiches
+Domain "1" -- "1" DomainResponsibility
 
 @enduml

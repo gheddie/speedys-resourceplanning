@@ -2,10 +2,6 @@ package de.trispeedys.resourceplanning.entity.builder;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import de.trispeedys.resourceplanning.entity.Event;
 
 public class EventBuilder extends AbstractEntityBuilder<Event>

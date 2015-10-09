@@ -1,21 +1,22 @@
 package de.trispeedys.resourceplanning.entity.builder;
 
 import de.trispeedys.resourceplanning.entity.Domain;
-import de.trispeedys.resourceplanning.entity.Helper;
 
 public class DomainBuilder extends AbstractEntityBuilder<Domain>
 {
-    private Helper leader;
+//    private Helper leader;
     
     private int domainNumber;
     
     private String name;
 
+    /*
     public DomainBuilder withLeader(Helper aLeader)
     {
         leader = aLeader;
         return this;
     }
+    */
     
     public DomainBuilder withName(String aName)
     {
@@ -32,7 +33,7 @@ public class DomainBuilder extends AbstractEntityBuilder<Domain>
     public Domain build()
     {
         Domain domain = new Domain();
-        domain.setLeader(leader);
+//        domain.setLeader(leader);
         domain.setDomainNumber(domainNumber);
         domain.setName(name);
         return domain;

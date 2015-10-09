@@ -28,5 +28,6 @@
 		<mapping class="de.trispeedys.resourceplanning.entity.EventPosition" />
 		<mapping class="de.trispeedys.resourceplanning.entity.Domain" />
 		<mapping class="de.trispeedys.resourceplanning.entity.DatabaseLogger" />
+		<mapping class="de.trispeedys.resourceplanning.entity.DomainResponsibility" />
 	</session-factory>
 </hibernate-configuration>

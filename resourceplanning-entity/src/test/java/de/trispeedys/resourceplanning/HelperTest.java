@@ -37,7 +37,7 @@ public class HelperTest
         // create helper
         Helper helper = EntityFactory.buildHelper("Diana", "Schulz", "a@b.de", HelperState.ACTIVE, 4, 3, 1973).persist();
         // create domain
-        Domain domain = EntityFactory.buildDomain("someDomain", 1, null).persist();
+        Domain domain = EntityFactory.buildDomain("someDomain", 1).persist();
         //create positions
         Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false).persist();
         Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false).persist();

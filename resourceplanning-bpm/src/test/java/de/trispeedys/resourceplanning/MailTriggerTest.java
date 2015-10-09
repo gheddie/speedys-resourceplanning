@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
-import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
@@ -18,7 +17,7 @@ public class MailTriggerTest
     public ProcessEngineRule processEngine = new ProcessEngineRule();
     
     @SuppressWarnings("unchecked")
-    @Test
+    //@Test
     @Deployment(resources = "MailTriggerProcess.bpmn")
     public void testSendAll()
     {

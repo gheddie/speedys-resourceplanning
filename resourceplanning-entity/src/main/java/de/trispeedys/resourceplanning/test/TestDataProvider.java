@@ -33,8 +33,8 @@ public class TestDataProvider
                         .persist();
 
         // build domains
-        Domain domain1 = EntityFactory.buildDomain("D1", 1, null).persist();
-        Domain domain2 = EntityFactory.buildDomain("D2", 1, null).persist();
+        Domain domain1 = EntityFactory.buildDomain("D1", 1).persist();
+        Domain domain2 = EntityFactory.buildDomain("D2", 1).persist();
         // build positions
         Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, false).persist();
         Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, false).persist();
@@ -80,8 +80,8 @@ public class TestDataProvider
                 EntityFactory.buildHelper("H5_First", "H5_Last", MAIL_ADDRESS, HelperState.ACTIVE, 5, 2, 1980)
                         .persist();
         // build domains
-        Domain domain1 = EntityFactory.buildDomain("D1", 1, helper1).persist();
-        Domain domain2 = EntityFactory.buildDomain("D2", 1, helper3).persist();
+        Domain domain1 = EntityFactory.buildDomain("D1", 1).persist();
+        Domain domain2 = EntityFactory.buildDomain("D2", 1).persist();
         // build positions
         Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, false).persist();
         Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, false).persist();
@@ -119,7 +119,7 @@ public class TestDataProvider
                 EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
                         .persist();
         // build domain
-        Domain domain = EntityFactory.buildDomain("D1", 1, helper).persist();
+        Domain domain = EntityFactory.buildDomain("D1", 1).persist();
         // build position
         Position pos = EntityFactory.buildPosition("P1", 12, domain, false).persist();
         // assign position to event

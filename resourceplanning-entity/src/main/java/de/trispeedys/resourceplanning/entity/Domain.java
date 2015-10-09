@@ -16,9 +16,11 @@ public class Domain extends AbstractDbObject
     /**
      * the {@link Helper} who is in charge for this {@link Domain}
      */
+    /*
     @OneToOne
     @JoinColumn(name = "helper_id")
     private Helper leader;
+    */
     
     @Column(name = "domain_number")
     private int domainNumber;
@@ -36,16 +38,20 @@ public class Domain extends AbstractDbObject
     {
         this.domainNumber = domainNumber;
     }
-    
+ 
+    /*
     public Helper getLeader()
     {
         return leader;
     }
+    */
     
+    /*
     public void setLeader(Helper leader)
     {
         this.leader = leader;
     }
+    */
     
     public String getName()
     {

@@ -2,21 +2,22 @@ package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
 
-import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.DatabaseLogger;
 import de.trispeedys.resourceplanning.entity.Domain;
+import de.trispeedys.resourceplanning.entity.DomainResponsibility;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.builder.DatabaseLoggerBuilder;
 import de.trispeedys.resourceplanning.entity.builder.DomainBuilder;
+import de.trispeedys.resourceplanning.entity.builder.DomainResponsibilityBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventBuilder;
-import de.trispeedys.resourceplanning.entity.builder.HelperAssignmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventPositionBuilder;
+import de.trispeedys.resourceplanning.entity.builder.HelperAssignmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
@@ -92,9 +93,15 @@ public class EntityFactory
         return new EventPositionBuilder().withEvent(event).withPosition(position).build();
     }
     
-    public static Domain buildDomain(String name, int domainNumber, Helper leader)
+    public static DomainResponsibility buildDomainResponsibility(Domain domain, Helper helper)
+    {
+        return new DomainResponsibilityBuilder().withDomain(domain).withHelper(helper).build();
+    }    
+    
+    public static Domain buildDomain(String name, int domainNumber)
     {
         //if a leader is set for the domain, he must be an active helper!!
+        /*
         if (leader != null)
         {
             if (!(leader.isActive()))
@@ -102,7 +109,8 @@ public class EntityFactory
                 throw new ResourcePlanningException("helper '"+leader+"' can not be the leader of a domain is he is not active!!.");
             }
         }
-        return new DomainBuilder().withDomainNumber(domainNumber).withName(name).withLeader(leader).build();
+        */
+        return new DomainBuilder().withDomainNumber(domainNumber).withName(name).build();
     }
 
     public static DatabaseLogger buildLog(String businessKey, String message)
