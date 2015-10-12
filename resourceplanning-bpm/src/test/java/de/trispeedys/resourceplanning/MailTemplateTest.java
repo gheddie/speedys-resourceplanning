@@ -4,8 +4,11 @@ import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Domain;
+import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messaging.ProposePositionsMailTemplate;
@@ -17,9 +20,9 @@ public class MailTemplateTest
     @Test
     public void testProposePositions()
     {
-        //clear db
+        // clear db
         HibernateUtil.clearAll();
-        //create domains
+        // create domains
         Domain domain1 = EntityFactory.buildDomain("dom1", 1).persist();
         Domain domain2 = EntityFactory.buildDomain("dom2", 2).persist();
         // create positions
@@ -28,10 +31,15 @@ public class MailTemplateTest
         EntityFactory.buildPosition("Pos3", 12, domain2, false).persist();
         EntityFactory.buildPosition("Pos4", 12, domain2, false).persist();
         EntityFactory.buildPosition("Pos5", 12, domain2, false).persist();
+        // create helper and event
+        Helper helper =
+                EntityFactory.buildHelper("H1_First", "H1_Last", "testhelper1.trispeedys@gmail.com ",
+                        HelperState.ACTIVE, 1, 1, 1980).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
         // send mail
         ProposePositionsMailTemplate template =
-                new ProposePositionsMailTemplate(DatasourceRegistry.getDatasource(Position.class).findAll(
-                        Position.class));
+                new ProposePositionsMailTemplate(helper, event, DatasourceRegistry.getDatasource(Position.class)
+                        .findAll(Position.class));
         MessagingService.createMessage("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "moo",
                 template.getBody(), MessagingType.NONE, MessagingFormat.HTML);
         MessagingService.sendAllUnprocessedMessages();

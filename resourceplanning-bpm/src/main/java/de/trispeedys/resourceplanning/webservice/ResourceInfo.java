@@ -51,14 +51,15 @@ public class ResourceInfo
         variables.put(BpmVariables.RequestHelpHelper.VAR_EVENT_ID, new Long(eventId));
         BpmPlatform.getDefaultProcessEngine()
                 .getRuntimeService()
-                .startProcessInstanceByMessage(BpmMessages.RequestHelpHelper.MSG_HELP_TRIG, ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId), variables);
+                .startProcessInstanceByMessage(BpmMessages.RequestHelpHelper.MSG_HELP_TRIG,
+                        ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId), variables);
     }
 
     @SuppressWarnings("unchecked")
     public void startSomeProcesses()
     {
         HibernateUtil.clearAll();
-        
+
         Event event2016 =
                 DatabaseRoutines.duplicateEvent(
                         TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
@@ -71,16 +72,17 @@ public class ResourceInfo
             startHelperRequestProcess(helper.getId(), event2016.getId());
         }
     }
-    
+
     /**
-     * like the 'status quo' - example {@link ResourceInfo#startSomeProcesses()}, but with 2 new helpers which
-     * block 2 positions, so 2 of 5 {@link HelperCallback#ASSIGNMENT_AS_BEFORE} will not work.
+     * like the 'status quo' - example {@link ResourceInfo#startSomeProcesses()}, but with 2 new helpers which block 2
+     * positions, so 2 of 5 {@link HelperCallback#ASSIGNMENT_AS_BEFORE} will not work (and alternative positions will be
+     * proposed).
      */
     @SuppressWarnings("unchecked")
     public void startSomeProcessesWithNewHelpers()
     {
         HibernateUtil.clearAll();
-        
+
         Event event2016 =
                 DatabaseRoutines.duplicateEvent(
                         TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
@@ -89,23 +91,25 @@ public class ResourceInfo
                 DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_HELPER_STATE,
                         HelperState.ACTIVE);
         List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);
-        //new helper 1 with assignment
-        Helper newHelper1 = EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
+        // new helper 1 with assignment
+        Helper newHelper1 =
+                EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
         AssignmentService.assignHelper(newHelper1, event2016, positions.get(1));
-        //new helper 2 with assignment
-        Helper newHelper2 = EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
+        // new helper 2 with assignment
+        Helper newHelper2 =
+                EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
         AssignmentService.assignHelper(newHelper2, event2016, positions.get(3));
         for (Helper helper : helpers)
         {
             startHelperRequestProcess(helper.getId(), event2016.getId());
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public void startOneProcesses()
     {
         HibernateUtil.clearAll();
-        
+
         Event event2016 =
                 DatabaseRoutines.duplicateEvent(
                         TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
@@ -115,12 +119,12 @@ public class ResourceInfo
                         HelperState.ACTIVE);
         startHelperRequestProcess(helpers.get(0).getId(), event2016.getId());
     }
-    
+
     public void sendAllMessages()
     {
         MessagingService.sendAllUnprocessedMessages();
     }
-    
+
     public void processHelperCallback(String businessKey, String callback)
     {
         if ((businessKey == null) || (businessKey.length() == 0))
@@ -134,7 +138,9 @@ public class ResourceInfo
             System.out.println("string '' can not be interpreted as helper callback --> returning.");
             return;
         }
-        LoggerService.log("processed helper callback '"+callbackValue+"' for business key '"+businessKey+"'...", DbLogLevel.INFO);
+        LoggerService.log(
+                "processed helper callback '" + callbackValue + "' for business key '" + businessKey + "'...",
+                DbLogLevel.INFO);
         HelperInteraction.processCallback(callbackValue, businessKey);
     }
 }
