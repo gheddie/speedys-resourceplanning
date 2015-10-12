@@ -25,6 +25,21 @@ public interface ResourceInfo {
 
     /**
      * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.HelperAssignmentDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public HelperAssignmentDTOArray queryHelperAssignments(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        String arg1);
+
+    /**
+     * 
      */
     @WebMethod
     public void startSomeProcesses();
@@ -45,16 +60,13 @@ public interface ResourceInfo {
      * 
      * @param arg1
      * @param arg0
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.HelperAssignmentDTOArray
      */
     @WebMethod
-    @WebResult(partName = "return")
-    public HelperAssignmentDTOArray queryHelperAssignments(
+    public void processHelperCallback(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0,
         @WebParam(name = "arg1", partName = "arg1")
-        String arg1);
+        HelperCallback arg1);
 
     /**
      * 
@@ -67,5 +79,11 @@ public interface ResourceInfo {
         long arg0,
         @WebParam(name = "arg1", partName = "arg1")
         long arg1);
+
+    /**
+     * 
+     */
+    @WebMethod
+    public void startSomeProcessesWithNewHelpers();
 
 }

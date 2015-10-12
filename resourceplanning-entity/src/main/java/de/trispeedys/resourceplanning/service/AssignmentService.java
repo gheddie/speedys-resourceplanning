@@ -16,7 +16,7 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class AssignmentService
 {
-    public static void confirmHelper(Helper helper, Event event, Position position) throws ResourcePlanningException
+    public static void assignHelper(Helper helper, Event event, Position position) throws ResourcePlanningException
     {
         /*
         if (isHelperConfirmedForEvent(event, helper))

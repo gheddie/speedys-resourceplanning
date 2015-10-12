@@ -26,7 +26,7 @@ public class PositionTest
         Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
 
         // some positions
-        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
+        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
         Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false).persist();
         Position position3 = EntityFactory.buildPosition("Irgendwas kontrollieren", 12, defaultDomain, false).persist();
         Position position4 = EntityFactory.buildPosition("Gut aussehen", 12, defaultDomain, false).persist();
@@ -58,7 +58,7 @@ public class PositionTest
         Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013).persist();
         Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014).persist();
         // create positions
-        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
+        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
         Position posA = EntityFactory.buildPosition("A", 12, defaultDomain, false).persist();
         Position posB = EntityFactory.buildPosition("B", 12, defaultDomain, false).persist();
         Position posC = EntityFactory.buildPosition("C", 12, defaultDomain, false).persist();

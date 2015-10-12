@@ -16,14 +16,14 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 public class HelperService
 {
     @SuppressWarnings("unchecked")
-    public static HelperAssignment getLastConfirmedAssignmentForHelper(Long helperId)
+    public static HelperAssignment getLastConfirmedAssignmentForHelper(Helper helper)
     {
         String queryString =
                 "From " +
                         HelperAssignment.class.getSimpleName() +
                         " ec INNER JOIN ec.event eo WHERE ec.helperId = :helperId ORDER BY eo.eventDate DESC";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("helperId", helperId);
+        parameters.put("helperId", helper.getId());
         List<Object[]> list = (List<Object[]>) DatasourceRegistry.getDatasource(null).find(queryString, parameters);
         if (list.size() == 0)
         {

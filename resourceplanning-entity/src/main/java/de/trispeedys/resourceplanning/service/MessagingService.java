@@ -5,7 +5,10 @@ import java.util.List;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
+import de.trispeedys.resourceplanning.entity.MessagingType;
+import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;
+import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.util.MailSender;
 
 public class MessagingService
@@ -39,5 +42,11 @@ public class MessagingService
             message.setMessagingState(MessagingState.PROCESSED);
             DatasourceRegistry.getDatasource(MessageQueue.class).saveOrUpdate(message);
         }
+    }
+    
+    public static void createMessage(String fromAddress, String toAddress, String subject, String body, MessagingType messagingType, MessagingFormat messagingFormat)
+    {
+        EntityFactory.buildMessageQueue(fromAddress, toAddress,
+                subject, body, messagingType, messagingFormat).persist();
     }
 }

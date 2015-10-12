@@ -43,7 +43,7 @@ public class HelperAssignmentTest
 
         Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
 
-        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain();
+        Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
         Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false).persist();
         Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain, false).persist();
 
@@ -57,7 +57,7 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(helper, event, position2).persist();
 
         // confirm helper for another position of the same event
-        AssignmentService.confirmHelper(helper, event, position1);
+        AssignmentService.assignHelper(helper, event, position1);
     }
 
     /**
@@ -79,10 +79,10 @@ public class HelperAssignmentTest
 
         // Position erfordert Mindest-Alter 16 Jahre
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), true).persist();
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), true).persist();
 
         // Muss zu Ausnahme führen
-        AssignmentService.confirmHelper(helper, event, position);
+        AssignmentService.assignHelper(helper, event, position);
     }
 
     /**
@@ -104,11 +104,11 @@ public class HelperAssignmentTest
 
         // Position erfordert Mindest-Alter 16 Jahre
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false)
                         .persist();
 
         // Muss zu Ausnahme führen
-        AssignmentService.confirmHelper(helper, event, position);
+        AssignmentService.assignHelper(helper, event, position);
     }
 
     @Test
@@ -125,7 +125,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
                         .persist();
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false)
                         .persist();
 
         // relate position to both events
@@ -134,7 +134,7 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(helper, evt2012, position).persist();
 
         // last confirmed assignment should be in 2012
-        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
+        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper);
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(lastConfirmedAssignment.getEvent().getEventDate());
@@ -155,7 +155,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
                         .persist();
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false)
                         .persist();
 
         // assign position to event
@@ -163,7 +163,7 @@ public class HelperAssignmentTest
         DataModelUtil.relatePositionsToEvent(event2014, position);
 
         // last confirmed assignment shuold be in 2012
-        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper.getId());
+        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper);
 
         assertEquals(null, lastConfirmedAssignment);
     }
@@ -179,7 +179,7 @@ public class HelperAssignmentTest
 
         // create a position
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(), false)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false)
                         .persist();
 
         // helper was assigned pos 'Laufverpflegung' in 2015...
@@ -205,8 +205,7 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(blockingHelper, event2016, position).persist();
 
         // 'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
-        Long helperId = helperToReassign.getId();
-        assertFalse(PositionService.isPositionAvailable(event2016, HelperService.getLastConfirmedAssignmentForHelper(helperId).getPosition()));
+        assertFalse(PositionService.isPositionAvailable(event2016, HelperService.getLastConfirmedAssignmentForHelper(helperToReassign).getPosition()));
     }
 
     /**
@@ -224,7 +223,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .persist();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(), false).persist();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false).persist();
         // assign position to event
         EntityFactory.buildEventPosition(event, position).persist();
         // commit helper
@@ -246,7 +245,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .persist();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(), false).persist();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false).persist();
         
         // commit helper (position is not present in the event) --> must throw exception
         EntityFactory.buildHelperAssignment(helper, event, position);

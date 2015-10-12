@@ -3,6 +3,7 @@ package de.trispeedys.resourceplanning.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Position extends AbstractDbObject
@@ -12,6 +13,7 @@ public class Position extends AbstractDbObject
     @Column(name = "minimal_age")
     private int minimalAge;
     
+    @NotNull
     @ManyToOne
     private Domain domain;
     

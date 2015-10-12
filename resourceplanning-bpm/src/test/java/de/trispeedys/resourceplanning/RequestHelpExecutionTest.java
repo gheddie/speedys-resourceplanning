@@ -69,7 +69,7 @@ public class RequestHelpExecutionTest
         Helper helperB = allHelpers.get(3);
         //get assigned position for helper 'A' in 2015
         HelperAssignment assignmentA2015 = AssignmentService.getHelperAssignments(helperA, event2015).get(0);
-        AssignmentService.confirmHelper(helperB, event2016, assignmentA2015.getPosition());
+        AssignmentService.assignHelper(helperB, event2016, assignmentA2015.getPosition());
         
         // (4)
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperA.getId(), event2016.getId());
@@ -204,5 +204,38 @@ public class RequestHelpExecutionTest
         
         // helper state remains 'ACTIVE'
         assertEquals(HelperState.INACTIVE, ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, notCooperativeHelper.getId())).getHelperState());
+    }
+    
+    /**
+     * Tests {@link HelperCallback#PAUSE_ME}.
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testPauseMe()
+    {
+        // clear all tables in db
+        HibernateUtil.clearAll();
+        
+        HibernateUtil.clearAll();
+        
+        Event event2015 = TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        
+        Event event2016 = DatabaseRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        
+        List<Helper> allHelpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
+        assertEquals(5, allHelpers.size());
+        Helper helperA = allHelpers.get(1);
+        
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperA.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helperA, event2016, businessKey, processEngine);
+        
+        Map<String, Object> variablesCallback = new HashMap<String, Object>();
+        variablesCallback.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.PAUSE_ME);
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
+        
+        //process must be gone, helper must remain at state active
+        assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
+        assertEquals(HelperState.ACTIVE, ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperA.getId())).getHelperState());
     }
 }

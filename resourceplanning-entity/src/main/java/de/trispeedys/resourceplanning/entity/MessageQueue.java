@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;
@@ -19,8 +20,10 @@ public class MessageQueue extends AbstractDbObject
     @Column(name = "to_address")
     private String toAddress;
     
+    @NotNull
     private String subject;
     
+    @NotNull
     private String body;
     
     @Enumerated(EnumType.STRING)
