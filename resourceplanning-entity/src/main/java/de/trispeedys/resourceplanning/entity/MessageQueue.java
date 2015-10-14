@@ -14,6 +14,14 @@ import de.trispeedys.resourceplanning.entity.misc.MessagingState;
 @Table(name = "message_queue")
 public class MessageQueue extends AbstractDbObject
 {
+    public static final String ATTR_FROM_ADDRESS = "fromAddress";
+    
+    public static final String ATTR_TO_ADDRESS = "toAddress";
+    
+    public static final String ATTR_SUBJECT = "subject";
+    
+    public static final String ATTR_BODY = "body";
+    
     @Column(name = "from_address")
     private String fromAddress;
     

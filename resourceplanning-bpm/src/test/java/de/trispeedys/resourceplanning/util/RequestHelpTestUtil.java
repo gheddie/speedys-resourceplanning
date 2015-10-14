@@ -14,6 +14,7 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
+import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.jobs.BpmJobDefinitions;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
@@ -115,5 +116,12 @@ public class RequestHelpTestUtil
     public static void fireTimer(String jobDefinition, ProcessEngineRule processEngine)
     {
         processEngine.getManagementService().executeJob(processEngine.getManagementService().createJobQuery().activityId(jobDefinition).list().get(0).getId());
-    }    
+    }
+    
+    public static void doCallback(HelperCallback helperCallback, String businessKey, ProcessEngineRule processEngine)
+    {
+        Map<String, Object> variablesCallback = new HashMap<String, Object>();
+        variablesCallback.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, helperCallback);
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
+    }
 }

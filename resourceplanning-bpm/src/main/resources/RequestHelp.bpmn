@@ -262,7 +262,7 @@
       <bpmn:text>Helfer bleibt aktiv</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:textAnnotation id="TextAnnotation_4">
-      <bpmn:text>Position kann inzweischen anderweitig vergben sein</bpmn:text>
+      <bpmn:text>Position kann inzwischen anderweitig vergben sein</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_4" sourceRef="TextAnnotation_4" targetRef="ServiceTask_0aamnu2"/>
   </bpmn:process>

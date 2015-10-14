@@ -78,9 +78,7 @@ public class RequestHelpExecutionTest
         // (5)
         RequestHelpTestUtil.fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_HELPER_REMINDER_TIMER, processEngine);
 
-        Map<String, Object> variablesCallback = new HashMap<String, Object>();
-        variablesCallback.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
-        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
+        RequestHelpTestUtil.doCallback(HelperCallback.ASSIGNMENT_AS_BEFORE, businessKey, processEngine);
         
         // (6) --> if CheckAvailabiliy-Delegate fails, variable 'posAvailable' must be set to 'false'
         // ??? how to check the variable ???
@@ -128,9 +126,7 @@ public class RequestHelpExecutionTest
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperA.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helperA, event2016, businessKey, processEngine);
         
-        Map<String, Object> variablesCallback = new HashMap<String, Object>();
-        variablesCallback.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
-        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
+        RequestHelpTestUtil.doCallback(HelperCallback.ASSIGNMENT_AS_BEFORE, businessKey, processEngine);
         
         List<HelperAssignment> helperAssignmentA2016 = AssignmentService.getHelperAssignments(helperA, event2016);
         assertEquals(1, helperAssignmentA2016.size());
@@ -237,5 +233,48 @@ public class RequestHelpExecutionTest
         //process must be gone, helper must remain at state active
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
         assertEquals(HelperState.ACTIVE, ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperA.getId())).getHelperState());
+    }
+    
+    /**
+     * Testing a process fpr a helper who wants to change his position (start like {@link RequestHelpExecutionTest#testProposePositionsOnAssignmentRequestedAsBefore}, 
+     * but the helper commits the message for {@link HelperCallback#CHANGE_POS}) (A). He then chooses a positions which already has been assigned to someone else (B),
+     * so he gets a second mail, choose a free position this time (C). Then the process is gone (D).
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testChangePositions()
+    {
+        HibernateUtil.clearAll();
+        
+        Event event2015 = TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        
+        Event event2016 = DatabaseRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        
+        List<Helper> allHelpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
+        assertEquals(5, allHelpers.size());
+        Helper helperA = allHelpers.get(1);
+        Helper helperB = allHelpers.get(3);
+        //get assigned position for helper 'A' in 2015
+        HelperAssignment assignmentA2015 = AssignmentService.getHelperAssignments(helperA, event2015).get(0);
+        AssignmentService.assignHelper(helperB, event2016, assignmentA2015.getPosition());
+        
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperA.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helperA, event2016, businessKey, processEngine);
+        
+        // (A)
+        RequestHelpTestUtil.doCallback(HelperCallback.CHANGE_POS, businessKey, processEngine);
+        
+        //check mails ('REMINDER_STEP_0' und 'PROPOSE_POSITIONS' must be there)
+        assertTrue(RequestHelpTestUtil.checkMails(2, MessagingType.REMINDER_STEP_0, MessagingType.PROPOSE_POSITIONS));
+        
+        // (B)
+        // ...
+        
+        // (C)
+        // ...
+        
+        // (D)
+        // ...
     }
 }
