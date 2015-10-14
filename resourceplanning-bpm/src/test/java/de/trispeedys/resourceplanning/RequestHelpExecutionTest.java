@@ -90,9 +90,7 @@ public class RequestHelpExecutionTest
         
         // (8)
         Position chosenPosition = unassignedPositionsIn2016.get(1);
-        Map<String, Object> variablesPosChosen = new HashMap<String, Object>();
-        variablesPosChosen.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, chosenPosition.getId());
-        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variablesPosChosen);
+        RequestHelpTestUtil.choosePosition(businessKey, chosenPosition, processEngine);
         
         // (9)        
         // ...
@@ -238,7 +236,7 @@ public class RequestHelpExecutionTest
     /**
      * Testing a process fpr a helper who wants to change his position (start like {@link RequestHelpExecutionTest#testProposePositionsOnAssignmentRequestedAsBefore}, 
      * but the helper commits the message for {@link HelperCallback#CHANGE_POS}) (A). He then chooses a positions which already has been assigned to someone else (B),
-     * so he gets a second mail, choose a free position this time (C). Then the process is gone (D).
+     * so he gets a second mail, choose a free position this time (C). Then the position is assigned to 'helperA' and the process is gone (D).
      */
     @SuppressWarnings("unchecked")
     @Test
@@ -254,10 +252,7 @@ public class RequestHelpExecutionTest
         List<Helper> allHelpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
-        Helper helperB = allHelpers.get(3);
-        //get assigned position for helper 'A' in 2015
-        HelperAssignment assignmentA2015 = AssignmentService.getHelperAssignments(helperA, event2015).get(0);
-        AssignmentService.assignHelper(helperB, event2016, assignmentA2015.getPosition());
+        Helper helperB = allHelpers.get(3);                
         
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperA.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helperA, event2016, businessKey, processEngine);
@@ -268,13 +263,18 @@ public class RequestHelpExecutionTest
         //check mails ('REMINDER_STEP_0' und 'PROPOSE_POSITIONS' must be there)
         assertTrue(RequestHelpTestUtil.checkMails(2, MessagingType.REMINDER_STEP_0, MessagingType.PROPOSE_POSITIONS));
         
-        // (B)
-        // ...
+        // (B) we assign one of the proposed prosition to another helper and let 'helperA' choose it...
+        Position blockedPosition = PositionService.findUnassignedPositionsInEvent(event2016).get(0);
+        Position notBlockedPosition = PositionService.findUnassignedPositionsInEvent(event2016).get(1);
+        AssignmentService.assignHelper(helperB, event2016, blockedPosition);
+        RequestHelpTestUtil.choosePosition(businessKey, blockedPosition, processEngine);
         
-        // (C)
-        // ...
+        // (C) --> there must be a second proposal mail
+        assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.REMINDER_STEP_0, MessagingType.PROPOSE_POSITIONS));
+        RequestHelpTestUtil.choosePosition(businessKey, notBlockedPosition, processEngine);
         
         // (D)
-        // ...
+        assertEquals(1, AssignmentService.getHelperAssignments(helperA, event2016).size());
+        assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
     }
 }

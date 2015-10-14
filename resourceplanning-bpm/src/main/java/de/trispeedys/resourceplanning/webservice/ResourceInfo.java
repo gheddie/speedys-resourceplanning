@@ -74,6 +74,33 @@ public class ResourceInfo
     }
 
     /**
+     * starts a process and blocks a position in order to test {@link HelperCallback#CHANGE_POS} with an already blocked
+     * position chosen.
+     */
+    @SuppressWarnings("unchecked")
+    public void prepareBlockedChoosePosition()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                DatabaseRoutines.duplicateEvent(
+                        TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+
+        // block one of the positions with a new helper
+        Helper blockingHelper =
+                EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
+        AssignmentService.assignHelper(blockingHelper, event2016,
+                (Position) DatasourceRegistry.getDatasource(Position.class).findAll(Position.class).get(0));
+
+        // start process for the created helper 'H2_Last'
+        startHelperRequestProcess(
+                ((Helper) DatasourceRegistry.getDatasource(Helper.class)
+                        .find(Helper.class, Helper.ATTR_LAST_NAME, "H2_Last")
+                        .get(0)).getId(), event2016.getId());
+    }
+
+    /**
      * like the 'status quo' - example {@link ResourceInfo#startSomeProcesses()}, but with 2 new helpers which block 2
      * positions, so 2 of 5 {@link HelperCallback#ASSIGNMENT_AS_BEFORE} will not work (and alternative positions will be
      * proposed).

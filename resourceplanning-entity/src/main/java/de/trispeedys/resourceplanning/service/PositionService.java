@@ -31,6 +31,14 @@ public class PositionService
         }
         return result;
     }
+    
+    @SuppressWarnings("unchecked")
+    public static boolean isPositionAvailable(Long eventId, Long positionId)
+    {
+        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById(Position.class, positionId);
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);
+        return isPositionAvailable(event, position);
+    }
 
     /**
      * checks if the given position is present and already assigned in the given event
