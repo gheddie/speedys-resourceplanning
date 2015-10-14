@@ -168,6 +168,6 @@ public class ResourceInfo
         LoggerService.log(
                 "processed helper callback '" + callbackValue + "' for business key '" + businessKey + "'...",
                 DbLogLevel.INFO);
-        HelperInteraction.processCallback(callbackValue, businessKey);
+        HelperInteraction.processReminderCallback(callbackValue, businessKey);
     }
 }

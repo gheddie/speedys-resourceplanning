@@ -4,43 +4,26 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>First JSP</title>
+<title>R&uumlckmeldung erhalten</title>
 </head>
-<%@ page import="java.util.Date"%>
-<%@ page import="org.camunda.bpm.BpmPlatform"%>
-<%@ page
-	import="de.trispeedys.resourceplanning.entity.misc.HelperCallback"%>
-<%@ page import="java.util.HashMap"%>
-<%@ page import="java.util.List"%>
-<%@ page import="java.util.Map"%>
-<%@ page import="de.trispeedys.resourceplanning.messages.BpmMessages"%>
-<%@ page import="de.trispeedys.resourceplanning.variables.BpmVariables"%>
-<%@ page
-	import="de.trispeedys.resourceplanning.util.ResourcePlanningUtil"%>
-<%@ page
-	import="de.trispeedys.resourceplanning.service.PositionService"%>
+<%@ page import="de.trispeedys.resourceplanning.interaction.HelperInteraction"%>
+<%@ page import="de.trispeedys.resourceplanning.interaction.HtmlRenderer"%>
+<%@page import="org.camunda.bpm.engine.MismatchingMessageCorrelationException"%>
+<%@page import="de.trispeedys.resourceplanning.interaction.HelperInteraction"%>
+<%@page import="de.trispeedys.resourceplanning.interaction.HtmlRenderer"%>
 <body>
-	<h3>Hi Stefan</h3>
-	<br>
-	<br>
-	<img src="img/OK.png" alt="OK" width="300" height="300" />
-	<br>
-	<br>	
-	<strong>Current Time is</strong>:
-	<%=new Date()%>
 	<%
-        System.out.println("the helper chosen a position...");
-        Map<String, Object> variables = new HashMap<String, Object>();
-        Long chosenPositionId = Long.parseLong(request.getParameter("chosenPosition"));
-        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION,
-                chosenPositionId);
-        Long helperId = Long.parseLong(request.getParameter("helperId"));
-        Long eventId = Long.parseLong(request.getParameter("eventId"));
-        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-        BpmPlatform.getDefaultProcessEngine()
-                .getRuntimeService()
-                .correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
-        //out.println("position ["+chosenPositionId+"] available : " + PositionService.isPositionAvailable(eventId, chosenPositionId));
+	    try
+	    {
+	        HelperInteraction.processPositionChosenCallback(request);
+	        //the message could be correlated
+	        out.println(HtmlRenderer.renderCorrelationSuccess(request));
+	    }
+	    catch (MismatchingMessageCorrelationException e)
+	    {
+	        //the message could not be correlated
+	        out.println(HtmlRenderer.renderCorrelationFault(request));
+	    }
 	%>
 </body>
 </html>
