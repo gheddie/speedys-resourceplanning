@@ -7,21 +7,30 @@ import java.util.List;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 
 public class ProposePositionsMailTemplate extends AbstractMailTemplate
 {
     private List<Position> positions;
-    
+
     private Helper helper;
-    
+
     private Event event;
 
-    public ProposePositionsMailTemplate(Helper aHelper, Event aEvent, List<Position> aPositions)
+    // which kind of callback caused this mail?
+    private HelperCallback trigger;
+
+    private Position priorAssignment;
+
+    public ProposePositionsMailTemplate(Helper aHelper, Event aEvent, List<Position> aPositions,
+            HelperCallback aTrigger, Position aPriorAssignment)
     {
         super();
         this.helper = aHelper;
         this.event = aEvent;
         this.positions = aPositions;
+        this.trigger = aTrigger;
+        this.priorAssignment = aPriorAssignment;
     }
 
     public String getBody()
@@ -41,21 +50,32 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
         StringBuffer buffer = new StringBuffer();
         buffer.append("Hallo, " + helper.getFirstName() + "!!");
         buffer.append("<br><br>");
-        buffer.append("Bitte sag uns, welche Position du beim "+event.getDescription()+" besetzen möchtest:");
+        if (trigger.equals(HelperCallback.ASSIGNMENT_AS_BEFORE))
+        {
+            buffer.append("Deine vormalige Position ("+priorAssignment.getDescription()+" im Bereich "+priorAssignment.getDomain().getName()+") ist leider bereits besetzt.");
+            buffer.append("<br><br>"); 
+        }
+        buffer.append("Bitte sag uns, welche Position du beim " + event.getDescription() + " besetzen möchtest:");
         buffer.append("<br><br>");
         String entry = null;
         for (String key : grouping.keySet())
         {
-            buffer.append("<li>"+key+"</li>");
+            buffer.append("<li>" + key + "</li>");
             for (Position pos : grouping.get(key))
             {
-                entry = "http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/ChosenPositionReceiver.jsp?chosenPosition=" +
-                        pos.getId() + "&helperId=" + helper.getId() + "&eventId=" + event.getId();
-                buffer.append("<ul><a href=\""+entry+"\">"+pos.getDescription()+"</a></ul>");
+                entry =
+                        "http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/ChosenPositionReceiver.jsp?chosenPosition=" +
+                                pos.getId() + "&helperId=" + helper.getId() + "&eventId=" + event.getId();
+                buffer.append("<ul><a href=\"" + entry + "\">" + pos.getDescription() + "</a></ul>");
             }
         }
-        buffer.append("<br><br>");
+        buffer.append("<br>");
         buffer.append("Deine Speedys");
         return buffer.toString();
+    }
+
+    public String getSubject()
+    {
+        return "Positions-Auswahl für den Wettkampf " + event.getDescription();
     }
 }

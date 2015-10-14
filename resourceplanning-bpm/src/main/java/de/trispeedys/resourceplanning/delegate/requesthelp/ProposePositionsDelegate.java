@@ -10,9 +10,11 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messaging.ProposePositionsMailTemplate;
+import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
@@ -33,26 +35,11 @@ public class ProposePositionsDelegate implements JavaDelegate
         // send mail
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
-                "Positions-Auswahl für den Wettkampf " + event.getDescription(),
-                generateProposalBody(helper, event, unassignedPositions), MessagingType.PROPOSE_POSITIONS,
-                MessagingFormat.HTML).persist();
-    }
-
-    private String generateProposalBody(Helper helper, Event event, List<Position> unassignedPositions)
-    {
-        // build message body
-
-        return new ProposePositionsMailTemplate(helper, event, unassignedPositions).getBody();
-
-        /*
-         * StringBuffer buffer = new StringBuffer(); buffer.append("Hallo, " + helper.getFirstName() + "!!");
-         * buffer.append("\n\n");
-         * buffer.append("Bitte sag uns, welche Position du beim "+event.getDescription()+" besetzen möchtest:");
-         * buffer.append("\n\n"); for (Position unassignedPosition : unassignedPositions) { buffer.append(
-         * "http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/ChosenPositionReceiver.jsp?chosenPosition=" +
-         * unassignedPosition.getId() + "&helperId=" + helper.getId() + "&eventId=" + event.getId());
-         * buffer.append("\n\n"); } buffer.append("Eure Speedys"); return buffer.toString();
-         */
+        ProposePositionsMailTemplate template =
+                new ProposePositionsMailTemplate(helper, event, unassignedPositions,
+                        (HelperCallback) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK),
+                        HelperService.getPriorAssignment(helper).getPosition());
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.getSubject(),
+                template.getBody(), MessagingType.PROPOSE_POSITIONS, MessagingFormat.HTML).persist();
     }
 }

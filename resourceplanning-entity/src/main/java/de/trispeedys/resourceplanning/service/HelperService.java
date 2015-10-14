@@ -16,7 +16,7 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 public class HelperService
 {
     @SuppressWarnings("unchecked")
-    public static HelperAssignment getLastConfirmedAssignmentForHelper(Helper helper)
+    public static HelperAssignment getPriorAssignment(Helper helper)
     {
         String queryString =
                 "From " +

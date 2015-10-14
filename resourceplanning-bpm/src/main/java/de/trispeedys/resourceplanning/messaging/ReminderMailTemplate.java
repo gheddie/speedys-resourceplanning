@@ -6,4 +6,9 @@ public class ReminderMailTemplate extends AbstractMailTemplate
     {
         return null;
     }
+
+    public String getSubject()
+    {
+        return null;
+    }
 }

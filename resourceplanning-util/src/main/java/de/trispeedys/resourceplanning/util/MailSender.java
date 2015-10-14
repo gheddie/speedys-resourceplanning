@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -15,7 +16,7 @@ public class MailSender
 {
     private static final String FROM = "from-email@gmail.com";
 
-    public static void sendMail(String toAddress, String body, String subject)
+    public static void sendMail(String toAddress, String body, String subject) throws AddressException, MessagingException
     {
         final String username = "testhelper1.trispeedys@gmail.com";
         final String password = "trispeedys1234";
@@ -32,23 +33,16 @@ public class MailSender
                 return new PasswordAuthentication(username, password);
             }
         });
-        try
-        {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(FROM));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
-            message.setSubject(subject);
-            message.setText(body);
-            Transport.send(message);
-            System.out.println("Done");
-        }
-        catch (MessagingException e)
-        {
-            throw new RuntimeException(e);
-        }
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(FROM));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
+        message.setSubject(subject);
+        message.setText(body);
+        Transport.send(message);
+        System.out.println("Done");
     }
 
-    public static void sendHtmlMail(String toAddress, String body, String subject)
+    public static void sendHtmlMail(String toAddress, String body, String subject) throws AddressException, MessagingException
     {
         final String username = "testhelper1.trispeedys@gmail.com";
         final String password = "trispeedys1234";
@@ -65,18 +59,11 @@ public class MailSender
                 return new PasswordAuthentication(username, password);
             }
         });
-        try
-        {
-            Message msg = new MimeMessage(session);
-            msg.setSubject(subject);
-            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress, false));
-            msg.setContent(body, "text/html; charset=utf-8");
-            msg.setSentDate(new Date());
-            Transport.send(msg);
-        }
-        catch (MessagingException e)
-        {
-            throw new RuntimeException(e);
-        }
+        Message msg = new MimeMessage(session);
+        msg.setSubject(subject);
+        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress, false));
+        msg.setContent(body, "text/html; charset=utf-8");
+        msg.setSentDate(new Date());
+        Transport.send(msg);
     }
 }

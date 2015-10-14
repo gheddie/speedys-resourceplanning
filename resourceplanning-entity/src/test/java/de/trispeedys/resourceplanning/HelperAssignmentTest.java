@@ -134,7 +134,7 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(helper, evt2012, position).persist();
 
         // last confirmed assignment should be in 2012
-        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper);
+        HelperAssignment lastConfirmedAssignment = HelperService.getPriorAssignment(helper);
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(lastConfirmedAssignment.getEvent().getEventDate());
@@ -163,7 +163,7 @@ public class HelperAssignmentTest
         DataModelUtil.relatePositionsToEvent(event2014, position);
 
         // last confirmed assignment shuold be in 2012
-        HelperAssignment lastConfirmedAssignment = HelperService.getLastConfirmedAssignmentForHelper(helper);
+        HelperAssignment lastConfirmedAssignment = HelperService.getPriorAssignment(helper);
 
         assertEquals(null, lastConfirmedAssignment);
     }
@@ -205,7 +205,7 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(blockingHelper, event2016, position).persist();
 
         // 'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
-        assertFalse(PositionService.isPositionAvailable(event2016, HelperService.getLastConfirmedAssignmentForHelper(helperToReassign).getPosition()));
+        assertFalse(PositionService.isPositionAvailable(event2016, HelperService.getPriorAssignment(helperToReassign).getPosition()));
     }
 
     /**

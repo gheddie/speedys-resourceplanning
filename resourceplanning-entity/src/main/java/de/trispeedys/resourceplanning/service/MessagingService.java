@@ -30,17 +30,27 @@ public class MessagingService
         
         for (MessageQueue message : findAllUnprocessedMessages())
         {
-            switch (message.getMessagingFormat())
+            try
             {
-                case PLAIN:
-                    MailSender.sendMail(message.getToAddress(), message.getBody(), message.getSubject());
-                    break;
-                case HTML:
-                    MailSender.sendHtmlMail(message.getToAddress(), message.getBody(), message.getSubject());
-                    break;
+                switch (message.getMessagingFormat())
+                {
+                    case PLAIN:
+                        MailSender.sendMail(message.getToAddress(), message.getBody(), message.getSubject());
+                        break;
+                    case HTML:
+                        MailSender.sendHtmlMail(message.getToAddress(), message.getBody(), message.getSubject());
+                        break;                   
+                }
+                message.setMessagingState(MessagingState.PROCESSED);                   
             }
-            message.setMessagingState(MessagingState.PROCESSED);
-            DatasourceRegistry.getDatasource(MessageQueue.class).saveOrUpdate(message);
+            catch (Exception e)
+            {
+                message.setMessagingState(MessagingState.FAILURE);
+            }
+            finally
+            {
+                DatasourceRegistry.getDatasource(MessageQueue.class).saveOrUpdate(message);
+            }
         }
     }
     

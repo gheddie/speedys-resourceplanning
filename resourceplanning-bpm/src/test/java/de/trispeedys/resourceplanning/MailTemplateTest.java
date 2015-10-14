@@ -8,10 +8,12 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messaging.ProposePositionsMailTemplate;
+import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class MailTemplateTest
@@ -28,7 +30,7 @@ public class MailTemplateTest
         // create positions
         EntityFactory.buildPosition("Pos1", 12, domain1, false).persist();
         EntityFactory.buildPosition("Pos2", 12, domain1, false).persist();
-        EntityFactory.buildPosition("Pos3", 12, domain2, false).persist();
+        Position pos3 = EntityFactory.buildPosition("Pos3", 12, domain2, false).persist();
         EntityFactory.buildPosition("Pos4", 12, domain2, false).persist();
         EntityFactory.buildPosition("Pos5", 12, domain2, false).persist();
         // create helper and event
@@ -39,9 +41,9 @@ public class MailTemplateTest
         // send mail
         ProposePositionsMailTemplate template =
                 new ProposePositionsMailTemplate(helper, event, DatasourceRegistry.getDatasource(Position.class)
-                        .findAll(Position.class));
-        MessagingService.createMessage("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "moo",
-                template.getBody(), MessagingType.NONE, MessagingFormat.HTML);
+                        .findAll(Position.class), HelperCallback.ASSIGNMENT_AS_BEFORE, pos3);
+        MessagingService.createMessage("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com",
+                template.getSubject(), template.getBody(), MessagingType.NONE, MessagingFormat.HTML);
         MessagingService.sendAllUnprocessedMessages();
     }
 }
