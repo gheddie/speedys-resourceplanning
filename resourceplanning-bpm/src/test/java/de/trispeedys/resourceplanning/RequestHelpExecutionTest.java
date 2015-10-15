@@ -90,7 +90,7 @@ public class RequestHelpExecutionTest
         
         // (8)
         Position chosenPosition = unassignedPositionsIn2016.get(1);
-        RequestHelpTestUtil.choosePosition(businessKey, chosenPosition, processEngine);
+        RequestHelpTestUtil.choosePosition(businessKey, chosenPosition, processEngine, event2016.getId());
         
         // (9)        
         // ...
@@ -267,11 +267,11 @@ public class RequestHelpExecutionTest
         Position blockedPosition = PositionService.findUnassignedPositionsInEvent(event2016).get(0);
         Position notBlockedPosition = PositionService.findUnassignedPositionsInEvent(event2016).get(1);
         AssignmentService.assignHelper(helperB, event2016, blockedPosition);
-        RequestHelpTestUtil.choosePosition(businessKey, blockedPosition, processEngine);
+        RequestHelpTestUtil.choosePosition(businessKey, blockedPosition, processEngine, event2016.getId());
         
         // (C) --> there must be a second proposal mail
         assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.REMINDER_STEP_0, MessagingType.PROPOSE_POSITIONS));
-        RequestHelpTestUtil.choosePosition(businessKey, notBlockedPosition, processEngine);
+        RequestHelpTestUtil.choosePosition(businessKey, notBlockedPosition, processEngine, event2016.getId());
         
         // (D)
         assertEquals(1, AssignmentService.getHelperAssignments(helperA, event2016).size());

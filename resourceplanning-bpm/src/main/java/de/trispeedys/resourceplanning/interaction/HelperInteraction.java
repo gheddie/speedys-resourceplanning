@@ -12,6 +12,7 @@ import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.service.LoggerService;
+import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
@@ -54,6 +55,7 @@ public class HelperInteraction
         Long eventId = Long.parseLong(request.getParameter("eventId"));
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, chosenPositionId);
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, PositionService.isPositionAvailable(eventId, chosenPositionId));
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
         BpmPlatform.getDefaultProcessEngine().getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
     }

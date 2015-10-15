@@ -18,6 +18,7 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.jobs.BpmJobDefinitions;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
+import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class RequestHelpTestUtil
@@ -126,10 +127,11 @@ public class RequestHelpTestUtil
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
     }
     
-    public static void choosePosition(String businessKey, Position blockedPosition, ProcessEngineRule processEngine)
+    public static void choosePosition(String businessKey, Position blockedPosition, ProcessEngineRule processEngine, Long eventId)
     {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, blockedPosition.getId());
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, PositionService.isPositionAvailable(eventId, blockedPosition.getId()));
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
     }
 }

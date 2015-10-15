@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.trispeedys.resourceplanning.configuration.AppConfiguration;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -64,7 +65,7 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
             for (Position pos : grouping.get(key))
             {
                 entry =
-                        "http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/ChosenPositionReceiver.jsp?chosenPosition=" +
+                        AppConfiguration.getInstance().getHost()+"/resourceplanning-bpm-"+AppConfiguration.getInstance().getVersion()+"/ChosenPositionReceiver.jsp?chosenPosition=" +
                                 pos.getId() + "&helperId=" + helper.getId() + "&eventId=" + event.getId();
                 buffer.append("<ul><a href=\"" + entry + "\">" + pos.getDescription() + "</a></ul>");
             }

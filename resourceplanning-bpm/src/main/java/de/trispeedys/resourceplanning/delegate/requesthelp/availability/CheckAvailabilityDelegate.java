@@ -26,7 +26,7 @@ public abstract class CheckAvailabilityDelegate implements JavaDelegate
         Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
         boolean positionAvailable = PositionService.isPositionAvailable(event , position);
         LoggerService.log(execution.getBusinessKey(), "ckecking availability for helper '"+helper+"' and position '"+position+"' in event '"+event+"', position available : " + positionAvailable);
-        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_POS_AVAILABLE_TO_REASSIGN, positionAvailable);
+        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_PRIOR_POS_AVAILABLE, positionAvailable);
         // set id of the position
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, position.getId());
     }

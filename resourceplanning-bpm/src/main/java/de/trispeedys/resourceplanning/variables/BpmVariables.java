@@ -12,7 +12,9 @@ public class BpmVariables
 
         public static final String VAR_EVENT_ID = "eventId";
 
-        public static final String VAR_POS_AVAILABLE_TO_REASSIGN = "posAvailable";
+        public static final String VAR_PRIOR_POS_AVAILABLE = "priorPosAvailable";
+        
+        public static final String VAR_CHOSEN_POS_AVAILABLE = "chosenPosAvailable";
 
         public static final String VAR_ACTIVE_HELPER_IDS = "activeHelperIds";
         

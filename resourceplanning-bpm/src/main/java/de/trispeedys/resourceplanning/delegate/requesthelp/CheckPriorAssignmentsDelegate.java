@@ -3,6 +3,7 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
+import de.trispeedys.resourceplanning.configuration.AppConfiguration;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.service.HelperService;
@@ -14,6 +15,8 @@ public class CheckPriorAssignmentsDelegate implements JavaDelegate
     @SuppressWarnings("unchecked")
     public void execute(DelegateExecution execution) throws Exception
     {
+        AppConfiguration.getInstance();
+        
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
         boolean firstAssignment = HelperService.isFirstAssignment(helperId);
