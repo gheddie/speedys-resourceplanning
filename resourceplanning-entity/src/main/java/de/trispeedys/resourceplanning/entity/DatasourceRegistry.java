@@ -33,13 +33,14 @@ public class DatasourceRegistry
         return DatasourceRegistry.instance;
     }
 
-    private <T> DefaultDatasource datasource(Class<T> entityClass)
+    @SuppressWarnings("unchecked")
+    private <T> DefaultDatasource<T> datasource(Class<T> entityClass)
     {
         DefaultDatasource<T> dataSource = registeredDatasources.get(entityClass);
         return (dataSource != null ? dataSource : defaultDatasource);
     }
 
-    public static <T> DefaultDatasource getDatasource(Class<T> entityClass)
+    public static <T> DefaultDatasource<T> getDatasource(Class<T> entityClass)
     {
         return getInstance().datasource(entityClass);
     }

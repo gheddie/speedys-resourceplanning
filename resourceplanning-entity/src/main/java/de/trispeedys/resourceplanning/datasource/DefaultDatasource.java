@@ -13,13 +13,9 @@ import de.trispeedys.resourceplanning.entity.MessageQueue;
 
 public class DefaultDatasource<T> implements IDatasource
 {
-    @SuppressWarnings("unchecked")
-    public <T> T findById(Class<T> entityClass, Long primaryKeyValue)
-    {
-        return (T) find("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue).get(0);
-    }
-
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({
+            "rawtypes", "unchecked"
+    })
     public <T> List<T> find(String qryString, HashMap<String, Object> parameters)
     {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -36,6 +32,7 @@ public class DefaultDatasource<T> implements IDatasource
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     public List<T> find(String qryString)
     {
         return (List<T>) find(qryString, null);
@@ -112,5 +109,11 @@ public class DefaultDatasource<T> implements IDatasource
             parameters.put((String) filters[index], filters[index+1]);
         }
         return find(qryString, parameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T findById(Class<T> entityClass, Long primaryKeyValue)
+    {
+        return (T) find("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue).get(0);
     }
 }

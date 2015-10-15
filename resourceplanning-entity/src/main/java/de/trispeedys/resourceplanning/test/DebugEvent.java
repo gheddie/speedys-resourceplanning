@@ -12,7 +12,6 @@ import de.trispeedys.resourceplanning.entity.Position;
 
 public class DebugEvent
 {
-    @SuppressWarnings("unchecked")
     public static void main(String[] args)
     {
 //        HibernateUtil.clearAll();
@@ -27,7 +26,7 @@ public class DebugEvent
     
     public static StringBuffer debugEvent(Long eventId)
     {
-        return debugEvent((Event) DatasourceRegistry.getDatasource(null).findById(Event.class, eventId));
+        return debugEvent((Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId));
     }
 
     public static StringBuffer debugEvent(Event event)

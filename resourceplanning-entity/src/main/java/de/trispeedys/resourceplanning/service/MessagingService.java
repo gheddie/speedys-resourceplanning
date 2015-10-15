@@ -18,7 +18,7 @@ public class MessagingService
     {
         HashMap<String, Object> variables = new HashMap<String, Object>();
         variables.put("messagingState", MessagingState.UNPROCESSED);
-        return (List<MessageQueue>) DatasourceRegistry.getDatasource(null).find(
+        return DatasourceRegistry.getDatasource(MessageQueue.class).find(
                 "FROM " + MessageQueue.class.getSimpleName() + " mq WHERE mq.messagingState = :messagingState",
                 variables);
     }

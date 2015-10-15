@@ -24,7 +24,7 @@ public class HelperService
                         " ec INNER JOIN ec.event eo WHERE ec.helperId = :helperId ORDER BY eo.eventDate DESC";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("helperId", helper.getId());
-        List<Object[]> list = (List<Object[]>) DatasourceRegistry.getDatasource(null).find(queryString, parameters);
+        List<Object[]> list = DatasourceRegistry.getDatasource(null).find(queryString, parameters);
         if (list.size() == 0)
         {
             return null;
@@ -53,7 +53,7 @@ public class HelperService
     @SuppressWarnings("unchecked")
     public static void deactivateHelper(Long helperId)
     {
-        DefaultDatasource<?> datasource = DatasourceRegistry.getDatasource(Helper.class);
+        DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
         Helper helper = (Helper) datasource.findById(Helper.class, helperId);
         helper.setHelperState(HelperState.INACTIVE);
         datasource.saveOrUpdate(helper);
