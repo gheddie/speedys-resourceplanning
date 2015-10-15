@@ -9,7 +9,6 @@ import org.hibernate.Transaction;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.entity.MessageQueue;
 
 public class DefaultDatasource<T> implements IDatasource
 {
@@ -38,11 +37,11 @@ public class DefaultDatasource<T> implements IDatasource
         return (List<T>) find(qryString, null);
     }
 
-    public List<?> find(String qryString, String paramaterName, Object paramaterValue)
+    public List<T> find(String qryString, String paramaterName, Object paramaterValue)
     {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(paramaterName, paramaterValue);
-        return (List<?>) find(qryString, parameters);
+        return find(qryString, parameters);
     }
 
     @SuppressWarnings("unchecked")
@@ -76,7 +75,7 @@ public class DefaultDatasource<T> implements IDatasource
         return (List<T>) find("FROM " + entityClass.getSimpleName());
     }
 
-    public <T> List<T> find(Class<MessageQueue> entityClass, Object... filters)
+    public <T> List<T> find(Class<T> entityClass, Object... filters)
     {
         if ((filters == null) || (filters.length == 0))
         {

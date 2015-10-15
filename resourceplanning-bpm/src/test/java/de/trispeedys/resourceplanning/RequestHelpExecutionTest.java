@@ -48,7 +48,6 @@ public class RequestHelpExecutionTest
      * - (9) chosen position ('C') must be assigned to the helper 'A' afterwards
      * - (10) process must be finished
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testProposePositionsOnAssignmentRequestedAsBefore()
@@ -106,7 +105,6 @@ public class RequestHelpExecutionTest
      * was assigned to last year before is available (not blocked by helper 'B'). This means that 'A' must be automatically
      * assigned to his used position by the system.
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testAssignmentRequestedAsBeforeSuccesful()
@@ -136,7 +134,6 @@ public class RequestHelpExecutionTest
      * tests the deactivation of a helper not respondig to any reminder mail, but in the end, he responds positive to
      * the 'last chance' mail (which means that he remains {@link HelperState#ACTIVE}).
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testNotCooperativeAndRecoveredHelper()
@@ -170,7 +167,6 @@ public class RequestHelpExecutionTest
      * Like {@link RequestHelpExecutionTest#testNotCooperativeAndRecoveredHelper()}, but the helper does NOT respond to the last chance mail
      * so that the one month timer is fired. That means that the helper gets deactived.
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testCompletetlyUncooperativeHelper()
@@ -203,7 +199,6 @@ public class RequestHelpExecutionTest
     /**
      * Tests {@link HelperCallback#PAUSE_ME}.
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testPauseMe()
@@ -238,7 +233,6 @@ public class RequestHelpExecutionTest
      * but the helper commits the message for {@link HelperCallback#CHANGE_POS}) (A). He then chooses a positions which already has been assigned to someone else (B),
      * so he gets a second mail, choose a free position this time (C). Then the position is assigned to 'helperA' and the process is gone (D).
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testChangePositions()

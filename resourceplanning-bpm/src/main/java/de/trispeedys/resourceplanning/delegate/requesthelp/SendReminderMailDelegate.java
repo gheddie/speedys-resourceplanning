@@ -7,14 +7,12 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
-import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class SendReminderMailDelegate implements JavaDelegate
 {
-    @SuppressWarnings("unchecked")
     public void execute(DelegateExecution execution) throws Exception
     {
         // find helper and event

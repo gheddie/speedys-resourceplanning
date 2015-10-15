@@ -13,7 +13,6 @@ import de.trispeedys.resourceplanning.util.MailSender;
 
 public class MessagingService
 {
-    @SuppressWarnings("unchecked")
     public static List<MessageQueue> findAllUnprocessedMessages()
     {
         HashMap<String, Object> variables = new HashMap<String, Object>();
@@ -23,7 +22,6 @@ public class MessagingService
                 variables);
     }
 
-    @SuppressWarnings("unchecked")
     public static void sendAllUnprocessedMessages()
     {
         LoggerService.log("sending all unprocessed messages...");

@@ -21,7 +21,6 @@ import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class ProposePositionsDelegate implements JavaDelegate
 {
-    @SuppressWarnings("unchecked")
     public void execute(DelegateExecution execution) throws Exception
     {
         // send a mail with all unassigned positions in the current event

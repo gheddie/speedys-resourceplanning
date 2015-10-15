@@ -193,7 +193,6 @@ public class RequestHelpTest extends GenericBpmTest
      * create little event with helpers, duplicate it, make sure every helper gets a reminder mail for the following up
      * event.
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testFollowingEventWithSameHelpers()
@@ -222,7 +221,6 @@ public class RequestHelpTest extends GenericBpmTest
      * same as {@link RequestHelpTest#testFollowingEventWithSameHelpers()} , but additional (new) helpers are available.
      * Everyone of those must get a manual assignment.
      */
-    @SuppressWarnings("unchecked")
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testFollowingEventWithOldAndNewHelpers()

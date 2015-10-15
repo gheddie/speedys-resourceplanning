@@ -23,10 +23,9 @@ public abstract class AbstractDbObject
         this.id = id;
     }
     
-    @SuppressWarnings("unchecked")
     public <T> T persist()
     {
-        DefaultDatasource datasource = DatasourceRegistry.getDatasource(this.getClass());
+        DefaultDatasource<T> datasource = (DefaultDatasource<T>) DatasourceRegistry.getDatasource(AbstractDbObject.class);
         return (T) datasource.saveOrUpdate(this);
     }
 

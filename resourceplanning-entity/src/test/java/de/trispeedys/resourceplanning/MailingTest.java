@@ -10,7 +10,6 @@ import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class MailingTest
 {
-    @SuppressWarnings("unchecked")
     //@Test
     public void testSendMails()
     {

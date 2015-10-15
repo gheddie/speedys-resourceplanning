@@ -17,7 +17,6 @@ public class MailTriggerTest
     @Rule
     public ProcessEngineRule processEngine = new ProcessEngineRule();
     
-    @SuppressWarnings("unchecked")
     //@Test
     @Deployment(resources = "MailTriggerProcess.bpmn")
     public void testSendAll()

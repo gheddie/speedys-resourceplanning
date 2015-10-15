@@ -7,7 +7,6 @@ import de.trispeedys.resourceplanning.entity.Helper;
 
 public class HtmlRenderer
 {
-    @SuppressWarnings("unchecked")
     public static String renderCorrelationSuccess(HttpServletRequest request)
     {
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, Long.parseLong(request.getParameter("helperId")));
@@ -20,7 +19,6 @@ public class HtmlRenderer
         return buffer.toString();
     }
     
-    @SuppressWarnings("unchecked")
     public static String renderCorrelationFault(HttpServletRequest request)
     {
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, Long.parseLong(request.getParameter("helperId")));

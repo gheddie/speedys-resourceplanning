@@ -15,7 +15,6 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class HelperService
 {
-    @SuppressWarnings("unchecked")
     public static HelperAssignment getPriorAssignment(Helper helper)
     {
         String queryString =
@@ -38,7 +37,6 @@ public class HelperService
         return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
 
-    @SuppressWarnings("unchecked")
     public static List<Long> queryActiveHelperIds()
     {
         List<Long> result = new ArrayList<Long>();
@@ -50,7 +48,6 @@ public class HelperService
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     public static void deactivateHelper(Long helperId)
     {
         DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
@@ -59,7 +56,6 @@ public class HelperService
         datasource.saveOrUpdate(helper);
     }
 
-    @SuppressWarnings("unchecked")
     public static boolean isHelperAssignedForPosition(Helper helper, Event event, Position position)
     {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
@@ -73,7 +69,6 @@ public class HelperService
         return ((list != null) || (list.size() == 1));
     }
 
-    @SuppressWarnings("unchecked")
     public static Position getHelperAssignment(Helper helper, Event event)
     {
         HashMap<String, Object> parameters = new HashMap<String, Object>();

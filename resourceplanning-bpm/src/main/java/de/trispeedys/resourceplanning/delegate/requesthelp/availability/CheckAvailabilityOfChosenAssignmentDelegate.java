@@ -9,7 +9,6 @@ import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class CheckAvailabilityOfChosenAssignmentDelegate extends CheckAvailabilityDelegate
 {
-    @SuppressWarnings("unchecked")
     protected Position getReferencePosition(Helper helper, Map<String, Object> variables)
     {
         // check availability of the position which was just selected by the helper

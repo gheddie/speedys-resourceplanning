@@ -13,12 +13,10 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messaging.ProposePositionsMailTemplate;
-import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class MailTemplateTest
 {
-    @SuppressWarnings("unchecked")
     @Test
     public void testProposePositions()
     {

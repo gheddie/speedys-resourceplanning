@@ -12,7 +12,6 @@ import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class CheckPriorAssignmentsDelegate implements JavaDelegate
 {
-    @SuppressWarnings("unchecked")
     public void execute(DelegateExecution execution) throws Exception
     {
         AppConfiguration.getInstance();

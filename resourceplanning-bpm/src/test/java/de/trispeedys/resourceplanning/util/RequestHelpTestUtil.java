@@ -48,13 +48,11 @@ public class RequestHelpTestUtil
         rule.getRuntimeService().startProcessInstanceByKey(PROCESS_DEFINITION_KEY_SYSTEM_PROCESS);
     }
 
-    @SuppressWarnings("unchecked")
     public static int countMails()
     {
         return DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size();
     }
 
-    @SuppressWarnings("unchecked")
     public static boolean checkMails(int expectedMailCount, MessagingType... types)
     {
         List<MessageQueue> messages = DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class);

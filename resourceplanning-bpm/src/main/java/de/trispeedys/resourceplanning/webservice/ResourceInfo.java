@@ -24,10 +24,8 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.service.AssignmentService;
-import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
-import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.DatabaseRoutines;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
@@ -55,7 +53,6 @@ public class ResourceInfo
                         ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId), variables);
     }
 
-    @SuppressWarnings("unchecked")
     public void startSomeProcesses()
     {
         HibernateUtil.clearAll();
@@ -77,7 +74,6 @@ public class ResourceInfo
      * starts a process and blocks a position in order to test {@link HelperCallback#CHANGE_POS} with an already blocked
      * position chosen.
      */
-    @SuppressWarnings("unchecked")
     public void prepareBlockedChoosePosition()
     {
         HibernateUtil.clearAll();
@@ -105,7 +101,6 @@ public class ResourceInfo
      * positions, so 2 of 5 {@link HelperCallback#ASSIGNMENT_AS_BEFORE} will not work (and alternative positions will be
      * proposed).
      */
-    @SuppressWarnings("unchecked")
     public void startSomeProcessesWithNewHelpers()
     {
         HibernateUtil.clearAll();
@@ -132,7 +127,6 @@ public class ResourceInfo
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void startOneProcesses()
     {
         HibernateUtil.clearAll();

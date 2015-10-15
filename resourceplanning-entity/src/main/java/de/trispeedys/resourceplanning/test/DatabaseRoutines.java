@@ -10,7 +10,6 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
 public class DatabaseRoutines
 {
-    @SuppressWarnings("unchecked")
     public static Event duplicateEvent(Long eventId, String description, String eventKey, int day, int month, int year)
     {
         Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);

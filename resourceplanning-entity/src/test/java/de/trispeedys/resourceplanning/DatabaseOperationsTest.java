@@ -19,7 +19,6 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
 public class DatabaseOperationsTest
 {
-    @SuppressWarnings("unchecked")
     @Test
     public void testFetchListByQuery()
     {

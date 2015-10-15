@@ -16,23 +16,22 @@ import de.trispeedys.resourceplanning.entity.Position;
 
 public class PositionService
 {
-    @SuppressWarnings("unchecked")
     public static List<Position> findPositionsInEvent(Event event)
     {
-        List<Object[]> list =
-                (List<Object[]>) DatasourceRegistry.getDatasource(null).find(
+        List<Object> list = DatasourceRegistry.getDatasource(null).find(
                         "FROM " +
                                 EventPosition.class.getSimpleName() +
                                 " ep INNER JOIN ep.position pos WHERE ep.event = :event", "event", event);
         List<Position> result = new ArrayList<Position>();
-        for (Object[] tuple : list)
+        Object[] tuple = null;
+        for (Object obj : list)
         {
+            tuple = (Object[]) obj;
             result.add((Position) tuple[1]);
         }
         return result;
     }
     
-    @SuppressWarnings("unchecked")
     public static boolean isPositionAvailable(Long eventId, Long positionId)
     {
         Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById(Position.class, positionId);
@@ -47,10 +46,6 @@ public class PositionService
      * @param position
      * @return
      */
-    @SuppressWarnings(
-    {
-        "unchecked"
-    })
     public static boolean isPositionAvailable(Event event, Position position)
     {
         String queryString =
@@ -72,7 +67,6 @@ public class PositionService
      * @param event
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static boolean isPositionPresentInEvent(Position position, Event event)
     {
         HashMap<String, Object> parameters = new HashMap<String, Object>();

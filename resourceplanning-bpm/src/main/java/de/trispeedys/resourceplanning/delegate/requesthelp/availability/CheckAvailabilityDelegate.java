@@ -15,7 +15,6 @@ import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public abstract class CheckAvailabilityDelegate implements JavaDelegate
 {
-    @SuppressWarnings("unchecked")
     public void execute(DelegateExecution execution) throws Exception
     {
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
