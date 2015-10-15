@@ -1,34 +1,37 @@
-package de.trispeedys.resourceplanning.configuration;
+package de.trispeedys.resourceplanning.util.configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class AppConfiguration
 {
     private static final String CONFIG_FILE_NAME = "resource-planning.config.xml";
+    
+    private HashMap<String, String> configurationValues;
 
-//    private static final String VERSION = "0.0.1-SNAPSHOT";
+    public static final String HOST = "host";
 
-//    private static final String URL = "http://localhost:8080";
-
-    private static final String CONF_PARAM_HOST = "host";
-
-    private static final String CONF_PARAM_VERSION = "version";
+    public static final String VERSION = "version";       
+    
+    public static final String SMTP_USER = "smtp_user";
+    
+    public static final String SMTP_PASSWD = "smtp_passwd";
+    
+    public static final String SMTP_HOST = "smtp_host";
+    
+    public static final String SMTP_PORT = "smtp_port";
 
     private static AppConfiguration instance;
-
-    private String version;
-
-    private String host;
 
     private AppConfiguration()
     {
@@ -39,11 +42,15 @@ public class AppConfiguration
     {
         try
         {
-            Document xml = readXml(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE_NAME));
-            host = getConfigurationValue(CONF_PARAM_HOST, xml.getDocumentElement());
-            System.out.println("read conf value ["+CONF_PARAM_HOST+"] : " + host);
-            version = getConfigurationValue(CONF_PARAM_VERSION, xml.getDocumentElement());
-            System.out.println("read conf value ["+CONF_PARAM_VERSION+"] : " + version);
+            Document doc = readXml(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE_NAME));
+            configurationValues = new HashMap<String, String>();
+            NodeList nodeList = doc.getElementsByTagName("property");
+            Node node = null;
+            for (int temp = 0; temp < nodeList.getLength(); temp++)
+            {
+                node = nodeList.item(temp);
+                configurationValues.put(node.getAttributes().getNamedItem("name").getTextContent(), node.getTextContent());
+            }
         }
         catch (SAXException e)
         {
@@ -60,12 +67,6 @@ public class AppConfiguration
         //LoggerService.log("parsed configuration : " + resource, DbLogLevel.INFO);
     }
 
-    private String getConfigurationValue(String parameterName, Element root)
-    {
-        Node node = root.getElementsByTagName(parameterName).item(0);
-        return node.getTextContent();
-    }
-
     public static AppConfiguration getInstance()
     {
         if (AppConfiguration.instance == null)
@@ -73,16 +74,6 @@ public class AppConfiguration
             AppConfiguration.instance = new AppConfiguration();
         }
         return AppConfiguration.instance;
-    }
-
-    public String getVersion()
-    {
-        return version;
-    }
-
-    public String getHost()
-    {
-        return host;
     }
 
     public static Document readXml(InputStream is) throws SAXException, IOException, ParserConfigurationException
@@ -97,5 +88,10 @@ public class AppConfiguration
         db = dbf.newDocumentBuilder();
         db.setEntityResolver(new NullResolver());
         return db.parse(is);
+    }
+
+    public String getConfigurationValue(String key)
+    {
+        return configurationValues.get(key);
     }
 }

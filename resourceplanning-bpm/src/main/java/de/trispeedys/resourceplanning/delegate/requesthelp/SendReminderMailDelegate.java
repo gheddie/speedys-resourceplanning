@@ -7,8 +7,10 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
+import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class SendReminderMailDelegate implements JavaDelegate
@@ -22,26 +24,26 @@ public class SendReminderMailDelegate implements JavaDelegate
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
         Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);
         sendReminderMail(helper, event, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS));
-        //increase attempts
+        // increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
-        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue+1));
+        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue + 1));
     }
 
     private void sendReminderMail(Helper helper, Event event, int attemptCount)
     {
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
-                "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event), getMessagingType(attemptCount), MessagingFormat.HTML).persist();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event),
+                getMessagingType(attemptCount), MessagingFormat.HTML).persist();
     }
 
     private MessagingType getMessagingType(int attempt)
     {
         switch (attempt)
         {
-            case 0:                
+            case 0:
                 return MessagingType.REMINDER_STEP_0;
-            case 1:                
+            case 1:
                 return MessagingType.REMINDER_STEP_1;
-            case 2:                
+            case 2:
                 return MessagingType.REMINDER_STEP_2;
             default:
                 return MessagingType.NONE;
@@ -50,19 +52,26 @@ public class SendReminderMailDelegate implements JavaDelegate
 
     private String generateReminderBody(Helper helper, Event event)
     {
-        //build message body
+        // build message body
         StringBuffer buffer = new StringBuffer();
         buffer.append("Hallo, " + helper.getFirstName() + "!!");
         buffer.append("<br><br>");
-        buffer.append("Bitte sag uns, was Du beim anstehenden "+event.getDescription()+" tun möchtest:");
+        buffer.append("Bitte sag uns, was Du beim anstehenden " + event.getDescription() + " tun möchtest:");
         buffer.append("<br><br>");
-        buffer.append("<a href=\"http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=ASSIGNMENT_AS_BEFORE&helperId="+helper.getId()+"&eventId="+event.getId()+"\">Wie immer</a>");
-        buffer.append("<br><br>");
-        buffer.append("<a href=\"http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=PAUSE_ME&helperId="+helper.getId()+"&eventId="+event.getId()+"\">Diesmal nicht helfen</a>");
-        buffer.append("<br><br>");
-        buffer.append("<a href=\"http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=CHANGE_POS&helperId="+helper.getId()+"&eventId="+event.getId()+"\">Auf anderer Position helfen</a>");
-        buffer.append("<br><br>");
+        for (HelperCallback callback : HelperCallback.values())
+        {
+            buffer.append(renderCallbackOption(helper, event, callback));
+            buffer.append("<br><br>");
+        }
         buffer.append("Eure Speedys");
         return buffer.toString();
+    }
+
+    private String renderCallbackOption(Helper helper, Event event, HelperCallback helperCallback)
+    {
+        return "<a href=\"" +
+                AppConfiguration.getInstance().getConfigurationValue(AppConfiguration.HOST) + "/resourceplanning-bpm-" +
+                AppConfiguration.getInstance().getConfigurationValue(AppConfiguration.VERSION) + "/HelperCallbackReceiver.jsp?callbackResult=" + helperCallback + "&helperId=" + helper.getId() +
+                "&eventId=" + event.getId() + "\">" + helperCallback.getDescription() + "</a>";
     }
 }

@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.Position;
 
 public class HtmlRenderer
 {
@@ -29,5 +30,18 @@ public class HtmlRenderer
         buffer.append("<br><br>");
         buffer.append("Nachricht wurde bereits zugestellt.");
         return buffer.toString();
+    }
+    
+    public static String renderChosenPosAvailable(HttpServletRequest request, boolean positionAvailable)
+    {
+        Position chosenPosition = DatasourceRegistry.getDatasource(Position.class).findById(Position.class, Long.parseLong(request.getParameter("chosenPosition")));
+        if (positionAvailable)
+        {
+            return "<br><br>Deine gewünschte Position ("+chosenPosition.getDescription()+") ist verfuegbar und wird dir zugewiesen.<br><br>";
+        }
+        else
+        {
+            return "<br><br>Deine gewünschte Position ("+chosenPosition.getDescription()+") ist leider nicht mehr verfuegbar. Du erhältst eine weitere Mail mit Vorschlaegen.<br><br>";
+        }
     }
 }

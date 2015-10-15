@@ -113,6 +113,11 @@ public class DefaultDatasource<T> implements IDatasource
     @SuppressWarnings("unchecked")
     public <T> T findById(Class<T> entityClass, Long primaryKeyValue)
     {
-        return (T) find("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue).get(0);
+        if (primaryKeyValue == null)
+        {
+            return null;
+        }
+        List<T> list = (List<T>) find("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue);
+        return (list != null && list.size() == 1 ? (T) list.get(0) : null);
     }
 }

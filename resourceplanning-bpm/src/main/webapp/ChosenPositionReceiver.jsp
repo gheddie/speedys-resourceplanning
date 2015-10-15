@@ -11,13 +11,16 @@
 <%@page import="org.camunda.bpm.engine.MismatchingMessageCorrelationException"%>
 <%@page import="de.trispeedys.resourceplanning.interaction.HelperInteraction"%>
 <%@page import="de.trispeedys.resourceplanning.interaction.HtmlRenderer"%>
+<%@page import="de.trispeedys.resourceplanning.service.PositionService"%>
 <body>
 	<%
 	    try
 	    {
-	        HelperInteraction.processPositionChosenCallback(request);
+	        boolean positionAvailable = PositionService.isPositionAvailable(Long.parseLong(request.getParameter("eventId")), Long.parseLong(request.getParameter("chosenPosition")));
+	        HelperInteraction.processPositionChosenCallback(request, positionAvailable);
 	        //the message could be correlated
 	        out.println(HtmlRenderer.renderCorrelationSuccess(request));
+	        out.println(HtmlRenderer.renderChosenPosAvailable(request, positionAvailable));
 	    }
 	    catch (MismatchingMessageCorrelationException e)
 	    {

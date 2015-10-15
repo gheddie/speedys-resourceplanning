@@ -48,14 +48,14 @@ public class HelperInteraction
         BpmPlatform.getDefaultProcessEngine().getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variables);
     }
 
-    public static void processPositionChosenCallback(HttpServletRequest request) throws MismatchingMessageCorrelationException
+    public static void processPositionChosenCallback(HttpServletRequest request, boolean positionAvailable) throws MismatchingMessageCorrelationException
     {
         Long chosenPositionId = Long.parseLong(request.getParameter("chosenPosition"));
         Long helperId = Long.parseLong(request.getParameter("helperId"));
         Long eventId = Long.parseLong(request.getParameter("eventId"));
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, chosenPositionId);
-        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, PositionService.isPositionAvailable(eventId, chosenPositionId));
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, positionAvailable);
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
         BpmPlatform.getDefaultProcessEngine().getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
     }

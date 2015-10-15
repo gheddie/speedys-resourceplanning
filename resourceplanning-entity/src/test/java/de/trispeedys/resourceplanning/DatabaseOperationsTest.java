@@ -28,8 +28,7 @@ public class DatabaseOperationsTest
         EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
         EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.INACTIVE, 1, 1, 1980).persist();
 
-        String qry =
-                "FROM " + Helper.class.getSimpleName() + " h WHERE h." + Helper.ATTR_HELPER_STATE + " = :helperState";
+        String qry = "FROM " + Helper.class.getSimpleName() + " h WHERE h." + Helper.ATTR_HELPER_STATE + " = :helperState";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         DatasourceRegistry.getDatasource(Helper.class).find(qry, parameters);
@@ -44,7 +43,7 @@ public class DatabaseOperationsTest
         Helper helper = EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
 
         DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
-        Helper found = datasource.findById(Helper.class, helper.getId());
+        datasource.findById(Helper.class, helper.getId());
     }
 
     @Test
@@ -56,8 +55,7 @@ public class DatabaseOperationsTest
         EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
         EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).persist();
 
-        List<Helper> found = DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_HELPER_STATE,
-                HelperState.ACTIVE);
+        List<Helper> found = DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         assertEquals(2, found.size());
     }
 
@@ -68,23 +66,19 @@ public class DatabaseOperationsTest
         HibernateUtil.clearAll();
 
         // create messages
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "SUB1", "BODY1",
-                MessagingFormat.PLAIN).persist();
-        EntityFactory.buildMessageQueue("klaus", "testhelper1.trispeedys@gmail.com", "SUB1", "BODY1",
-                MessagingFormat.PLAIN).persist();
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "SUB1", "BODY2",
-                MessagingFormat.PLAIN).persist();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "SUB1", "BODY1", MessagingFormat.PLAIN).persist();
+        EntityFactory.buildMessageQueue("klaus", "testhelper1.trispeedys@gmail.com", "SUB1", "BODY1", MessagingFormat.PLAIN).persist();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "SUB1", "BODY2", MessagingFormat.PLAIN).persist();
 
         assertEquals(
                 1,
                 DatasourceRegistry.getDatasource(MessageQueue.class)
-                        .find(MessageQueue.class, MessageQueue.ATTR_SUBJECT, "SUB1", MessageQueue.ATTR_BODY, "BODY1",
-                                MessageQueue.ATTR_FROM_ADDRESS, "klaus")
+                        .find(MessageQueue.class, MessageQueue.ATTR_SUBJECT, "SUB1", MessageQueue.ATTR_BODY, "BODY1", MessageQueue.ATTR_FROM_ADDRESS, "klaus")
                         .size());
 
         ;
     }
-    
+
     @Test
     public void testFindSome()
     {
@@ -95,17 +89,17 @@ public class DatabaseOperationsTest
         {
             EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), false).persist();
         }
-        //fetch w/o parameters (all entries)
+        // fetch w/o parameters (all entries)
         assertEquals(10, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName()).size());
-        //fetch with class (all entries)
+        // fetch with class (all entries)
         assertEquals(10, DatasourceRegistry.getDatasource(null).findAll(Position.class).size());
-        //fetch with query string
+        // fetch with query string
         assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
-        assertEquals(4, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());        
-        //fetch with parameters
+        assertEquals(4, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());
+        // fetch with parameters
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("minimalAge", 5);
         assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", parameters).size());
         assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", "minimalAge", 5).size());
-    }    
+    }
 }
