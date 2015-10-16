@@ -3,6 +3,8 @@ package de.trispeedys.resourceplanning.entity.builder;
 import java.util.Date;
 
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class EventBuilder extends AbstractEntityBuilder<Event>
 {
@@ -13,6 +15,8 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
     private String eventKey;
 
     private boolean helpersReminded;
+    
+    private EventState eventState;
 
     public EventBuilder withDescription(String aDescription)
     {
@@ -38,6 +42,12 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
         return this;
     }
     
+    public EventBuilder withEventState(EventState aEventState)
+    {
+        eventState = aEventState;
+        return this;
+    }
+    
     public Event build()
     {
         Event event = new Event();
@@ -45,6 +55,7 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
         event.setEventKey(eventKey);
         event.setEventDate(eventDate);
         event.setHelpersReminded(helpersReminded);
+        event.setEventState(eventState);
         return event;
     }
 }

@@ -8,6 +8,7 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
@@ -35,7 +36,7 @@ public class MailTemplateTest
         Helper helper =
                 EntityFactory.buildHelper("H1_First", "H1_Last", "testhelper1.trispeedys@gmail.com ",
                         HelperState.ACTIVE, 1, 1, 1980).persist();
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED).persist();
         // send mail
         ProposePositionsMailTemplate template =
                 new ProposePositionsMailTemplate(helper, event, DatasourceRegistry.getDatasource(Position.class)

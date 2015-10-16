@@ -9,6 +9,7 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
+import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 
 public class ProposePositionsMailTemplate extends AbstractMailTemplate
 {
@@ -65,7 +66,7 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
             for (Position pos : grouping.get(key))
             {
                 entry =
-                        AppConfiguration.getInstance().getConfigurationValue(AppConfiguration.HOST)+"/resourceplanning-bpm-"+AppConfiguration.getInstance().getConfigurationValue(AppConfiguration.VERSION)+"/ChosenPositionReceiver.jsp?chosenPosition=" +
+                        AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.HOST)+"/resourceplanning-bpm-"+AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.VERSION)+"/ChosenPositionReceiver.jsp?chosenPosition=" +
                                 pos.getId() + "&helperId=" + helper.getId() + "&eventId=" + event.getId();
                 buffer.append("<ul><a href=\"" + entry + "\">" + pos.getDescription() + "</a></ul>");
             }

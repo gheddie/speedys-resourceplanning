@@ -22,6 +22,7 @@ import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.service.PositionService;
@@ -61,12 +62,12 @@ public class EntityFactory
         return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).withAuthorityOverride(authorityOverride).build();
     }
     
-    public static Event buildEvent(String description, String eventKey, int day, int month, int year)
+    public static Event buildEvent(String description, String eventKey, int day, int month, int year, EventState eventState)
     {
-        return buildEvent(description, eventKey, day, month, year, false);
+        return buildEvent(description, eventKey, day, month, year, false, eventState);
     }    
 
-    public static Event buildEvent(String description, String eventKey, int day, int month, int year, boolean helpersReminded)
+    public static Event buildEvent(String description, String eventKey, int day, int month, int year, boolean helpersReminded, EventState eventState)
     {
         Calendar eventDate = Calendar.getInstance();
         eventDate.set(Calendar.DAY_OF_MONTH, day);
@@ -76,6 +77,7 @@ public class EntityFactory
                 .withDate(eventDate.getTime())
                 .withEventKey(eventKey)
                 .withHelpersReminded(helpersReminded)
+                .withEventState(eventState)
                 .build();
     }
     

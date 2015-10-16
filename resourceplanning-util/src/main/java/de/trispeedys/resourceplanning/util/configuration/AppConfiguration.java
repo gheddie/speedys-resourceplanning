@@ -14,22 +14,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class AppConfiguration
-{
-    private static final String CONFIG_FILE_NAME = "resource-planning.config.xml";
-    
-    private HashMap<String, String> configurationValues;
-
-    public static final String HOST = "host";
-
-    public static final String VERSION = "version";       
-    
-    public static final String SMTP_USER = "smtp_user";
-    
-    public static final String SMTP_PASSWD = "smtp_passwd";
-    
-    public static final String SMTP_HOST = "smtp_host";
-    
-    public static final String SMTP_PORT = "smtp_port";
+{       
+    private HashMap<String, String> configurationValues;    
 
     private static AppConfiguration instance;
 
@@ -42,14 +28,14 @@ public class AppConfiguration
     {
         try
         {
-            Document doc = readXml(getClass().getClassLoader().getResourceAsStream(CONFIG_FILE_NAME));
+            Document doc = readXml(getClass().getClassLoader().getResourceAsStream(AppConfigurationValues.CONFIG_FILE_NAME));
             configurationValues = new HashMap<String, String>();
-            NodeList nodeList = doc.getElementsByTagName("property");
+            NodeList nodeList = doc.getElementsByTagName(AppConfigurationValues.PROPERTY_NODE_NAME);
             Node node = null;
-            for (int temp = 0; temp < nodeList.getLength(); temp++)
+            for (int index = 0; index < nodeList.getLength(); index++)
             {
-                node = nodeList.item(temp);
-                configurationValues.put(node.getAttributes().getNamedItem("name").getTextContent(), node.getTextContent());
+                node = nodeList.item(index);
+                configurationValues.put(node.getAttributes().getNamedItem(AppConfigurationValues.CONF_ATTR_NAME).getTextContent(), node.getTextContent());
             }
         }
         catch (SAXException e)

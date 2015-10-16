@@ -14,6 +14,7 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
@@ -41,7 +42,7 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
 
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED).persist();
 
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
         Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false).persist();
@@ -70,7 +71,7 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
 
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED).persist();
 
         // Helfer ist zum Datum der Veranstaltung erst 15
         Helper helper =
@@ -95,7 +96,7 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
 
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED).persist();
 
         // Helfer ist zum Datum der Veranstaltung erst 15
         Helper helper =
@@ -117,8 +118,8 @@ public class HelperAssignmentTest
         HibernateUtil.clearAll();
 
         // create some events
-        Event evt2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012).persist();
-        Event evt2014 = EntityFactory.buildEvent("TRI-2012", "TRI-2014", 21, 6, 2014).persist();
+        Event evt2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012, EventState.PLANNED).persist();
+        Event evt2014 = EntityFactory.buildEvent("TRI-2012", "TRI-2014", 21, 6, 2014, EventState.PLANNED).persist();
 
         // helper was confirmed for a position in 2012, but only proposed for one in 2014...
         Helper helper =
@@ -147,8 +148,8 @@ public class HelperAssignmentTest
         HibernateUtil.clearAll();
 
         // create some events
-        Event event2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012).persist();
-        Event event2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014).persist();
+        Event event2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012, EventState.PLANNED).persist();
+        Event event2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED).persist();
 
         // helper was confirmed for a position in 2012, but only proposed for one in 2014...
         Helper helper =
@@ -186,7 +187,7 @@ public class HelperAssignmentTest
         Helper helperToReassign =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
                         .persist();
-        Event event2015 = EntityFactory.buildEvent("TRI-2015", "TRI-2015", 21, 6, 2015).persist();
+        Event event2015 = EntityFactory.buildEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED).persist();
 
         // assign position to event
         DataModelUtil.relatePositionsToEvent(event2015, position);
@@ -197,7 +198,7 @@ public class HelperAssignmentTest
         Helper blockingHelper =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .persist();
-        Event event2016 = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016).persist();
+        Event event2016 = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED).persist();
 
         // assign position to event
         DataModelUtil.relatePositionsToEvent(event2016, position);
@@ -217,7 +218,7 @@ public class HelperAssignmentTest
         // clear db
         HibernateUtil.clearAll();
         // event
-        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016).persist();
+        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED).persist();
         // helper
         Helper helper =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
@@ -239,7 +240,7 @@ public class HelperAssignmentTest
         // clear db
         HibernateUtil.clearAll();
         // event
-        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016).persist();
+        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED).persist();
         // helper
         Helper helper =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)

@@ -8,6 +8,7 @@ import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
@@ -22,8 +23,8 @@ public class PositionTest
         HibernateUtil.clearAll();
 
         // some events
-        Event event1 = EntityFactory.buildEvent("DM AK 2014", "DM-AK-2014", 21, 6, 2014).persist();
-        Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015).persist();
+        Event event1 = EntityFactory.buildEvent("DM AK 2014", "DM-AK-2014", 21, 6, 2014, EventState.PLANNED).persist();
+        Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED).persist();
 
         // some positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
@@ -55,8 +56,8 @@ public class PositionTest
         // create helper
         Helper helper = EntityFactory.buildHelper("", "", "", HelperState.ACTIVE, 1, 1, 1980);
         // create events
-        Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013).persist();
-        Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014).persist();
+        Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013, EventState.PLANNED).persist();
+        Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED).persist();
         // create positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
         Position posA = EntityFactory.buildPosition("A", 12, defaultDomain, false).persist();

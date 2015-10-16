@@ -6,6 +6,7 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
 public class DatabaseRoutines
@@ -17,7 +18,7 @@ public class DatabaseRoutines
         {
             return null;
         }
-        Event newEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
+        Event newEvent = EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED).persist();
         List<EventPosition> positions = (List<EventPosition>) DatasourceRegistry.getDatasource(null).find(EventPosition.class, "event", event);
         System.out.println(positions.size());
         Position newPosRelation = null;

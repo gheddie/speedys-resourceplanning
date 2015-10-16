@@ -5,6 +5,7 @@ import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
@@ -22,7 +23,7 @@ public class TestDataProvider
     public static Event createSimpleUnassignedEvent(String description, String eventKey, int day, int month, int year)
     {
         // build event
-        Event myLittleEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
+        Event myLittleEvent = EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED).persist();
 
         // create helpers
         Helper helper1 =
@@ -62,7 +63,7 @@ public class TestDataProvider
     public static Event createSimpleEvent(String description, String eventKey, int day, int month, int year)
     {
         // build event
-        Event myLittleEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
+        Event myLittleEvent = EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED).persist();
         // create helpers
         Helper helper1 =
                 EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 2, 1980)
@@ -113,7 +114,7 @@ public class TestDataProvider
     public static Event createMinimalEvent(String description, String eventKey, int day, int month, int year)
     {
         // build event
-        Event myMinimalEvent = EntityFactory.buildEvent(description, eventKey, day, month, year).persist();
+        Event myMinimalEvent = EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED).persist();
         // create helper
         Helper helper =
                 EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)

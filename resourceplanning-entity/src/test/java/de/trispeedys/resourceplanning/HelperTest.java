@@ -8,6 +8,7 @@ import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
@@ -42,7 +43,7 @@ public class HelperTest
         Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false).persist();
         Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false).persist();
         //create event
-        Event tri2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014).persist();
+        Event tri2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED).persist();
         //assign positions to that event
         DataModelUtil.relatePositionsToEvent(tri2014, pos1, pos2);        
         //assign helper to both positions

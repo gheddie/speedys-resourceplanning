@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -12,6 +14,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
+import de.trispeedys.resourceplanning.entity.misc.EventState;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 @Entity
 @Table(name = "event")
@@ -34,6 +39,11 @@ public class Event extends AbstractDbObject
 
     @Column(name = "helpers_reminded")
     private boolean helpersReminded;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_state")
+    @NotNull
+    private EventState eventState;
 
     public Date getEventDate()
     {
@@ -83,6 +93,16 @@ public class Event extends AbstractDbObject
     public void setHelpersReminded(boolean helpersReminded)
     {
         this.helpersReminded = helpersReminded;        
+    }
+    
+    public EventState getEventState()
+    {
+        return eventState;
+    }
+    
+    public void setEventState(EventState eventState)
+    {
+        this.eventState = eventState;
     }
     
     public String toString()

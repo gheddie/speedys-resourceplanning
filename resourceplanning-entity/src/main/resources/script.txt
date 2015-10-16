@@ -51,6 +51,7 @@ create table event
 	event_key varchar(255),
 	event_date date,
 	helpers_reminded boolean,
+	event_state varchar(64),	
 	primary key (id)
 );
 
