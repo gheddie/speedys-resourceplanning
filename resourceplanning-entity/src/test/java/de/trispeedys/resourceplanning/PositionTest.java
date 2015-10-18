@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
@@ -21,10 +22,12 @@ public class PositionTest
     public void testEventPositions()
     {
         HibernateUtil.clearAll();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
 
         // some events
-        Event event1 = EntityFactory.buildEvent("DM AK 2014", "DM-AK-2014", 21, 6, 2014, EventState.PLANNED).persist();
-        Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED).persist();
+        Event event1 = EntityFactory.buildEvent("DM AK 2014", "DM-AK-2014", 21, 6, 2014, EventState.FINISHED, template).persist();
+        Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED, template).persist();
 
         // some positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
@@ -53,11 +56,14 @@ public class PositionTest
     {
         // clear db
         HibernateUtil.clearAll();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        
         // create helper
         Helper helper = EntityFactory.buildHelper("", "", "", HelperState.ACTIVE, 1, 1, 1980);
         // create events
-        Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013, EventState.PLANNED).persist();
-        Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED).persist();
+        Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013, EventState.FINISHED, template).persist();
+        Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).persist();
         // create positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
         Position posA = EntityFactory.buildPosition("A", 12, defaultDomain, false).persist();

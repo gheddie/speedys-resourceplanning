@@ -37,7 +37,7 @@ public class ProposePositionsDelegate implements JavaDelegate
         ProposePositionsMailTemplate template =
                 new ProposePositionsMailTemplate(helper, event, unassignedPositions,
                         (HelperCallback) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK),
-                        HelperService.getPriorAssignment(helper).getPosition());
+                        HelperService.getPriorAssignment(helper, event.getEventTemplate()).getPosition());
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.getSubject(),
                 template.getBody(), MessagingType.PROPOSE_POSITIONS, MessagingFormat.HTML).persist();
     }

@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.service.HelperService;
+import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
@@ -18,7 +18,7 @@ public class CheckPriorAssignmentsDelegate implements JavaDelegate
         
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
-        boolean firstAssignment = HelperService.isFirstAssignment(helperId);
+        boolean firstAssignment = AssignmentService.isFirstAssignment(helperId);
         if (firstAssignment)
         {
             LoggerService.log(execution.getBusinessKey(), "this is the first assignments for helper '"+helper+"'.");

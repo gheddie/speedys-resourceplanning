@@ -15,15 +15,21 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class AssignmentService
 {
-    public static void assignHelper(Helper helper, Event event, Position position) throws ResourcePlanningException
+    public static void assignHelper(Helper helper, Event event, Position position)
+            throws ResourcePlanningException
     {
         if (!(position.isAuthorityOverride()))
         {
             // no authority override -> check age
-            int dayDiff = Days.daysBetween(DateHelper.toDateTime(event.getEventDate()), DateHelper.toDateTime(helper.getDateOfBirth()).plusYears(position.getMinimalAge())).getDays();
+            int dayDiff =
+                    Days.daysBetween(
+                            DateHelper.toDateTime(event.getEventDate()),
+                            DateHelper.toDateTime(helper.getDateOfBirth())
+                                    .plusYears(position.getMinimalAge())).getDays();
             if (dayDiff > 0)
             {
-                throw new ResourcePlanningException("helper is " + dayDiff + " days to young for this position!");
+                throw new ResourcePlanningException("helper is " +
+                        dayDiff + " days to young for this position!");
             }
         }
         EntityFactory.buildHelperAssignment(helper, event, position).persist();
@@ -31,10 +37,9 @@ public class AssignmentService
 
     public static List<HelperAssignment> getAllHelperAssignments(Long helperId)
     {
-        String queryString = null;
-        List<HelperAssignment> list = null;
-        queryString = "From " + HelperAssignment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId";
-        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(queryString, "helperId", helperId);
+        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(
+                "From " + HelperAssignment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId",
+                "helperId", helperId);
     }
 
     /**
@@ -47,6 +52,13 @@ public class AssignmentService
      */
     public static List<HelperAssignment> getHelperAssignments(Helper helper, Event event)
     {
-        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(HelperAssignment.class, HelperAssignment.ATTR_HELPER, helper, HelperAssignment.ATTR_EVENT, event);
+        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(HelperAssignment.class,
+                HelperAssignment.ATTR_HELPER, helper, HelperAssignment.ATTR_EVENT, event);
+    }
+    
+    public static boolean isFirstAssignment(Long helperId)
+    {
+        List<HelperAssignment> helperAssignments = AssignmentService.getAllHelperAssignments(helperId);
+        return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
 }

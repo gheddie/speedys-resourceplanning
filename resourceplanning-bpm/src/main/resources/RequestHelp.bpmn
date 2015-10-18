@@ -81,7 +81,7 @@
       <bpmn:outgoing>flowFollowingAssignment</bpmn:outgoing>
       <bpmn:outgoing>flowFirstAssignment</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="ServiceTask_3" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.availability.CheckAvailabilityOfPriorAssignmentDelegate" name="Verfügbarkeit prüfen">
+    <bpmn:serviceTask id="ServiceTask_3" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.availability.CheckAvailabilityDelegate" name="Verfügbarkeit prüfen">
       <bpmn:incoming>flowAsLastTime</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -159,7 +159,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ServiceTask_4" targetRef="IntermediateCatchEvent_3"/>
     <bpmn:sequenceFlow id="SequenceFlow_14" name="" sourceRef="UserTaskManualAssignment" targetRef="ExclusiveGateway_1"/>
     <bpmn:sequenceFlow id="flowPosStillAvailable" name="verfügbar" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_16f9cl7"/>
-    <bpmn:serviceTask id="ServiceTask_6" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.availability.CheckAvailabilityOfPriorAssignmentDelegate" name="Verfügbarkeit prüfen">
+    <bpmn:serviceTask id="ServiceTask_6" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.availability.CheckAvailabilityDelegate" name="Verfügbarkeit prüfen">
       <bpmn:incoming>flowMailAttemptsOk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
     </bpmn:serviceTask>

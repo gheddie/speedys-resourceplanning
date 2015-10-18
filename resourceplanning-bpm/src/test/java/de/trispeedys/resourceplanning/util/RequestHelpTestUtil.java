@@ -125,11 +125,11 @@ public class RequestHelpTestUtil
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variablesCallback);
     }
     
-    public static void choosePosition(String businessKey, Position blockedPosition, ProcessEngineRule processEngine, Long eventId)
+    public static void choosePosition(String businessKey, Position position, ProcessEngineRule processEngine, Long eventId)
     {
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, blockedPosition.getId());
-        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, PositionService.isPositionAvailable(eventId, blockedPosition.getId()));
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, position.getId());
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, PositionService.isPositionAvailable(eventId, position.getId()));
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
     }
 }

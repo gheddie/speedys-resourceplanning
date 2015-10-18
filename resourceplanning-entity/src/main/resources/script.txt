@@ -41,6 +41,16 @@ create table position
 
 alter table position add constraint fk_position_domain foreign key (domain_id) references domain (id);
 
+------------------------------------------------ EventTemplate
+create sequence event_template_id_seq;
+
+create table event_template
+(
+	id bigint not null default nextval('event_template_id_seq'),
+	description varchar(255),
+	primary key (id)
+);
+
 ------------------------------------------------ Event
 create sequence event_id_seq;
 
@@ -50,10 +60,12 @@ create table event
 	description varchar(255),
 	event_key varchar(255),
 	event_date date,
-	helpers_reminded boolean,
 	event_state varchar(64),	
+	event_template_id bigint,
 	primary key (id)
 );
+
+alter table event add constraint fk_evt_template foreign key (event_template_id) references event_template (id);
 
 ------------------------------------------------ HelperAssignment
 create sequence helper_assignment_id_seq;

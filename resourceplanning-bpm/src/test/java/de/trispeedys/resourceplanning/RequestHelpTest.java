@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
@@ -29,7 +30,7 @@ import de.trispeedys.resourceplanning.misc.GenericBpmTest;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.tasks.BpmTaskDefinitionKeys;
-import de.trispeedys.resourceplanning.test.DatabaseRoutines;
+import de.trispeedys.resourceplanning.test.EventRoutines;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
@@ -69,8 +70,11 @@ public class RequestHelpTest extends GenericBpmTest
     {
         // clear db
         HibernateUtil.clearAll();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        
         // ...
-        Event event = EntityFactory.buildEvent("", "", 1, 1, 2000, EventState.PLANNED).persist();
+        Event event = EntityFactory.buildEvent("", "", 1, 1, 2000, EventState.PLANNED, template).persist();
         RequestHelpTestUtil.startHelperRequestProcess(DEFAULT_HELPER, event, null, rule);
     }
 
@@ -79,10 +83,12 @@ public class RequestHelpTest extends GenericBpmTest
     public void testReceiveReminderMail()
     {
         HibernateUtil.clearAll();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
 
         Position position =
                 EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false).persist();
-        Event event = EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED).persist();
+        Event event = EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).persist();
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
 
@@ -111,8 +117,11 @@ public class RequestHelpTest extends GenericBpmTest
     {
         // clear all tables in db
         HibernateUtil.clearAll();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        
         // create event
-        Event evt2016 = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED).persist();
+        Event evt2016 = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
         // create helper
         Helper helper = EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
         // start process
@@ -139,8 +148,8 @@ public class RequestHelpTest extends GenericBpmTest
                 EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain(1), false)
                         .persist();
         // create events
-        Event evt2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED).persist();
-        Event evt2015 = EntityFactory.buildEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED).persist();
+        Event evt2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, null).persist();
+        Event evt2015 = EntityFactory.buildEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED, null).persist();
         // create helper
         Helper createdHelper =
                 EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
@@ -203,7 +212,7 @@ public class RequestHelpTest extends GenericBpmTest
         // create 'little' event for 2015
         Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
-        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
                 DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
@@ -235,7 +244,7 @@ public class RequestHelpTest extends GenericBpmTest
         // create 'little' event for 2015
         Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
-        Event event2016 = DatabaseRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> helpers =
                 DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
@@ -271,7 +280,7 @@ public class RequestHelpTest extends GenericBpmTest
         // create 'minimal' event for 2015
         Event event2015 = TestDataProvider.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
         // duplicate event
-        Event event2016 = DatabaseRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = EventRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
         // select created helper
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
         // start process

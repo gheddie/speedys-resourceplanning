@@ -47,7 +47,7 @@ public class MessagingService
             }
             finally
             {
-                DatasourceRegistry.getDatasource(MessageQueue.class).saveOrUpdate(message);
+                message.persist();
             }
         }
     }

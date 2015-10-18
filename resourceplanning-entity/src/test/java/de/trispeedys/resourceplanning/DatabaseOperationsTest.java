@@ -9,13 +9,17 @@ import org.junit.Test;
 
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningPersistenceException;
 
 public class DatabaseOperationsTest
 {
@@ -77,6 +81,18 @@ public class DatabaseOperationsTest
                         .size());
 
         ;
+    }
+    
+    //@Test(expected = ResourcePlanningPersistenceException.class)
+    public void testValidationFail()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        
+        EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template).persist();
+        EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template).persist();
     }
 
     @Test

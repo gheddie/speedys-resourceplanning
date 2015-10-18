@@ -6,12 +6,14 @@ import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 
@@ -24,7 +26,7 @@ public class HelperTest
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", HelperAssignmentTest.TEST_MAIL_ADDRESS,
                         HelperState.ACTIVE, 13, 2, 1976).persist();
-        assertEquals(true, HelperService.isFirstAssignment(helper.getId()));
+        assertEquals(true, AssignmentService.isFirstAssignment(helper.getId()));
     }
 
     /**
@@ -42,8 +44,11 @@ public class HelperTest
         //create positions
         Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false).persist();
         Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false).persist();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        
         //create event
-        Event tri2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED).persist();
+        Event tri2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).persist();
         //assign positions to that event
         DataModelUtil.relatePositionsToEvent(tri2014, pos1, pos2);        
         //assign helper to both positions
@@ -53,7 +58,7 @@ public class HelperTest
     @Test
     public void testSelectActiveHelperIds()
     {        
-        HibernateUtil.clearAll();        
+        HibernateUtil.clearAll();       
         TestDataProvider.createSimpleEvent("TRI", "TRI", 1, 1, 1980);       
         assertEquals(5, HelperService.queryActiveHelperIds().size());
     }

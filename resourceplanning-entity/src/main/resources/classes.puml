@@ -8,6 +8,10 @@ class Helper {
 	helperState : HelperState
 }
 
+class EventTemplate {
+	description : String
+}
+
 class Event {
 	eventDate : Date
 	eventKey : String
@@ -84,5 +88,9 @@ Position "1..n" -- "1" Domain
 
 Helper "1" -- "1" DomainResponsibility : Leitung des Teilbereiches
 Domain "1" -- "1" DomainResponsibility
+
+Event "1..n" -- "1" EventTemplate
+
+Domain "1..n" -- "1" EventTemplate
 
 @enduml

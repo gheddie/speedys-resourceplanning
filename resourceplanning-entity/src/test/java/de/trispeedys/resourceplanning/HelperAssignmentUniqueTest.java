@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -32,11 +33,13 @@ public class HelperAssignmentUniqueTest
         // clear db
         HibernateUtil.clearAll();
         
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        
         // create domain
         Domain domain1 = EntityFactory.buildDomain("dom1", 1).persist();
 
         Position position = EntityFactory.buildPosition("Some position", 12, domain1, false).persist();
-        Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED).persist();
+        Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
         Helper helper1 =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
         Helper helper2 =

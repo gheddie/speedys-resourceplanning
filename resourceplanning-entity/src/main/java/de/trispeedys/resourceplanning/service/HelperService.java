@@ -8,6 +8,7 @@ import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -15,26 +16,21 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class HelperService
 {
-    public static HelperAssignment getPriorAssignment(Helper helper)
+    public static HelperAssignment getPriorAssignment(Helper helper, EventTemplate eventTemplate)
     {
         String queryString =
                 "From " +
                         HelperAssignment.class.getSimpleName() +
-                        " ec INNER JOIN ec.event eo WHERE ec.helperId = :helperId ORDER BY eo.eventDate DESC";
+                        " ha INNER JOIN ha.event ev WHERE ha.helperId = :helperId AND ev.eventTemplate = :eventTemplate ORDER BY ev.eventDate DESC";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("helperId", helper.getId());
+        parameters.put("eventTemplate", eventTemplate);
         List<Object[]> list = DatasourceRegistry.getDatasource(null).find(queryString, parameters);
         if (list.size() == 0)
         {
             return null;
         }
         return (HelperAssignment) list.get(0)[0];
-    }
-
-    public static boolean isFirstAssignment(Long helperId)
-    {
-        List<HelperAssignment> helperAssignments = AssignmentService.getAllHelperAssignments(helperId);
-        return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
 
     public static List<Long> queryActiveHelperIds()
@@ -53,7 +49,7 @@ public class HelperService
         DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
         Helper helper = (Helper) datasource.findById(Helper.class, helperId);
         helper.setHelperState(HelperState.INACTIVE);
-        datasource.saveOrUpdate(helper);
+        helper.persist();
     }
 
     public static boolean isHelperAssignedForPosition(Helper helper, Event event, Position position)
@@ -62,10 +58,12 @@ public class HelperService
         parameters.put("helper", helper);
         parameters.put("event", event);
         parameters.put("position", position);
-        List<HelperAssignment> list = DatasourceRegistry.getDatasource(Helper.class).find(
-                "FROM " +
-                        HelperAssignment.class.getSimpleName() +
-                        " ec WHERE ec.helper = :helper AND ec.event = :event AND ec.position = :position", parameters);
+        List<HelperAssignment> list =
+                DatasourceRegistry.getDatasource(Helper.class)
+                        .find("FROM " +
+                                HelperAssignment.class.getSimpleName() +
+                                " ec WHERE ec.helper = :helper AND ec.event = :event AND ec.position = :position",
+                                parameters);
         return ((list != null) || (list.size() == 1));
     }
 

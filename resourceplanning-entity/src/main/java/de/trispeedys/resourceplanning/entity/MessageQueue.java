@@ -22,6 +22,8 @@ public class MessageQueue extends AbstractDbObject
     
     public static final String ATTR_BODY = "body";
     
+    public static final String ATTR_MESSAGING_TYPE = "messagingType";
+    
     @Column(name = "from_address")
     private String fromAddress;
     

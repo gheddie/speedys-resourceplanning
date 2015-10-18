@@ -2,11 +2,13 @@ package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
 
+import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.DatabaseLogger;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.DomainResponsibility;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
@@ -17,6 +19,7 @@ import de.trispeedys.resourceplanning.entity.builder.DomainBuilder;
 import de.trispeedys.resourceplanning.entity.builder.DomainResponsibilityBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventPositionBuilder;
+import de.trispeedys.resourceplanning.entity.builder.EventTemplateBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperAssignmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
@@ -62,12 +65,12 @@ public class EntityFactory
         return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).withAuthorityOverride(authorityOverride).build();
     }
     
-    public static Event buildEvent(String description, String eventKey, int day, int month, int year, EventState eventState)
+    public static EventTemplate buildEventTemplate(String description)
     {
-        return buildEvent(description, eventKey, day, month, year, false, eventState);
-    }    
-
-    public static Event buildEvent(String description, String eventKey, int day, int month, int year, boolean helpersReminded, EventState eventState)
+        return new EventTemplateBuilder().withDescription(description).build();
+    }  
+ 
+    public static Event buildEvent(String description, String eventKey, int day, int month, int year, EventState eventState, EventTemplate eventTemplate)
     {
         Calendar eventDate = Calendar.getInstance();
         eventDate.set(Calendar.DAY_OF_MONTH, day);
@@ -76,8 +79,8 @@ public class EntityFactory
         return new EventBuilder().withDescription(description)
                 .withDate(eventDate.getTime())
                 .withEventKey(eventKey)
-                .withHelpersReminded(helpersReminded)
                 .withEventState(eventState)
+                .withEventTemplate(eventTemplate)
                 .build();
     }
     
@@ -124,5 +127,5 @@ public class EntityFactory
     public static DatabaseLogger buildLog(String businessKey, String message, DbLogLevel logLevel)
     {
         return new DatabaseLoggerBuilder().withBusinessKey(businessKey).withMessage(message).withLogLevel(logLevel).build();
-    }  
+    }
 }

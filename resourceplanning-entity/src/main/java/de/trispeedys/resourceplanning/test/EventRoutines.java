@@ -9,7 +9,7 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
-public class DatabaseRoutines
+public class EventRoutines
 {
     public static Event duplicateEvent(Long eventId, String description, String eventKey, int day, int month, int year)
     {
@@ -18,7 +18,7 @@ public class DatabaseRoutines
         {
             return null;
         }
-        Event newEvent = EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED).persist();
+        Event newEvent = EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, event.getEventTemplate()).persist();
         List<EventPosition> positions = (List<EventPosition>) DatasourceRegistry.getDatasource(null).find(EventPosition.class, "event", event);
         System.out.println(positions.size());
         Position newPosRelation = null;

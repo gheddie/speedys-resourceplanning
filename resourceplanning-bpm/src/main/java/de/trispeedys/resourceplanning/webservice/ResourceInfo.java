@@ -26,7 +26,7 @@ import de.trispeedys.resourceplanning.messages.BpmMessages;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
-import de.trispeedys.resourceplanning.test.DatabaseRoutines;
+import de.trispeedys.resourceplanning.test.EventRoutines;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.variables.BpmVariables;
@@ -62,7 +62,7 @@ public class ResourceInfo
     {
         HibernateUtil.clearAll();
 
-        Event event2016 = DatabaseRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2016 = EventRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         for (Helper helper : helpers)
         {
@@ -78,7 +78,7 @@ public class ResourceInfo
     {
         HibernateUtil.clearAll();
 
-        Event event2016 = DatabaseRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2016 = EventRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
         // block one of the positions with a new helper
         Helper blockingHelper = EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
@@ -99,7 +99,7 @@ public class ResourceInfo
     {
         HibernateUtil.clearAll();
 
-        Event event2016 = DatabaseRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2016 = EventRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
         startHelperRequestProcess(DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0).getId(), event2016.getId());
 
@@ -116,7 +116,7 @@ public class ResourceInfo
     {
         HibernateUtil.clearAll();
 
-        Event event2016 = DatabaseRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2016 = EventRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);
         // new helper 1 with assignment
@@ -135,7 +135,7 @@ public class ResourceInfo
     {
         HibernateUtil.clearAll();
 
-        Event event2016 = DatabaseRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2016 = EventRoutines.duplicateEvent(TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         startHelperRequestProcess(helpers.get(0).getId(), event2016.getId());
     }

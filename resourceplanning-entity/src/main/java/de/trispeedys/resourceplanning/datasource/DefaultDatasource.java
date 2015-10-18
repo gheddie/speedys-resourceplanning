@@ -1,5 +1,7 @@
 package de.trispeedys.resourceplanning.datasource;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +11,8 @@ import org.hibernate.Transaction;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.entity.misc.CheckOnUpdate;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningPersistenceException;
 
 public class DefaultDatasource<T> implements IDatasource
 {
@@ -54,6 +58,8 @@ public class DefaultDatasource<T> implements IDatasource
 
     public <T> T saveOrUpdate(T entity)
     {
+        performChecks((AbstractDbObject) entity);
+        
         Transaction tx = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         tx = session.beginTransaction();
@@ -68,6 +74,35 @@ public class DefaultDatasource<T> implements IDatasource
         tx.commit();
         session.close();
         return (T) entity;
+    }
+    
+    private void performChecks(AbstractDbObject entity)
+    {
+        for (Method method : entity.getClass().getDeclaredMethods())
+        {
+            if (method.isAnnotationPresent(CheckOnUpdate.class))
+            {
+                try
+                {
+                    method.invoke(entity);
+                }
+                catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (IllegalArgumentException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (InvocationTargetException e)
+                {
+                    if (e.getCause() instanceof ResourcePlanningPersistenceException)
+                    {
+                        throw (ResourcePlanningPersistenceException) e.getCause();
+                    }
+                }
+            }
+        }        
     }
 
     public <T> List<T> findAll(Class<T> entityClass)
