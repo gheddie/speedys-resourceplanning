@@ -3,6 +3,7 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
+import de.trispeedys.resourceplanning.CallbackChoiceGenerator;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -10,9 +11,9 @@ import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
 import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class SendReminderMailDelegate implements JavaDelegate
 {
@@ -59,7 +60,7 @@ public class SendReminderMailDelegate implements JavaDelegate
         buffer.append("<br><br>");
         buffer.append("Bitte sag uns, was Du beim anstehenden " + event.getDescription() + " tun möchtest:");
         buffer.append("<br><br>");
-        for (HelperCallback callback : HelperCallback.values())
+        for (HelperCallback callback : new CallbackChoiceGenerator().generateChoices(helper))
         {
             buffer.append(renderCallbackOption(helper, event, callback));
             buffer.append("<br><br>");

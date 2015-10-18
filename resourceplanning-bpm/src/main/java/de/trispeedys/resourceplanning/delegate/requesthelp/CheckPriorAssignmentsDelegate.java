@@ -5,10 +5,10 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class CheckPriorAssignmentsDelegate implements JavaDelegate
 {

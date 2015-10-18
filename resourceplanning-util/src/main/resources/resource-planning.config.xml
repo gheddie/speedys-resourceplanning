@@ -8,4 +8,5 @@
 	<property name="smtp_passwd">trispeedys1234</property>
 	<property name="smtp_host">smtp.gmail.com</property>
 	<property name="smtp_port">587</property>
+	<property name="admin_mail">admin@tri-speedys.de</property>
 </configuration>

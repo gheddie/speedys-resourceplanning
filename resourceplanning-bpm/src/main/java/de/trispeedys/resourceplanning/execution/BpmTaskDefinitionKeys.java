@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.tasks;
+package de.trispeedys.resourceplanning.execution;
 
 public class BpmTaskDefinitionKeys
 {

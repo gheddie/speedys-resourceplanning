@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.joda.time.Days;
 
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.util.DateHelper;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
@@ -55,10 +57,25 @@ public class AssignmentService
         return DatasourceRegistry.getDatasource(HelperAssignment.class).find(HelperAssignment.class,
                 HelperAssignment.ATTR_HELPER, helper, HelperAssignment.ATTR_EVENT, event);
     }
-    
+
     public static boolean isFirstAssignment(Long helperId)
     {
         List<HelperAssignment> helperAssignments = AssignmentService.getAllHelperAssignments(helperId);
         return ((helperAssignments == null) || (helperAssignments.size() == 0));
+    }
+
+    /**
+     * Sets a {@link HelperAssignment} to state {@link HelperAssignmentState#CANCELLED}.
+     */
+    public static void cancelHelperAssignment(Helper helper, Event event)
+    {
+        DefaultDatasource<HelperAssignment> datasource = DatasourceRegistry.getDatasource(HelperAssignment.class);
+        HelperAssignment assignment =
+                datasource
+                        .find(HelperAssignment.class, HelperAssignment.ATTR_HELPER, helper,
+                                HelperAssignment.ATTR_EVENT, event)
+                        .get(0);
+        assignment.setHelperAssignmentState(HelperAssignmentState.CANCELLED);
+        datasource.saveOrUpdate(assignment);
     }
 }

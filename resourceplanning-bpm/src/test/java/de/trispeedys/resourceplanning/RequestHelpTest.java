@@ -17,7 +17,6 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
-import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
@@ -25,19 +24,18 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import de.trispeedys.resourceplanning.messages.BpmMessages;
-import de.trispeedys.resourceplanning.misc.GenericBpmTest;
+import de.trispeedys.resourceplanning.execution.BpmMessages;
+import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
-import de.trispeedys.resourceplanning.tasks.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.test.EventRoutines;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
 
-public class RequestHelpTest extends GenericBpmTest
+public class RequestHelpTest
 {
     private static final Helper DEFAULT_HELPER = EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE,
             13, 2, 1976).persist();
@@ -128,7 +126,7 @@ public class RequestHelpTest extends GenericBpmTest
         RequestHelpTestUtil.startHelperRequestProcess(helper, evt2016,
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), evt2016.getId()), rule);
         // check
-        assertTrue(wasTaskGenerated(BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, rule));
+        assertTrue(RequestHelpTestUtil.wasTaskGenerated(BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, rule));
     }
 
     /**

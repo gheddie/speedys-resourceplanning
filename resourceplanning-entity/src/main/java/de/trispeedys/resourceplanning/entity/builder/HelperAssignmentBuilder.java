@@ -4,6 +4,7 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 
 public class HelperAssignmentBuilder extends AbstractEntityBuilder<HelperAssignment>
 {
@@ -12,6 +13,8 @@ public class HelperAssignmentBuilder extends AbstractEntityBuilder<HelperAssignm
     private Position position;
 
     private Event event;
+
+    private HelperAssignmentState helperAssignmentState;
 
     public HelperAssignmentBuilder withHelper(Helper aHelper)
     {
@@ -31,12 +34,19 @@ public class HelperAssignmentBuilder extends AbstractEntityBuilder<HelperAssignm
         return this;
     }
     
+    public HelperAssignmentBuilder withHelperAssignmentState(HelperAssignmentState aHelperAssignmentState)
+    {
+        helperAssignmentState = aHelperAssignmentState;
+        return this;
+    }
+    
     public HelperAssignment build()
     {
         HelperAssignment helperAssignment = new HelperAssignment();
         helperAssignment.setEvent(event);
         helperAssignment.setHelper(helper);
         helperAssignment.setPosition(position);
+        helperAssignment.setHelperAssignmentState(helperAssignmentState);
         return helperAssignment;
     }
 }

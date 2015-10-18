@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
@@ -19,17 +20,23 @@ import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
-import de.trispeedys.resourceplanning.jobs.BpmJobDefinitions;
-import de.trispeedys.resourceplanning.messages.BpmMessages;
+import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.execution.BpmJobDefinitions;
+import de.trispeedys.resourceplanning.execution.BpmMessages;
+import de.trispeedys.resourceplanning.execution.BpmSignals;
+import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.EventRoutines;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
+import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
+import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 
 public class RequestHelpExecutionTest
 {
@@ -45,7 +52,8 @@ public class RequestHelpExecutionTest
      * {@link HelperCallback#ASSIGNMENT_AS_BEFORE}) - (6) check availability must fail as the position is already
      * assigned (to 'B') - (7) mail with other positions (4) must be generated and sent to 'A' - (8) helper 'A' chooses
      * one of that positions ('C') (by triggering message 'MSG_POS_CHOSEN' with position id as variable) - (9) chosen
-     * position ('C') must be assigned to the helper 'A' afterwards - (10) process must be finished
+     * position ('C') must be assigned to the helper 'A' afterwards - (10) process must be finished (after signal for
+     * the event start)
      */
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
@@ -102,6 +110,7 @@ public class RequestHelpExecutionTest
         assertEquals(1, helperAssignmentA2016.size());
 
         // (10)
+        processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
     }
 
@@ -135,6 +144,7 @@ public class RequestHelpExecutionTest
                 AssignmentService.getHelperAssignments(helperA, event2016);
         assertEquals(1, helperAssignmentA2016.size());
 
+        processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
     }
 
@@ -261,7 +271,7 @@ public class RequestHelpExecutionTest
      * {@link RequestHelpExecutionTest#testProposePositionsOnAssignmentRequestedAsBefore}, but the helper commits the
      * message for {@link HelperCallback#CHANGE_POS}) (A). He then chooses a positions which already has been assigned
      * to someone else (B), so he gets a second mail, choose a free position this time (C). Then the position is
-     * assigned to 'helperA' and the process is gone (D).
+     * assigned to 'helperA' and the process is gone after signal (D).
      */
     @Test
     @Deployment(resources = "RequestHelp.bpmn")
@@ -303,6 +313,7 @@ public class RequestHelpExecutionTest
 
         // (D)
         assertEquals(1, AssignmentService.getHelperAssignments(helperA, event2016).size());
+        processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
     }
 
@@ -341,27 +352,89 @@ public class RequestHelpExecutionTest
         // 'B' is faster...
         RequestHelpTestUtil.choosePosition(businessKeyB, desiredPosition, processEngine, event2016.getId());
 
-        // 'B' is booked for desired position, only one process instance is left (A)...
+        // 'B' is booked for desired position...
         assertEquals(
                 1,
-                DatasourceRegistry.getDatasource(HelperAssignment.class).find(HelperAssignment.class,
-                        HelperAssignment.ATTR_EVENT, event2016,
-                        HelperAssignment.ATTR_HELPER, helperB,
-                        HelperAssignment.ATTR_POSITION, desiredPosition).size());
-        assertEquals(1, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
-        
+                DatasourceRegistry.getDatasource(HelperAssignment.class)
+                        .find(HelperAssignment.class, HelperAssignment.ATTR_EVENT, event2016,
+                                HelperAssignment.ATTR_HELPER, helperB, HelperAssignment.ATTR_POSITION,
+                                desiredPosition)
+                        .size());
+
         // 'A' comes to late
         RequestHelpTestUtil.choosePosition(businessKeyA, desiredPosition, processEngine, event2016.getId());
-        
-        // still one process there (with business key 'A')
-        assertEquals(1, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
-        
+
         // 'A' has two mails of type 'PROPOSE_POSITIONS'...
         assertEquals(
                 2,
-                DatasourceRegistry.getDatasource(MessageQueue.class).find(MessageQueue.class,
-                        MessageQueue.ATTR_MESSAGING_TYPE, MessagingType.PROPOSE_POSITIONS,
-                        MessageQueue.ATTR_TO_ADDRESS, helperA.getEmail()).size());
-        assertEquals(1, processEngine.getRuntimeService().createProcessInstanceQuery().list().size());
+                DatasourceRegistry.getDatasource(MessageQueue.class)
+                        .find(MessageQueue.class, MessageQueue.ATTR_MESSAGING_TYPE,
+                                MessagingType.PROPOSE_POSITIONS, MessageQueue.ATTR_TO_ADDRESS,
+                                helperA.getEmail())
+                        .size());
+    }
+
+    /**
+     * A new helper is manually assigned, but after being assigned to a position, he cancels his assignment. That for,
+     * an alert mail must be sent ({@link AppConfigurationValues#ADMIN_MAIL}) and the assignment must have the status
+     * {@link HelperAssignmentState#CANCELLED}.
+     */
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testNewHelperCancelsAssignment()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                EventRoutines.duplicateEvent(
+                        TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+
+        // new helper
+        Helper helper =
+                EntityFactory.buildHelper("Mee", "Moo", "a@b.de", HelperState.ACTIVE, 23, 6, 2000).persist();
+
+        // start process
+        String businessKey =
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, processEngine);
+
+        // manual assignment task must be there
+        assertTrue(RequestHelpTestUtil.wasTaskGenerated(
+                BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, processEngine));
+
+        // finish it (with a position)
+        Task task =
+                processEngine.getTaskService()
+                        .createTaskQuery()
+                        .taskDefinitionKey(
+                                BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT)
+                        .list()
+                        .get(0);
+        HashMap<String, Object> variables = new HashMap<String, Object>();
+        Position someUnassignedTask =
+                DatasourceRegistry.getDatasource(Position.class).findAll(Position.class).get(0);
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, someUnassignedTask.getId());
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, true);
+        processEngine.getTaskService().complete(task.getId(), variables);
+
+        // Send cancellation message
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED,
+                businessKey);
+
+        // process must be gone
+        assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
+
+        // check canncelled assignment
+        assertEquals(
+                HelperAssignmentState.CANCELLED,
+                DatasourceRegistry.getDatasource(HelperAssignment.class)
+                        .find(HelperAssignment.class, HelperAssignment.ATTR_EVENT, event2016,
+                                HelperAssignment.ATTR_HELPER, helper)
+                        .get(0)
+                        .getHelperAssignmentState());
+
+        // check admin mail
+        // TODO
     }
 }

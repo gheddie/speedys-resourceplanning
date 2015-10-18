@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.variables;
+package de.trispeedys.resourceplanning.execution;
 
 public class BpmVariables
 {

@@ -11,6 +11,12 @@ public enum MessagingType
     
     // propose positions to helper, e.g. 'ASSIGNMENT_AS_BEFORE' fails
     PROPOSE_POSITIONS,
+    
+    // confirmation of an assignment sent to the helper
+    CONFIRMATION,
+    
+    // a helper has cancelled his assignment (someone will be noticed)
+    ALERT_BOOKING_CANCELLED,
 
     // fallback
     NONE

@@ -3,8 +3,8 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
-import de.trispeedys.resourceplanning.messages.BpmMessages;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
+import de.trispeedys.resourceplanning.execution.BpmMessages;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 
 public class StartRemindersDelegate implements JavaDelegate
 {

@@ -10,11 +10,11 @@ import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
-import de.trispeedys.resourceplanning.messages.BpmMessages;
+import de.trispeedys.resourceplanning.execution.BpmMessages;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class HelperInteraction
 {

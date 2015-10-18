@@ -7,9 +7,9 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class ConfirmHelperDelegate implements JavaDelegate
 {

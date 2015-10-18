@@ -26,6 +26,7 @@ import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
+import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.service.PositionService;
@@ -57,6 +58,7 @@ public class EntityFactory
         return new HelperAssignmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEvent(event)
+                .withHelperAssignmentState(HelperAssignmentState.CONFIRMED)
                 .build();
     }
 

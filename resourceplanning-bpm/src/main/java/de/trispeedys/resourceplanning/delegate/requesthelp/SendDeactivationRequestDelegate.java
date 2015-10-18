@@ -8,7 +8,7 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 
 public class SendDeactivationRequestDelegate implements JavaDelegate
 {

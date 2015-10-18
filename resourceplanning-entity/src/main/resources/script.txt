@@ -77,6 +77,7 @@ create table helper_assignment
 	position_id bigint,
 	event_id bigint,
 	primary key (id),
+	helper_assignment_state varchar(64),
 	constraint hlp_assignm_unique_pos_event unique (position_id, event_id)
 );
 

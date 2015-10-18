@@ -10,11 +10,7 @@ import org.junit.Test;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
-import de.trispeedys.resourceplanning.entity.misc.HelperState;
-import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.test.EventRoutines;
 import de.trispeedys.resourceplanning.test.TestDataProvider;
 

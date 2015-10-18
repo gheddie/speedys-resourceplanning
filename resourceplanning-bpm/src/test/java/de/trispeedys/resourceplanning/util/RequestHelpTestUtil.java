@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
@@ -16,10 +17,10 @@ import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
-import de.trispeedys.resourceplanning.jobs.BpmJobDefinitions;
-import de.trispeedys.resourceplanning.messages.BpmMessages;
+import de.trispeedys.resourceplanning.execution.BpmJobDefinitions;
+import de.trispeedys.resourceplanning.execution.BpmMessages;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.PositionService;
-import de.trispeedys.resourceplanning.variables.BpmVariables;
 
 public class RequestHelpTestUtil
 {
@@ -131,5 +132,11 @@ public class RequestHelpTestUtil
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, position.getId());
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, PositionService.isPositionAvailable(eventId, position.getId()));
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
+    }
+    
+    public static boolean wasTaskGenerated(String taskId, ProcessEngineRule rule)
+    {
+        List<Task> list = rule.getTaskService().createTaskQuery().taskDefinitionKey(taskId).list();
+        return ((list != null) && (list.size() > 0));
     }
 }

@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.messages;
+package de.trispeedys.resourceplanning.execution;
 
 public class BpmMessages
 {
@@ -12,6 +12,13 @@ public class BpmMessages
         
         public static final String MSG_DEACT_RESP = "MSG_DEACT_RESP";
 
+        // helper has chosen a position
         public static final String MSG_POS_CHOSEN = "MSG_POS_CHOSEN";
+        
+        // Event starts --> e.g. no more cancellations possible
+        public static final String MSG_EVENT_START = "MSG_EVENT_START";
+        
+        // assigment cancelled by helper
+        public static final String MSG_ASSIG_CANCELLED = "MSG_ASSIG_CANCELLED";
     }
 }

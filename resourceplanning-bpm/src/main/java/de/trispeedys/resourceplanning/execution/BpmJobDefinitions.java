@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning.jobs;
+package de.trispeedys.resourceplanning.execution;
 
 public class BpmJobDefinitions
 {
