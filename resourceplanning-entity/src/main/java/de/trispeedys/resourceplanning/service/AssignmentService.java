@@ -1,5 +1,6 @@
 package de.trispeedys.resourceplanning.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.Days;
@@ -7,6 +8,7 @@ import org.joda.time.Days;
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -77,5 +79,22 @@ public class AssignmentService
                         .get(0);
         assignment.setHelperAssignmentState(HelperAssignmentState.CANCELLED);
         datasource.saveOrUpdate(assignment);
+    }
+    
+    public static HelperAssignment getPriorAssignment(Helper helper, EventTemplate eventTemplate)
+    {
+        String queryString =
+                "From " +
+                        HelperAssignment.class.getSimpleName() +
+                        " ha INNER JOIN ha.event ev WHERE ha.helperId = :helperId AND ev.eventTemplate = :eventTemplate ORDER BY ev.eventDate DESC";
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("helperId", helper.getId());
+        parameters.put("eventTemplate", eventTemplate);
+        List<Object[]> list = DatasourceRegistry.getDatasource(HelperAssignment.class).find(queryString, parameters);
+        if (list.size() == 0)
+        {
+            return null;
+        }
+        return (HelperAssignment) list.get(0)[0];
     }
 }

@@ -4,7 +4,7 @@ import de.trispeedys.resourceplanning.entity.EventPosition;
 
 public class EventPositionDatasource extends DefaultDatasource<EventPosition>
 {
-    protected Class<EventPosition> getType()
+    protected Class<EventPosition> getGenericType()
     {
         return null;
     }

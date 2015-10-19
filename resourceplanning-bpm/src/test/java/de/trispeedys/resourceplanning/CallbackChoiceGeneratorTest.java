@@ -11,8 +11,10 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.service.AssignmentService;
+import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.EventRoutines;
-import de.trispeedys.resourceplanning.test.TestDataProvider;
+import de.trispeedys.resourceplanning.test.TestDataGenerator;
 
 public class CallbackChoiceGeneratorTest
 {
@@ -25,16 +27,41 @@ public class CallbackChoiceGeneratorTest
         HibernateUtil.clearAll();
 
         // create events
-        Event event2015 = TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
-        Event event2016 =
-                EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        Event event2016 = EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         
         // get helper
         Helper helper =
                 DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
         
         assertTrue(checkChoices(HelperCallback.values(),
-                new CallbackChoiceGenerator().generateChoices(helper)));
+                new CallbackChoiceGenerator().generateChoices(helper, event2016)));
+    }
+    
+    /**
+     * Helper 'A' was assigned to a position in 2015, and in 2016, his position is already blocked (by helper 'B'),
+     * so {@link HelperCallback#ASSIGNMENT_AS_BEFORE} must be not available...
+     */
+    @Test
+    public void testPriorPositionAlreadyAssigned()
+    {
+        HibernateUtil.clearAll();
+
+        // create events
+        Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        Event event2016 = EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        
+        // get helpers
+        Helper helperA =
+                DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
+        Helper helperB =
+                DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(1);
+        
+        // assign 'B' to 'A's prior position...
+        AssignmentService.assignHelper(helperB, event2016, AssignmentService.getPriorAssignment(helperA, event2015.getEventTemplate()).getPosition());
+        
+        assertTrue(checkChoices(new HelperCallback[] {HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME},
+                new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
     }
 
     // ---

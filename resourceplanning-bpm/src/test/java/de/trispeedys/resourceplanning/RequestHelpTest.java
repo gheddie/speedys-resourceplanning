@@ -30,7 +30,7 @@ import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.test.EventRoutines;
-import de.trispeedys.resourceplanning.test.TestDataProvider;
+import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
@@ -182,7 +182,7 @@ public class RequestHelpTest
         HibernateUtil.clearAll();
 
         // create event
-        TestDataProvider.createSimpleEvent("TRI", "TRI", 1, 1, 1980);
+        TestDataGenerator.createSimpleEvent("TRI", "TRI", 1, 1, 1980);
 
         // there should be 5 active helpers...
         RequestHelpTestUtil.startTriggerHelperProcess(rule);
@@ -208,7 +208,7 @@ public class RequestHelpTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'little' event for 2015
-        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
         Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
@@ -240,7 +240,7 @@ public class RequestHelpTest
         EntityFactory.buildHelper("Helper2", "Helper2", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
         EntityFactory.buildHelper("Helper3", "Helper3", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
         // create 'little' event for 2015
-        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
         Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
@@ -276,7 +276,7 @@ public class RequestHelpTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'minimal' event for 2015
-        Event event2015 = TestDataProvider.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 = TestDataGenerator.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
         // duplicate event
         Event event2016 = EventRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
         // select created helper

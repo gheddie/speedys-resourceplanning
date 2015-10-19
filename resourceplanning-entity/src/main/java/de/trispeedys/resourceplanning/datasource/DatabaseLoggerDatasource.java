@@ -4,7 +4,7 @@ import de.trispeedys.resourceplanning.entity.DatabaseLogger;
 
 public class DatabaseLoggerDatasource extends DefaultDatasource<DatabaseLogger>
 {
-    protected Class<DatabaseLogger> getType()
+    protected Class<DatabaseLogger> getGenericType()
     {
         return null;
     }

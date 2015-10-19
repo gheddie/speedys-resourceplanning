@@ -4,6 +4,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.trispeedys.resourceplanning.CallbackChoiceGenerator;
+import de.trispeedys.resourceplanning.delegate.requesthelp.misc.RequestHelpDelegate;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -15,7 +16,7 @@ import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
 import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 
-public class SendReminderMailDelegate implements JavaDelegate
+public class SendReminderMailDelegate extends RequestHelpDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
@@ -25,15 +26,15 @@ public class SendReminderMailDelegate implements JavaDelegate
         // write mail
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
         Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
-        sendReminderMail(helper, event, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS));
+        sendReminderMail(helper, event, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS), execution);
         // increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue + 1));
     }
 
-    private void sendReminderMail(Helper helper, Event event, int attemptCount)
+    private void sendReminderMail(Helper helper, Event event, int attemptCount, DelegateExecution execution)
     {
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event),
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event, execution),
                 getMessagingType(attemptCount), MessagingFormat.HTML).persist();
     }
 
@@ -52,7 +53,7 @@ public class SendReminderMailDelegate implements JavaDelegate
         }
     }
 
-    private String generateReminderBody(Helper helper, Event event)
+    private String generateReminderBody(Helper helper, Event event, DelegateExecution execution)
     {
         // build message body
         StringBuffer buffer = new StringBuffer();
@@ -60,7 +61,7 @@ public class SendReminderMailDelegate implements JavaDelegate
         buffer.append("<br><br>");
         buffer.append("Bitte sag uns, was Du beim anstehenden " + event.getDescription() + " tun möchtest:");
         buffer.append("<br><br>");
-        for (HelperCallback callback : new CallbackChoiceGenerator().generateChoices(helper))
+        for (HelperCallback callback : new CallbackChoiceGenerator().generateChoices(helper, getEvent(execution)))
         {
             buffer.append(renderCallbackOption(helper, event, callback));
             buffer.append("<br><br>");

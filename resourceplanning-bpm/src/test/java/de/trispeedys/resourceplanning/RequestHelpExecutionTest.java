@@ -32,7 +32,7 @@ import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.EventRoutines;
-import de.trispeedys.resourceplanning.test.TestDataProvider;
+import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
@@ -63,7 +63,7 @@ public class RequestHelpExecutionTest
         HibernateUtil.clearAll();
 
         // (1)
-        Event event2015 = TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
 
         // (2)
         Event event2016 =
@@ -125,7 +125,7 @@ public class RequestHelpExecutionTest
     {
         HibernateUtil.clearAll();
 
-        Event event2015 = TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
 
         Event event2016 =
                 EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
@@ -159,7 +159,7 @@ public class RequestHelpExecutionTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'little' event for 2015
-        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
         Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
@@ -198,7 +198,7 @@ public class RequestHelpExecutionTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'little' event for 2015
-        Long eventId2015 = TestDataProvider.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
         Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
@@ -220,7 +220,7 @@ public class RequestHelpExecutionTest
         // process must be gone
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
 
-        // helper state remains 'ACTIVE'
+        // helper state changes to 'INACTIVE'
         assertEquals(
                 HelperState.INACTIVE,
                 ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
@@ -238,7 +238,7 @@ public class RequestHelpExecutionTest
 
         HibernateUtil.clearAll();
 
-        Event event2015 = TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
 
         Event event2016 =
                 EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
@@ -276,7 +276,7 @@ public class RequestHelpExecutionTest
     {
         HibernateUtil.clearAll();
 
-        Event event2015 = TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
 
         Event event2016 =
                 EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
@@ -326,7 +326,7 @@ public class RequestHelpExecutionTest
 
         Event event2016 =
                 EventRoutines.duplicateEvent(
-                        TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
                         "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
         List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
@@ -384,7 +384,7 @@ public class RequestHelpExecutionTest
 
         Event event2016 =
                 EventRoutines.duplicateEvent(
-                        TestDataProvider.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
                         "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
         // new helper

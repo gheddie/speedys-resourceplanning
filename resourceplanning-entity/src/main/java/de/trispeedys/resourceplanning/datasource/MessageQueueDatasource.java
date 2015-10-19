@@ -4,7 +4,7 @@ import de.trispeedys.resourceplanning.entity.MessageQueue;
 
 public class MessageQueueDatasource extends DefaultDatasource<MessageQueue>
 {
-    protected Class<MessageQueue> getType()
+    protected Class<MessageQueue> getGenericType()
     {
         return null;
     }

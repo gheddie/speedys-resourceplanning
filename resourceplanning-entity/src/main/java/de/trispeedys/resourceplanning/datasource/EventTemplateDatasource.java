@@ -4,7 +4,7 @@ import de.trispeedys.resourceplanning.entity.EventTemplate;
 
 public class EventTemplateDatasource extends DefaultDatasource<EventTemplate>
 {
-    protected Class<EventTemplate> getType()
+    protected Class<EventTemplate> getGenericType()
     {
         return null;
     }

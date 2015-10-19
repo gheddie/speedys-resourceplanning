@@ -4,7 +4,7 @@ import de.trispeedys.resourceplanning.entity.Domain;
 
 public class DomainDatasource extends DefaultDatasource<Domain>
 {
-    protected Class<Domain> getType()
+    protected Class<Domain> getGenericType()
     {
         return null;
     }

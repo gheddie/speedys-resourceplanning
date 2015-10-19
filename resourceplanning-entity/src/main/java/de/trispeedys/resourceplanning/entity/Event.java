@@ -16,10 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import de.trispeedys.resourceplanning.entity.misc.CheckOnUpdate;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
-import de.trispeedys.resourceplanning.entity.misc.HelperState;
-import de.trispeedys.resourceplanning.util.exception.ResourcePlanningPersistenceException;
 
 @Entity
 @Table(name = "event")
@@ -110,21 +107,6 @@ public class Event extends AbstractDbObject
     public void setEventTemplate(EventTemplate eventTemplate)
     {
         this.eventTemplate = eventTemplate;
-    }
-    
-    @CheckOnUpdate
-    public void check()
-    {
-        // TODO more than one event can be planned at a time...
-        /*
-        if (eventState.equals(EventState.PLANNED))
-        {
-            if (DatasourceRegistry.getDatasource(Event.class).find(Event.class, ATTR_EVENT_STATE, EventState.PLANNED).size() > 0)
-            {
-                throw new ResourcePlanningPersistenceException("123");
-            }
-        }
-        */
     }
     
     public String toString()

@@ -8,17 +8,6 @@
 		<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
 	</listener>
 
-	<!-- Test service -->
-	<servlet>
-		<servlet-name>someTestServiceWs</servlet-name>
-		<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>someTestServiceWs</servlet-name>
-		<url-pattern>/SomeTestServiceWs</url-pattern>
-	</servlet-mapping>
-
 	<!-- Resource info service -->
 	<servlet>
 		<servlet-name>resourceInfoWs</servlet-name>
@@ -29,6 +18,17 @@
 		<servlet-name>resourceInfoWs</servlet-name>
 		<url-pattern>/ResourceInfoWs</url-pattern>
 	</servlet-mapping>
+	
+	<!-- Test data provider service -->
+	<servlet>
+		<servlet-name>testDataProviderWs</servlet-name>
+		<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>testDataProviderWs</servlet-name>
+		<url-pattern>/TestDataProviderWs</url-pattern>
+	</servlet-mapping>	
 
 	<session-config>
 		<session-timeout>120</session-timeout>

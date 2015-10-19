@@ -12,8 +12,8 @@ import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
-import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
@@ -21,9 +21,8 @@ import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.AssignmentService;
-import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.PositionService;
-import de.trispeedys.resourceplanning.test.TestDataProvider;
+import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class HelperAssignmentTest
@@ -142,7 +141,7 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(helper, evt2012, position).persist();
 
         // last confirmed assignment should be in 2012
-        HelperAssignment lastConfirmedAssignment = HelperService.getPriorAssignment(helper, evt2014.getEventTemplate());
+        HelperAssignment lastConfirmedAssignment = AssignmentService.getPriorAssignment(helper, evt2014.getEventTemplate());
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(lastConfirmedAssignment.getEvent().getEventDate());
@@ -173,7 +172,7 @@ public class HelperAssignmentTest
         DataModelUtil.relatePositionsToEvent(event2014, position);
 
         // last confirmed assignment shuold be in 2012
-        HelperAssignment lastConfirmedAssignment = HelperService.getPriorAssignment(helper, event2014.getEventTemplate());
+        HelperAssignment lastConfirmedAssignment = AssignmentService.getPriorAssignment(helper, event2014.getEventTemplate());
 
         assertEquals(null, lastConfirmedAssignment);
     }
@@ -219,7 +218,7 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(blockingHelper, event2016, position).persist();
 
         // 'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
-        assertFalse(PositionService.isPositionAvailable(event2016, HelperService.getPriorAssignment(helperToReassign, event2016.getEventTemplate()).getPosition()));
+        assertFalse(PositionService.isPositionAvailable(event2016, AssignmentService.getPriorAssignment(helperToReassign, event2016.getEventTemplate()).getPosition()));
     }
 
     /**
@@ -281,7 +280,7 @@ public class HelperAssignmentTest
         HibernateUtil.clearAll();
 
         // event
-        Event event = TestDataProvider.createSimpleUnassignedEvent("TRI-2016", "TRI-2016", 21, 6, 2016);
+        Event event = TestDataGenerator.createSimpleUnassignedEvent("TRI-2016", "TRI-2016", 21, 6, 2016);
 
         // helpers
         Helper helper1 =

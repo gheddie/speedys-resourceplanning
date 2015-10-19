@@ -8,7 +8,7 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
-import de.trispeedys.resourceplanning.service.HelperService;
+import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.PositionService;
 
@@ -21,7 +21,7 @@ public class CheckAvailabilityDelegate implements JavaDelegate
                 (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
         Event event =
                 (Event) DatasourceRegistry.getDatasource(Event.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
-        Position position = HelperService.getPriorAssignment(helper, event.getEventTemplate()).getPosition();
+        Position position = AssignmentService.getPriorAssignment(helper, event.getEventTemplate()).getPosition();
         boolean positionAvailable = PositionService.isPositionAvailable(event, position);
         LoggerService.log(execution.getBusinessKey(), "ckecking availability for helper '" +
                 helper + "' and position '" + position + "' in event '" + event + "', position available : " +

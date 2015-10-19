@@ -8,7 +8,6 @@ import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -16,23 +15,6 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 
 public class HelperService
 {
-    public static HelperAssignment getPriorAssignment(Helper helper, EventTemplate eventTemplate)
-    {
-        String queryString =
-                "From " +
-                        HelperAssignment.class.getSimpleName() +
-                        " ha INNER JOIN ha.event ev WHERE ha.helperId = :helperId AND ev.eventTemplate = :eventTemplate ORDER BY ev.eventDate DESC";
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("helperId", helper.getId());
-        parameters.put("eventTemplate", eventTemplate);
-        List<Object[]> list = DatasourceRegistry.getDatasource(HelperAssignment.class).find(queryString, parameters);
-        if (list.size() == 0)
-        {
-            return null;
-        }
-        return (HelperAssignment) list.get(0)[0];
-    }
-
     public static List<Long> queryActiveHelperIds()
     {
         List<Long> result = new ArrayList<Long>();

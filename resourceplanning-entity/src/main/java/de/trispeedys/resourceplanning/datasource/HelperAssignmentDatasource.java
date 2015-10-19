@@ -4,7 +4,7 @@ import de.trispeedys.resourceplanning.entity.HelperAssignment;
 
 public class HelperAssignmentDatasource extends DefaultDatasource<HelperAssignment>
 {
-    protected Class<HelperAssignment> getType()
+    protected Class<HelperAssignment> getGenericType()
     {
         return null;
     }

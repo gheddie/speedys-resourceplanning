@@ -15,7 +15,7 @@ import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
-import de.trispeedys.resourceplanning.test.TestDataProvider;
+import de.trispeedys.resourceplanning.test.TestDataGenerator;
 
 public class HelperTest
 {
@@ -59,7 +59,7 @@ public class HelperTest
     public void testSelectActiveHelperIds()
     {        
         HibernateUtil.clearAll();       
-        TestDataProvider.createSimpleEvent("TRI", "TRI", 1, 1, 1980);       
+        TestDataGenerator.createSimpleEvent("TRI", "TRI", 1, 1, 1980);       
         assertEquals(5, HelperService.queryActiveHelperIds().size());
     }
 }

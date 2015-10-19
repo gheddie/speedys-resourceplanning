@@ -4,7 +4,7 @@ import de.trispeedys.resourceplanning.entity.Position;
 
 public class PositionDatasource extends DefaultDatasource<Position>
 {
-    protected Class<Position> getType()
+    protected Class<Position> getGenericType()
     {
         return Position.class;
     }

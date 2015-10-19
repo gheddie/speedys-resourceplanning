@@ -1,20 +1,14 @@
 package de.trispeedys.resourceplanning.datasource;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.id.IdentityGenerator.GetGeneratedKeysDelegate;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.entity.misc.CheckOnUpdate;
-import de.trispeedys.resourceplanning.util.exception.ResourcePlanningPersistenceException;
 
 public abstract class DefaultDatasource<T> implements IDatasource
 {
@@ -60,8 +54,6 @@ public abstract class DefaultDatasource<T> implements IDatasource
 
     public <T> T saveOrUpdate(T entity)
     {
-        performChecks((AbstractDbObject) entity);
-        
         Transaction tx = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         tx = session.beginTransaction();
@@ -76,44 +68,14 @@ public abstract class DefaultDatasource<T> implements IDatasource
         tx.commit();
         session.close();
         return (T) entity;
-    }
-    
-    private void performChecks(AbstractDbObject entity)
-    {
-        for (Method method : entity.getClass().getDeclaredMethods())
-        {
-            if (method.isAnnotationPresent(CheckOnUpdate.class))
-            {
-                try
-                {
-                    method.invoke(entity);
-                }
-                catch (IllegalAccessException e)
-                {
-                    e.printStackTrace();
-                }
-                catch (IllegalArgumentException e)
-                {
-                    e.printStackTrace();
-                }
-                catch (InvocationTargetException e)
-                {
-                    if (e.getCause() instanceof ResourcePlanningPersistenceException)
-                    {
-                        throw (ResourcePlanningPersistenceException) e.getCause();
-                    }
-                }
-            }
-        }        
-    }
+    }    
 
+    @SuppressWarnings("unchecked")
     public <T> List<T> findAll(Class<T> entityClass)
     {
         return (List<T>) find("FROM " + entityClass.getSimpleName());
     }
     
-    //---------------------------------------------------------------------------------------------------
-
     public <T> List<T> find(Class<T> entityClass, Object... filters)
     {
         if ((filters == null) || (filters.length == 0))
@@ -149,23 +111,20 @@ public abstract class DefaultDatasource<T> implements IDatasource
         return find(qryString, parameters);
     }
     
-    //---------------------------------------------------------------------------------------------------
-    
-    public <T> T findById(Long primaryKeyValue)
-    {
-        return (T) doFindById(getType(), primaryKeyValue);
-    }
-
     @SuppressWarnings("unchecked")
-    private <T> T doFindById(Class<T> entityClass, Long primaryKeyValue)
+    public <T> T findById(Long primaryKeyValue)
     {
         if (primaryKeyValue == null)
         {
             return null;
         }
-        List<T> list = (List<T>) find("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue);
+        List<T> list = (List<T>) find("FROM " + getGenericType().getSimpleName() + " WHERE id = " + primaryKeyValue);
         return (list != null && list.size() == 1 ? (T) list.get(0) : null);
     }
-    
-    protected abstract Class<T> getType();
+
+    /**
+     * gets the generic type of the datasource instance (inherit of {@link AbstractDbObject})
+     * @return
+     */
+    protected abstract Class<T> getGenericType();
 }

@@ -11,12 +11,12 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
-public class TestDataProvider
+public class TestDataGenerator
 {
     private static final String MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
 
     /**
-     * creates an {@link Event} like {@link TestDataProvider#createMinimalEvent(String, String, int, int, int)}, but
+     * creates an {@link Event} like {@link TestDataGenerator#createMinimalEvent(String, String, int, int, int)}, but
      * without assignments of positions to helpers.
      * 
      * @return
