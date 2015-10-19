@@ -20,9 +20,9 @@ public class ConfirmHelperDelegate implements JavaDelegate
         {
             throw new ResourcePlanningException("can not book helper to position for position id not set!!");
         }
-        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById(Position.class, (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION));
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
+        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION));
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
         AssignmentService.assignHelper(helper, event, position);
     }
 }

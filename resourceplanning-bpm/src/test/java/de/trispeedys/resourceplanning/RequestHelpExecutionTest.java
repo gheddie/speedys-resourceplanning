@@ -184,8 +184,7 @@ public class RequestHelpExecutionTest
         // helper state remains 'ACTIVE'
         assertEquals(
                 HelperState.ACTIVE,
-                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class,
-                        notCooperativeHelper.getId())).getHelperState());
+                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
     }
 
     /**
@@ -224,8 +223,7 @@ public class RequestHelpExecutionTest
         // helper state remains 'ACTIVE'
         assertEquals(
                 HelperState.INACTIVE,
-                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class,
-                        notCooperativeHelper.getId())).getHelperState());
+                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
     }
 
     /**
@@ -262,8 +260,7 @@ public class RequestHelpExecutionTest
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
         assertEquals(
                 HelperState.ACTIVE,
-                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class,
-                        helperA.getId())).getHelperState());
+                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperA.getId())).getHelperState());
     }
 
     /**

@@ -26,7 +26,7 @@ public class DebugEvent
     
     public static StringBuffer debugEvent(Long eventId)
     {
-        return debugEvent((Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId));
+        return debugEvent((Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId));
     }
 
     public static StringBuffer debugEvent(Event event)

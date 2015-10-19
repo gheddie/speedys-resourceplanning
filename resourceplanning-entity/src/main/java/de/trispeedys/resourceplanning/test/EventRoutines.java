@@ -13,13 +13,13 @@ public class EventRoutines
 {
     public static Event duplicateEvent(Long eventId, String description, String eventKey, int day, int month, int year)
     {
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
         if (event == null)
         {
             return null;
         }
         Event newEvent = EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, event.getEventTemplate()).persist();
-        List<EventPosition> positions = (List<EventPosition>) DatasourceRegistry.getDatasource(null).find(EventPosition.class, "event", event);
+        List<EventPosition> positions = (List<EventPosition>) DatasourceRegistry.getDatasource(EventPosition.class).find(EventPosition.class, "event", event);
         System.out.println(positions.size());
         Position newPosRelation = null;
         for (EventPosition evtpos : positions)

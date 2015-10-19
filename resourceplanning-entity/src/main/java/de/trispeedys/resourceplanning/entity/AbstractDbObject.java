@@ -25,7 +25,7 @@ public abstract class AbstractDbObject
     
     public <T> T persist()
     {
-        DefaultDatasource<T> datasource = (DefaultDatasource<T>) DatasourceRegistry.getDatasource(AbstractDbObject.class);
+        DefaultDatasource<T> datasource = (DefaultDatasource<T>) DatasourceRegistry.getDatasource(getClass());
         return (T) datasource.saveOrUpdate(this);
     }
 

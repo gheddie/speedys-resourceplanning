@@ -44,8 +44,10 @@ public class ResourceInfo
 
     public void assignHelper(Long helperId, Long positionId, Long eventId)
     {
-        AssignmentService.assignHelper(DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId), DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId),
-                DatasourceRegistry.getDatasource(Position.class).findById(Position.class, positionId));
+        /*
+        AssignmentService.assignHelper(DatasourceRegistry.getDatasource(Helper.class).findById(helperId), DatasourceRegistry.getDatasource(Event.class).findById(eventId),
+                DatasourceRegistry.getDatasource(Position.class).findById(positionId));
+                */
     }
 
     public void startHelperRequestProcess(Long helperId, Long eventId)

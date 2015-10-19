@@ -17,7 +17,7 @@ public class CheckPriorAssignmentsDelegate implements JavaDelegate
         AppConfiguration.getInstance();
         
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
         boolean firstAssignment = AssignmentService.isFirstAssignment(helperId);
         if (firstAssignment)
         {

@@ -10,7 +10,7 @@ public class HtmlRenderer
 {
     public static String renderCorrelationSuccess(HttpServletRequest request)
     {
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, Long.parseLong(request.getParameter("helperId")));
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Long.parseLong(request.getParameter("helperId")));
         StringBuffer buffer = new StringBuffer();
         buffer.append("<h1>Hallo "+helper.getFirstName()+",</h1>");
         buffer.append("<br><br>");
@@ -22,7 +22,7 @@ public class HtmlRenderer
     
     public static String renderCorrelationFault(HttpServletRequest request)
     {
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, Long.parseLong(request.getParameter("helperId")));
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Long.parseLong(request.getParameter("helperId")));
         StringBuffer buffer = new StringBuffer();
         buffer.append("<h1>Hallo "+helper.getFirstName()+",</h1>");
         buffer.append("<br><br>");
@@ -34,7 +34,7 @@ public class HtmlRenderer
     
     public static String renderChosenPosAvailable(HttpServletRequest request, boolean positionAvailable)
     {
-        Position chosenPosition = DatasourceRegistry.getDatasource(Position.class).findById(Position.class, Long.parseLong(request.getParameter("chosenPosition")));
+        Position chosenPosition = DatasourceRegistry.getDatasource(Position.class).findById(Long.parseLong(request.getParameter("chosenPosition")));
         if (positionAvailable)
         {
             return "<br><br>Deine gewünschte Position ("+chosenPosition.getDescription()+") ist verfuegbar und wird dir zugewiesen.<br><br>";

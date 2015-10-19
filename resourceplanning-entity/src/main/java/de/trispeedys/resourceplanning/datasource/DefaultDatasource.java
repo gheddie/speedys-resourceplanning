@@ -2,19 +2,21 @@ package de.trispeedys.resourceplanning.datasource;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.id.IdentityGenerator.GetGeneratedKeysDelegate;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.misc.CheckOnUpdate;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningPersistenceException;
 
-public class DefaultDatasource<T> implements IDatasource
+public abstract class DefaultDatasource<T> implements IDatasource
 {
     @SuppressWarnings({
             "rawtypes", "unchecked"
@@ -109,6 +111,8 @@ public class DefaultDatasource<T> implements IDatasource
     {
         return (List<T>) find("FROM " + entityClass.getSimpleName());
     }
+    
+    //---------------------------------------------------------------------------------------------------
 
     public <T> List<T> find(Class<T> entityClass, Object... filters)
     {
@@ -144,9 +148,16 @@ public class DefaultDatasource<T> implements IDatasource
         }
         return find(qryString, parameters);
     }
+    
+    //---------------------------------------------------------------------------------------------------
+    
+    public <T> T findById(Long primaryKeyValue)
+    {
+        return (T) doFindById(getType(), primaryKeyValue);
+    }
 
     @SuppressWarnings("unchecked")
-    public <T> T findById(Class<T> entityClass, Long primaryKeyValue)
+    private <T> T doFindById(Class<T> entityClass, Long primaryKeyValue)
     {
         if (primaryKeyValue == null)
         {
@@ -155,4 +166,6 @@ public class DefaultDatasource<T> implements IDatasource
         List<T> list = (List<T>) find("FROM " + entityClass.getSimpleName() + " WHERE id = " + primaryKeyValue);
         return (list != null && list.size() == 1 ? (T) list.get(0) : null);
     }
+    
+    protected abstract Class<T> getType();
 }

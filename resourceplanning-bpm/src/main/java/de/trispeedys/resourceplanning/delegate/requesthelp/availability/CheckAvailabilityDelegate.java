@@ -18,10 +18,9 @@ public class CheckAvailabilityDelegate implements JavaDelegate
     {
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Helper helper =
-                (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
+                (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
         Event event =
-                (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class,
-                        (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
+                (Event) DatasourceRegistry.getDatasource(Event.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
         Position position = HelperService.getPriorAssignment(helper, event.getEventTemplate()).getPosition();
         boolean positionAvailable = PositionService.isPositionAvailable(event, position);
         LoggerService.log(execution.getBusinessKey(), "ckecking availability for helper '" +

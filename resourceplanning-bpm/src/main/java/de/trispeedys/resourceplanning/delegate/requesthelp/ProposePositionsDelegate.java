@@ -25,7 +25,7 @@ public class ProposePositionsDelegate implements JavaDelegate
     {
         // send a mail with all unassigned positions in the current event
         Long eventId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID);
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
         List<Position> unassignedPositions = PositionService.findUnassignedPositionsInEvent(event);
         if ((unassignedPositions == null) || (unassignedPositions.size() == 0))
         {
@@ -33,7 +33,7 @@ public class ProposePositionsDelegate implements JavaDelegate
         }
         // send mail
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
         ProposePositionsMailTemplate template =
                 new ProposePositionsMailTemplate(helper, event, unassignedPositions,
                         (HelperCallback) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK),

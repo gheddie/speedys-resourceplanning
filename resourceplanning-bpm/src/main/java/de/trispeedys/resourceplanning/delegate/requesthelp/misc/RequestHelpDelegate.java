@@ -13,16 +13,14 @@ public abstract class RequestHelpDelegate implements JavaDelegate
     protected Helper getHelper(DelegateExecution execution)
     {
         Helper helper =
-                DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class,
-                        (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
+                DatasourceRegistry.getDatasource(Helper.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
         return helper;
     }
 
     protected Event getEvent(DelegateExecution execution)
     {
         Event event =
-                DatasourceRegistry.getDatasource(Event.class).findById(Event.class,
-                        (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
+                DatasourceRegistry.getDatasource(Event.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
         return event;
     }
 }

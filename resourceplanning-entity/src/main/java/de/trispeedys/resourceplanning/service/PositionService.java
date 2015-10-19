@@ -18,7 +18,7 @@ public class PositionService
 {
     public static List<Position> findPositionsInEvent(Event event)
     {
-        List<Object> list = DatasourceRegistry.getDatasource(null).find(
+        List<EventPosition> list = DatasourceRegistry.getDatasource(EventPosition.class).find(
                         "FROM " +
                                 EventPosition.class.getSimpleName() +
                                 " ep INNER JOIN ep.position pos WHERE ep.event = :event", "event", event);
@@ -34,8 +34,8 @@ public class PositionService
     
     public static boolean isPositionAvailable(Long eventId, Long positionId)
     {
-        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById(Position.class, positionId);
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);
+        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById(positionId);
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
         return isPositionAvailable(event, position);
     }
 

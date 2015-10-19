@@ -7,7 +7,7 @@ public interface IDatasource
 {
     public <T> T saveOrUpdate(T dbObject);
     
-    public <T> T findById(Class<T> entityClass, Long primaryKeyValue);
+    public <T> T findById(Long primaryKeyValue);
     
     public <T> List<T> find(String qryString, HashMap<String, Object> parameters);
     

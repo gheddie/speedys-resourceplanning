@@ -23,8 +23,8 @@ public class SendReminderMailDelegate implements JavaDelegate
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Long eventId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID);
         // write mail
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(Event.class, eventId);
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
+        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
         sendReminderMail(helper, event, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS));
         // increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);

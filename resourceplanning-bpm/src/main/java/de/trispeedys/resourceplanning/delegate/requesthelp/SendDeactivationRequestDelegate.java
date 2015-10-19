@@ -15,7 +15,7 @@ public class SendDeactivationRequestDelegate implements JavaDelegate
     public void execute(DelegateExecution execution) throws Exception
     {
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(Helper.class, helperId);
+        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
         // write mail
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
                 "Helfermeldung zum Triathlon 2016", generateDeactivationRequestBody(), MessagingType.DEACTIVATION_REQUEST, MessagingFormat.PLAIN).persist();

@@ -45,7 +45,7 @@ public class DatabaseOperationsTest
         Helper helper = EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
 
         DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
-        datasource.findById(Helper.class, helper.getId());
+        datasource.findById(helper.getId());
     }
 
     @Test
@@ -104,16 +104,16 @@ public class DatabaseOperationsTest
             EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), false).persist();
         }
         // fetch w/o parameters (all entries)
-        assertEquals(10, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName()).size());
+        assertEquals(10, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName()).size());
         // fetch with class (all entries)
-        assertEquals(10, DatasourceRegistry.getDatasource(null).findAll(Position.class).size());
+        assertEquals(10, DatasourceRegistry.getDatasource(Position.class).findAll(Position.class).size());
         // fetch with query string
-        assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
-        assertEquals(4, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());
+        assertEquals(1, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
+        assertEquals(4, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());
         // fetch with parameters
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("minimalAge", 5);
-        assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", parameters).size());
-        assertEquals(1, DatasourceRegistry.getDatasource(null).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", "minimalAge", 5).size());
+        assertEquals(1, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", parameters).size());
+        assertEquals(1, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", "minimalAge", 5).size());
     }
 }

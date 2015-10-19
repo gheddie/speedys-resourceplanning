@@ -25,7 +25,7 @@ public class HelperService
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("helperId", helper.getId());
         parameters.put("eventTemplate", eventTemplate);
-        List<Object[]> list = DatasourceRegistry.getDatasource(null).find(queryString, parameters);
+        List<Object[]> list = DatasourceRegistry.getDatasource(HelperAssignment.class).find(queryString, parameters);
         if (list.size() == 0)
         {
             return null;
@@ -47,7 +47,7 @@ public class HelperService
     public static void deactivateHelper(Long helperId)
     {
         DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
-        Helper helper = (Helper) datasource.findById(Helper.class, helperId);
+        Helper helper = (Helper) datasource.findById(helperId);
         helper.setHelperState(HelperState.INACTIVE);
         helper.persist();
     }
