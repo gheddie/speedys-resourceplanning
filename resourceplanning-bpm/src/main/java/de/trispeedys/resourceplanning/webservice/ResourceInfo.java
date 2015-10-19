@@ -27,7 +27,7 @@ import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
-import de.trispeedys.resourceplanning.test.EventRoutines;
+import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 

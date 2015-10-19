@@ -22,14 +22,13 @@ import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
-import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
-import de.trispeedys.resourceplanning.test.EventRoutines;
+import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
@@ -91,7 +90,7 @@ public class RequestHelpTest
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
 
         // assign position to event
-        DataModelUtil.relatePositionsToEvent(event, position);
+        SpeedyRoutines.relatePositionsToEvent(event, position);
 
         // create preconditions (this must be a follow up assignment)
         EntityFactory.buildHelperAssignment(helper, event, position).persist();
@@ -154,7 +153,7 @@ public class RequestHelpTest
         Helper blockingHelper =
                 EntityFactory.buildHelper("Blocking", "Helper", "", HelperState.ACTIVE, 1, 1, 1990).persist();
         // assign position to event
-        DataModelUtil.relateEventsToPosition(positionBikeEntry, evt2014, evt2015);
+        SpeedyRoutines.relateEventsToPosition(positionBikeEntry, evt2014, evt2015);
         // assign helper to position in 2014
         EntityFactory.buildHelperAssignment(createdHelper, evt2014, positionBikeEntry).persist();
         // assign position to another helper in 2015
@@ -210,7 +209,7 @@ public class RequestHelpTest
         // create 'little' event for 2015
         Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
-        Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
                 DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
@@ -242,7 +241,7 @@ public class RequestHelpTest
         // create 'little' event for 2015
         Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
         // duplicate event
-        Event event2016 = EventRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> helpers =
                 DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState", HelperState.ACTIVE);
@@ -278,7 +277,7 @@ public class RequestHelpTest
         // create 'minimal' event for 2015
         Event event2015 = TestDataGenerator.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
         // duplicate event
-        Event event2016 = EventRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
         // select created helper
         Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
         // start process

@@ -2,7 +2,6 @@ package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
 
-import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.DatabaseLogger;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.DomainResponsibility;
@@ -30,23 +29,26 @@ import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.service.PositionService;
+import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class EntityFactory
 {
-    public static Helper buildHelper(String firstName, String lastName, String email, HelperState helperState,
+    public static Helper buildHelper(String lastName, String firstName, String email, HelperState helperState,
             int dayOfBirth, int monthOfBirth, int yearOfBirth)
     {
         Calendar dateOfBirth = Calendar.getInstance();
         dateOfBirth.set(Calendar.DAY_OF_MONTH, dayOfBirth);
         dateOfBirth.set(Calendar.MONTH, monthOfBirth - 1);
         dateOfBirth.set(Calendar.YEAR, yearOfBirth);
-        return new HelperBuilder().withFirstName(firstName)
+        Helper result = new HelperBuilder().withFirstName(firstName)
                 .withLastName(lastName)
                 .withDateOfBirth(dateOfBirth.getTime())
                 .withEmail(email)
                 .withHelperState(helperState)
                 .build();
+        result.setCode(SpeedyRoutines.createHelperCode(result));
+        return result;
     }
 
     public static HelperAssignment buildHelperAssignment(Helper helper, Event event, Position position)

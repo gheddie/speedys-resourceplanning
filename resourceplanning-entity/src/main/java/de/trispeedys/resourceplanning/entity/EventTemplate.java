@@ -2,9 +2,13 @@ package de.trispeedys.resourceplanning.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "event_template")
+@Table(name = "event_template", uniqueConstraints = @UniqueConstraint(columnNames =
+{
+        "description"
+}))
 public class EventTemplate extends AbstractDbObject
 {
     private String description;

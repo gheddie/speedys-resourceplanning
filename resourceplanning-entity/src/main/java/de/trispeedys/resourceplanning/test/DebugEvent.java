@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
 
 public class DebugEvent
 {
     public static void main(String[] args)
     {
-//        HibernateUtil.clearAll();
-//        TestDataProvider.createSimpleEvent();
-        List<Event> allEvents = (List<Event>) DatasourceRegistry.getDatasource(null).findAll(Event.class);
+        HibernateUtil.clearAll();
+        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        List<Event> allEvents = (List<Event>) DatasourceRegistry.getDatasource(Event.class).findAll(Event.class);
         System.out.println(allEvents.size());
         for (Event ev : allEvents)
         {
@@ -66,7 +67,7 @@ public class DebugEvent
     private static String getHelperString(HashMap<String, Object> variables)
     {
         List<?> helperAssignments =
-                DatasourceRegistry.getDatasource(null).find("FROM " +
+                DatasourceRegistry.getDatasource(HelperAssignment.class).find("FROM " +
                         HelperAssignment.class.getSimpleName() +
                         " ec WHERE ec.position = :position AND ec.event = :event", variables);
         if ((helperAssignments == null) || helperAssignments.size() != 1)

@@ -1,19 +1,17 @@
 package de.trispeedys.resourceplanning;
 
-import javax.validation.ConstraintViolationException;
-
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
-import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
-import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 
 /**
  * Tests the unique criterias for the {@link HelperAssignment} entity.
@@ -46,7 +44,7 @@ public class HelperAssignmentUniqueTest
                 EntityFactory.buildHelper("Diana", "Schulz", "a@b.de", HelperState.ACTIVE, 4, 3, 1973).persist();
         
         //assign position to event to avoid resource planning exception
-        DataModelUtil.relatePositionsToEvent(event, position);
+        SpeedyRoutines.relatePositionsToEvent(event, position);
         
         EntityFactory.buildHelperAssignment(helper1, event, position).persist();
         EntityFactory.buildHelperAssignment(helper2, event, position).persist();

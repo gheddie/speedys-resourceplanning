@@ -21,7 +21,9 @@ public class Helper extends AbstractDbObject
     
     public static final String ATTR_LAST_NAME = "lastName";
     
-    public static final String ATTR_HELPER_STATE = "helperState";   
+    public static final String ATTR_HELPER_STATE = "helperState";
+
+    public static final String ATTR_CODE = "code";   
 
     @Column(name = "first_name")
     @Length(min=2)
@@ -42,6 +44,9 @@ public class Helper extends AbstractDbObject
     @Column(name = "helper_state")
     @NotNull
     private HelperState helperState;
+
+    @NotNull
+    private String code;
 
     public String getFirstName()
     {
@@ -91,6 +96,16 @@ public class Helper extends AbstractDbObject
     public void setHelperState(HelperState helperState)
     {
         this.helperState = helperState;
+    }
+    
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
     }
     
     public String toString()

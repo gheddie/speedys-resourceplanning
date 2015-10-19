@@ -5,45 +5,55 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-public class HibernateUtil {
-	private static final SessionFactory sessionFactory = buildSessionFactory();
+public class HibernateUtil
+{
+    private static final SessionFactory sessionFactory = buildSessionFactory();
 
-	@SuppressWarnings("deprecation")
-	private static SessionFactory buildSessionFactory() {
-		try {
-			return new Configuration().configure().buildSessionFactory();
-		} catch (Throwable ex) {
-			System.err.println("Initial SessionFactory creation failed." + ex);
-			throw new ExceptionInInitializerError(ex);
-		}
-	}
+    @SuppressWarnings("deprecation")
+    private static SessionFactory buildSessionFactory()
+    {
+        try
+        {
+            return new Configuration().configure().buildSessionFactory();
+        }
+        catch (Throwable ex)
+        {
+            System.err.println("Initial SessionFactory creation failed." + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
 
-	public static SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
+    public static SessionFactory getSessionFactory()
+    {
+        return sessionFactory;
+    }
 
-	public static void shutdown() {
-		getSessionFactory().close();
-	}
+    public static void shutdown()
+    {
+        getSessionFactory().close();
+    }
 
-	public static void clearAll() {
-	    clearTable("event_position");
-	    clearTable("helper_assignment");
-	    clearTable("position");
-	    clearTable("domain");	    	    
-		clearTable("helper");		
-		clearTable("event");
-		clearTable("message_queue");
-		clearTable("database_logger");
-	}
+    public static void clearAll()
+    {
+        clearTable("event_position");
+        clearTable("helper_assignment");
+        clearTable("position");
+        clearTable("domain");
+        clearTable("helper");
+        clearTable("event");
+        clearTable("event_template");
+        clearTable("message_queue");
+        clearTable("database_logger");
+    }
 
-	private static void clearTable(String tableName) {
-		Session session = getSessionFactory().openSession();
-		Transaction tx = session.beginTransaction();
-		String queryString = "delete from " + tableName;
+    private static void clearTable(String tableName)
+    {
+        Session session = getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        String queryString = "delete from " + tableName;
 
-		session.createSQLQuery(queryString).executeUpdate();
-		tx.commit();
-		session.close();
-	}    
+        session.createSQLQuery(queryString).executeUpdate();
+        tx.commit();
+        session.close();
+    }
 }

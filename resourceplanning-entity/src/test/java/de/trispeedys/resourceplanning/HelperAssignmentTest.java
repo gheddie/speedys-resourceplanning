@@ -18,10 +18,10 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
-import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
+import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
@@ -51,7 +51,7 @@ public class HelperAssignmentTest
         Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain, false).persist();
 
         // relate positions to event
-        DataModelUtil.relatePositionsToEvent(event, position1, position2);
+        SpeedyRoutines.relatePositionsToEvent(event, position1, position2);
 
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976)
@@ -136,7 +136,7 @@ public class HelperAssignmentTest
                         .persist();
 
         // relate position to both events
-        DataModelUtil.relateEventsToPosition(position, evt2012, evt2014);
+        SpeedyRoutines.relateEventsToPosition(position, evt2012, evt2014);
 
         EntityFactory.buildHelperAssignment(helper, evt2012, position).persist();
 
@@ -168,8 +168,8 @@ public class HelperAssignmentTest
                         .persist();
 
         // assign position to event
-        DataModelUtil.relatePositionsToEvent(event2012, position);
-        DataModelUtil.relatePositionsToEvent(event2014, position);
+        SpeedyRoutines.relatePositionsToEvent(event2012, position);
+        SpeedyRoutines.relatePositionsToEvent(event2014, position);
 
         // last confirmed assignment shuold be in 2012
         HelperAssignment lastConfirmedAssignment = AssignmentService.getPriorAssignment(helper, event2014.getEventTemplate());
@@ -201,7 +201,7 @@ public class HelperAssignmentTest
         Event event2015 = EntityFactory.buildEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, template).persist();
 
         // assign position to event
-        DataModelUtil.relatePositionsToEvent(event2015, position);
+        SpeedyRoutines.relatePositionsToEvent(event2015, position);
 
         EntityFactory.buildHelperAssignment(helperToReassign, event2015, position).persist();
 
@@ -213,7 +213,7 @@ public class HelperAssignmentTest
         Event event2016 = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
 
         // assign position to event
-        DataModelUtil.relatePositionsToEvent(event2016, position);
+        SpeedyRoutines.relatePositionsToEvent(event2016, position);
 
         EntityFactory.buildHelperAssignment(blockingHelper, event2016, position).persist();
 

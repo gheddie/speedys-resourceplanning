@@ -13,7 +13,7 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
-import de.trispeedys.resourceplanning.test.EventRoutines;
+import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 
 public class CallbackChoiceGeneratorTest
@@ -28,7 +28,7 @@ public class CallbackChoiceGeneratorTest
 
         // create events
         Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
-        Event event2016 = EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         
         // get helper
         Helper helper =
@@ -49,7 +49,7 @@ public class CallbackChoiceGeneratorTest
 
         // create events
         Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
-        Event event2016 = EventRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         
         // get helpers
         Helper helperA =

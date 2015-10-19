@@ -12,9 +12,9 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
-import de.trispeedys.resourceplanning.entity.util.DataModelUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.PositionService;
+import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 
 public class PositionTest
 {
@@ -60,7 +60,7 @@ public class PositionTest
         EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
         
         // create helper
-        Helper helper = EntityFactory.buildHelper("", "", "", HelperState.ACTIVE, 1, 1, 1980);
+        Helper helper = EntityFactory.buildHelper("La", "Li", "", HelperState.ACTIVE, 1, 1, 1980);
         // create events
         Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013, EventState.FINISHED, template).persist();
         Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).persist();
@@ -78,8 +78,8 @@ public class PositionTest
         EntityFactory.buildEventPosition(evt2014, posB).persist();
 
         // relate positions
-        DataModelUtil.relatePositionsToEvent(evt2013, posA, posB, posC);
-        DataModelUtil.relatePositionsToEvent(evt2014, posA, posB, posC);
+        SpeedyRoutines.relatePositionsToEvent(evt2013, posA, posB, posC);
+        SpeedyRoutines.relatePositionsToEvent(evt2014, posA, posB, posC);
 
         // assign positions
         EntityFactory.buildHelperAssignment(helper, evt2013, posA);

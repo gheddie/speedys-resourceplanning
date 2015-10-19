@@ -11,6 +11,7 @@ create table helper
 	date_of_birth date,
 	email varchar(255),
 	helper_state varchar(64),
+	code varchar(16),
 	primary key (id)
 );
 
@@ -48,7 +49,8 @@ create table event_template
 (
 	id bigint not null default nextval('event_template_id_seq'),
 	description varchar(255),
-	primary key (id)
+	primary key (id),
+	constraint evt_tpl_unique_description unique (description)
 );
 
 ------------------------------------------------ Event
