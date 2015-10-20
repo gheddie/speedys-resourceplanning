@@ -140,14 +140,14 @@ public class TestDataGenerator
         return myMinimalEvent;
     }
 
-    public static Event createRealLifeEvent(String description, String eventKey, int day, int month, int year)
+    public static Event createRealLifeEvent(String description, String eventKey, int day, int month, int year, EventState eventState)
     {
         // build event template
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate(EventTemplate.TEMPLATE_TRI).persist();
 
         // build event
         Event event =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
+                EntityFactory.buildEvent(description, eventKey, day, month, year, eventState,
                         template).persist();
 
         // ------------------------ create helpers ('old')

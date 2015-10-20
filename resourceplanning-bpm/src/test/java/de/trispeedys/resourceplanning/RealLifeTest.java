@@ -2,6 +2,7 @@ package de.trispeedys.resourceplanning;
 
 import org.junit.Test;
 
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 
 public class RealLifeTest
@@ -11,6 +12,6 @@ public class RealLifeTest
     {
         HibernateUtil.clearAll();
 
-        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED);
     }
 }

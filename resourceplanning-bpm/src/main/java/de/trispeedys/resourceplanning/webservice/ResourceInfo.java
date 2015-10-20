@@ -15,6 +15,7 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.interaction.EventManager;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
@@ -64,6 +65,6 @@ public class ResourceInfo
     
     public void startProcessesForActiveHelpers(String templateName)
     {
-        Datasources.getDatasource(EventTemplate.class).find(EventTemplate.ATTR_DESCRIPTION, templateName).get(0);
+        EventManager.triggerHelperProcesses(templateName);
     }
 }

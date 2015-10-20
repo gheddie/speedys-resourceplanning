@@ -10,13 +10,14 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.EventState;
 
 public class DebugEvent
 {
     public static void main(String[] args)
     {
         HibernateUtil.clearAll();
-        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED);
         List<Event> allEvents = (List<Event>) Datasources.getDatasource(Event.class).findAll(Event.class);
         System.out.println(allEvents.size());
         for (Event ev : allEvents)

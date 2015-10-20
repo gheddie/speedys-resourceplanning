@@ -12,6 +12,10 @@ import javax.persistence.UniqueConstraint;
 public class EventTemplate extends AbstractDbObject
 {
     public static final String ATTR_DESCRIPTION = "description";
+
+    public static final String TEMPLATE_TRI = "TEMPLATE_TRI";
+    
+    public static final String TEMPLATE_CROSSZALES = "TEMPLATE_CROSSZALES";
     
     private String description;
     
