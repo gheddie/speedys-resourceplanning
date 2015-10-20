@@ -411,7 +411,6 @@ public class RequestHelpExecutionTest
         Position someUnassignedTask =
                 DatasourceRegistry.getDatasource(Position.class).findAll(Position.class).get(0);
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, someUnassignedTask.getId());
-        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, true);
         processEngine.getTaskService().complete(task.getId(), variables);
 
         // Send cancellation message
