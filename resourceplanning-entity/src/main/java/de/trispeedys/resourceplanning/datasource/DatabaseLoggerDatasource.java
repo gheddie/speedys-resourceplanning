@@ -6,6 +6,6 @@ public class DatabaseLoggerDatasource extends DefaultDatasource<DatabaseLogger>
 {
     protected Class<DatabaseLogger> getGenericType()
     {
-        return null;
+        return DatabaseLogger.class;
     }
 }

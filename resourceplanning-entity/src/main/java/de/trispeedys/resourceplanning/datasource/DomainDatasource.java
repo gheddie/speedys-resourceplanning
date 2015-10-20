@@ -6,6 +6,6 @@ public class DomainDatasource extends DefaultDatasource<Domain>
 {
     protected Class<Domain> getGenericType()
     {
-        return null;
+        return Domain.class;
     }
 }

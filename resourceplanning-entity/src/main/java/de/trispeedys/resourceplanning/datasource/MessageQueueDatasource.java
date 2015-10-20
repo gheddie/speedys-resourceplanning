@@ -6,6 +6,6 @@ public class MessageQueueDatasource extends DefaultDatasource<MessageQueue>
 {
     protected Class<MessageQueue> getGenericType()
     {
-        return null;
+        return MessageQueue.class;
     }
 }

@@ -6,6 +6,6 @@ public class EventTemplateDatasource extends DefaultDatasource<EventTemplate>
 {
     protected Class<EventTemplate> getGenericType()
     {
-        return null;
+        return EventTemplate.class;
     }
 }

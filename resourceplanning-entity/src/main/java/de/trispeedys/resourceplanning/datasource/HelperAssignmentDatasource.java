@@ -6,6 +6,6 @@ public class HelperAssignmentDatasource extends DefaultDatasource<HelperAssignme
 {
     protected Class<HelperAssignment> getGenericType()
     {
-        return null;
+        return HelperAssignment.class;
     }
 }
