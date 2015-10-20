@@ -6,6 +6,6 @@ public class EventPositionDatasource extends DefaultDatasource<EventPosition>
 {
     protected Class<EventPosition> getGenericType()
     {
-        return null;
+        return EventPosition.class;
     }
 }

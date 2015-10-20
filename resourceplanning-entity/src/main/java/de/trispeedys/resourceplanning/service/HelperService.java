@@ -18,7 +18,7 @@ public class HelperService
     public static List<Long> queryActiveHelperIds()
     {
         List<Long> result = new ArrayList<Long>();
-        for (Object helper : DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState",
+        for (Object helper : DatasourceRegistry.getDatasource(Helper.class).find("helperState",
                 HelperState.ACTIVE))
         {
             result.add(((AbstractDbObject) helper).getId());

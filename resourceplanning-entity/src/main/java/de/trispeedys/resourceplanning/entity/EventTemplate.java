@@ -11,6 +11,8 @@ import javax.persistence.UniqueConstraint;
 }))
 public class EventTemplate extends AbstractDbObject
 {
+    public static final String ATTR_DESCRIPTION = "description";
+    
     private String description;
     
     public String getDescription()

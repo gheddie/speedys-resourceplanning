@@ -26,9 +26,7 @@ public class SpeedyRoutines
         Event newEvent =
                 EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
                         event.getEventTemplate()).persist();
-        List<EventPosition> positions =
-                (List<EventPosition>) DatasourceRegistry.getDatasource(EventPosition.class).find(
-                        EventPosition.class, "event", event);
+        List<EventPosition> positions = DatasourceRegistry.getDatasource(EventPosition.class).find("event", event);
         System.out.println(positions.size());
         Position newPosRelation = null;
         for (EventPosition evtpos : positions)

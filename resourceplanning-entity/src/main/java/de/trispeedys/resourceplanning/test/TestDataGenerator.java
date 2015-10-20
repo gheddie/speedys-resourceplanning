@@ -215,7 +215,7 @@ public class TestDataGenerator
 
     private static Helper findHelperByCode(String helperCode)
     {
-        return DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_CODE, helperCode).get(0);
+        return (Helper) DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_CODE, helperCode).get(0);
     }
 
     public static void main(String[] args)

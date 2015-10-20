@@ -45,10 +45,10 @@ public abstract class DefaultDatasource<T> implements IDatasource
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> find(Class<T> entityClass, String paramaterName, Object paramaterValue)
+    public <T> List<T> find(String paramaterName, Object paramaterValue)
     {
         return (List<T>) find("FROM " +
-                entityClass.getSimpleName() + " WHERE " + paramaterName + " = :" + paramaterName, paramaterName,
+                getGenericType().getSimpleName() + " WHERE " + paramaterName + " = :" + paramaterName, paramaterName,
                 paramaterValue);
     }
 

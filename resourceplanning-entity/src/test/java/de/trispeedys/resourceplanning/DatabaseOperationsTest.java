@@ -57,7 +57,7 @@ public class DatabaseOperationsTest
         EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
         EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).persist();
 
-        List<Helper> found = DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        List<Helper> found = DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         assertEquals(2, found.size());
     }
 

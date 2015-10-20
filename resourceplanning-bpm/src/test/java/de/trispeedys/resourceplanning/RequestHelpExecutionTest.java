@@ -163,7 +163,7 @@ public class RequestHelpExecutionTest
         Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
-                DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState",
+                DatasourceRegistry.getDatasource(Helper.class).find("helperState",
                         HelperState.ACTIVE);
         Helper notCooperativeHelper = activeHelpers.get(0);
         String businessKey =
@@ -202,7 +202,7 @@ public class RequestHelpExecutionTest
         Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
-                DatasourceRegistry.getDatasource(Helper.class).find(Helper.class, "helperState",
+                DatasourceRegistry.getDatasource(Helper.class).find("helperState",
                         HelperState.ACTIVE);
         Helper notCooperativeHelper = activeHelpers.get(0);
         String businessKey =
