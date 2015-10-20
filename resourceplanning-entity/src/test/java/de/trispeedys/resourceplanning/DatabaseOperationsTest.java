@@ -75,7 +75,7 @@ public class DatabaseOperationsTest
         assertEquals(
                 1,
                 DatasourceRegistry.getDatasource(MessageQueue.class)
-                        .find(MessageQueue.class, MessageQueue.ATTR_SUBJECT, "SUB1", MessageQueue.ATTR_BODY, "BODY1", MessageQueue.ATTR_FROM_ADDRESS, "klaus")
+                        .find(MessageQueue.ATTR_SUBJECT, "SUB1", MessageQueue.ATTR_BODY, "BODY1", MessageQueue.ATTR_FROM_ADDRESS, "klaus")
                         .size());
 
         ;

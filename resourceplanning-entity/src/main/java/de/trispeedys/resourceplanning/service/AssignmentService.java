@@ -56,8 +56,7 @@ public class AssignmentService
      */
     public static List<HelperAssignment> getHelperAssignments(Helper helper, Event event)
     {
-        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(HelperAssignment.class,
-                HelperAssignment.ATTR_HELPER, helper, HelperAssignment.ATTR_EVENT, event);
+        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(HelperAssignment.ATTR_HELPER, helper, HelperAssignment.ATTR_EVENT, event);
     }
 
     public static boolean isFirstAssignment(Long helperId)
@@ -73,8 +72,8 @@ public class AssignmentService
     {
         DefaultDatasource<HelperAssignment> datasource = DatasourceRegistry.getDatasource(HelperAssignment.class);
         HelperAssignment assignment =
-                datasource
-                        .find(HelperAssignment.class, HelperAssignment.ATTR_HELPER, helper,
+                (HelperAssignment) datasource
+                        .find(HelperAssignment.ATTR_HELPER, helper,
                                 HelperAssignment.ATTR_EVENT, event)
                         .get(0);
         assignment.setHelperAssignmentState(HelperAssignmentState.CANCELLED);

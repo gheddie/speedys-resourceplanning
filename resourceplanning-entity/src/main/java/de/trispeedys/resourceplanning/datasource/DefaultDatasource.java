@@ -76,12 +76,12 @@ public abstract class DefaultDatasource<T> implements IDatasource
         return (List<T>) find("FROM " + entityClass.getSimpleName());
     }
     
-    public <T> List<T> find(Class<T> entityClass, Object... filters)
+    public <T> List<T> find(Object... filters)
     {
         if ((filters == null) || (filters.length == 0))
         {
             // no filters
-            return (List<T>) findAll(entityClass);
+            return (List<T>) findAll(getGenericType());
         }
         if (!(filters.length % 2 == 0))
         {
@@ -91,9 +91,9 @@ public abstract class DefaultDatasource<T> implements IDatasource
         if (filters.length == 2)
         {
             // one key value pair
-            return find(entityClass, filters[0], filters[1]);
+            return find(getGenericType(), filters[0], filters[1]);
         }
-        String qryString = "FROM " + entityClass.getSimpleName() + " WHERE (";
+        String qryString = "FROM " + getGenericType().getSimpleName() + " WHERE (";
         for (int index = 0; index < filters.length; index += 2)
         {
             qryString += filters[index] + " = :" + filters[index];

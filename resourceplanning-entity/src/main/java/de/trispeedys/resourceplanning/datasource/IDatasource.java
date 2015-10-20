@@ -19,5 +19,5 @@ public interface IDatasource
 
     public <T> List<T> find(String paramaterName, Object paramaterValue);
     
-    public <T> List<T> find(Class<T> entityClass, Object... filters);
+    public <T> List<T> find(Object... filters);
 }

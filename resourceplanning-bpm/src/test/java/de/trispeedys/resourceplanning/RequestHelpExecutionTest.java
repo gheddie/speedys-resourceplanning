@@ -352,7 +352,7 @@ public class RequestHelpExecutionTest
         assertEquals(
                 1,
                 DatasourceRegistry.getDatasource(HelperAssignment.class)
-                        .find(HelperAssignment.class, HelperAssignment.ATTR_EVENT, event2016,
+                        .find(HelperAssignment.ATTR_EVENT, event2016,
                                 HelperAssignment.ATTR_HELPER, helperB, HelperAssignment.ATTR_POSITION,
                                 desiredPosition)
                         .size());
@@ -364,7 +364,7 @@ public class RequestHelpExecutionTest
         assertEquals(
                 2,
                 DatasourceRegistry.getDatasource(MessageQueue.class)
-                        .find(MessageQueue.class, MessageQueue.ATTR_MESSAGING_TYPE,
+                        .find(MessageQueue.ATTR_MESSAGING_TYPE,
                                 MessagingType.PROPOSE_POSITIONS, MessageQueue.ATTR_TO_ADDRESS,
                                 helperA.getEmail())
                         .size());
@@ -423,10 +423,10 @@ public class RequestHelpExecutionTest
         // check canncelled assignment
         assertEquals(
                 HelperAssignmentState.CANCELLED,
-                DatasourceRegistry.getDatasource(HelperAssignment.class)
-                        .find(HelperAssignment.class, HelperAssignment.ATTR_EVENT, event2016,
+                ((HelperAssignment) DatasourceRegistry.getDatasource(HelperAssignment.class)
+                        .find(HelperAssignment.ATTR_EVENT, event2016,
                                 HelperAssignment.ATTR_HELPER, helper)
-                        .get(0)
+                        .get(0))
                         .getHelperAssignmentState());
 
         // check admin mail
