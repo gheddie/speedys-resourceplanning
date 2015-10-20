@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -20,9 +20,9 @@ public class ConfirmHelperDelegate implements JavaDelegate
         {
             throw new ResourcePlanningException("can not book helper to position for position id not set!!");
         }
-        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION));
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
+        Position position = (Position) Datasources.getDatasource(Position.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION));
+        Event event = (Event) Datasources.getDatasource(Event.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID));
+        Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById((Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID));
         AssignmentService.assignHelper(helper, event, position);
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
@@ -291,7 +291,7 @@ public class HelperAssignmentTest
                         .persist();
 
         // we have 5 positions...
-        List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);
+        List<Position> positions = Datasources.getDatasource(Position.class).findAll(Position.class);
 
         // ...and assign 2 of them...
         EntityFactory.buildHelperAssignment(helper1, event, positions.get(0)).persist();

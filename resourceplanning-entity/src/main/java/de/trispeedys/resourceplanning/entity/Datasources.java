@@ -13,15 +13,15 @@ import de.trispeedys.resourceplanning.datasource.HelperDatasource;
 import de.trispeedys.resourceplanning.datasource.MessageQueueDatasource;
 import de.trispeedys.resourceplanning.datasource.PositionDatasource;
 
-public class DatasourceRegistry
+public class Datasources
 {
-    private static DatasourceRegistry instance;
+    private static Datasources instance;
     
     private HashMap<Class<? extends AbstractDbObject>, DefaultDatasource> registeredDatasources;
 
     private DefaultDatasource defaultDatasource;
 
-    private DatasourceRegistry()
+    private Datasources()
     {
         registeredDatasources = new HashMap<Class<? extends AbstractDbObject>, DefaultDatasource>();
         registerDatasources();
@@ -41,13 +41,13 @@ public class DatasourceRegistry
         registeredDatasources.put(DatabaseLogger.class, new DatabaseLoggerDatasource());
     }
 
-    private static DatasourceRegistry getInstance()
+    private static Datasources getInstance()
     {
-        if (DatasourceRegistry.instance == null)
+        if (Datasources.instance == null)
         {
-            DatasourceRegistry.instance = new DatasourceRegistry();
+            Datasources.instance = new Datasources();
         }
-        return DatasourceRegistry.instance;
+        return Datasources.instance;
     }
 
     @SuppressWarnings("unchecked")

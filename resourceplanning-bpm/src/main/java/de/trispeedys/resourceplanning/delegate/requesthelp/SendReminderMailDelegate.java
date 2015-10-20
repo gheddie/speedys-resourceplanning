@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.trispeedys.resourceplanning.CallbackChoiceGenerator;
 import de.trispeedys.resourceplanning.delegate.requesthelp.misc.RequestHelpDelegate;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
@@ -24,8 +24,8 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Long eventId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID);
         // write mail
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
+        Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
+        Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);
         sendReminderMail(helper, event, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS), execution);
         // increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);

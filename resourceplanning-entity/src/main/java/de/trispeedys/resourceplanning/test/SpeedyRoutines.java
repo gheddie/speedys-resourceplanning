@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -18,7 +18,7 @@ public class SpeedyRoutines
     public static Event duplicateEvent(Long eventId, String description, String eventKey, int day, int month,
             int year)
     {
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
+        Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);
         if (event == null)
         {
             return null;
@@ -26,7 +26,7 @@ public class SpeedyRoutines
         Event newEvent =
                 EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
                         event.getEventTemplate()).persist();
-        List<EventPosition> positions = DatasourceRegistry.getDatasource(EventPosition.class).find("event", event);
+        List<EventPosition> positions = Datasources.getDatasource(EventPosition.class).find("event", event);
         System.out.println(positions.size());
         Position newPosRelation = null;
         for (EventPosition evtpos : positions)

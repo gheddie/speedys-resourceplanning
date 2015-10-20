@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
@@ -32,7 +32,7 @@ public class CallbackChoiceGeneratorTest
         
         // get helper
         Helper helper =
-                DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
+                Datasources.getDatasource(Helper.class).findAll(Helper.class).get(0);
         
         assertTrue(checkChoices(HelperCallback.values(),
                 new CallbackChoiceGenerator().generateChoices(helper, event2016)));
@@ -53,9 +53,9 @@ public class CallbackChoiceGeneratorTest
         
         // get helpers
         Helper helperA =
-                DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
+                Datasources.getDatasource(Helper.class).findAll(Helper.class).get(0);
         Helper helperB =
-                DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(1);
+                Datasources.getDatasource(Helper.class).findAll(Helper.class).get(1);
         
         // assign 'B' to 'A's prior position...
         AssignmentService.assignHelper(helperB, event2016, AssignmentService.getPriorAssignment(helperA, event2015.getEventTemplate()).getPosition());

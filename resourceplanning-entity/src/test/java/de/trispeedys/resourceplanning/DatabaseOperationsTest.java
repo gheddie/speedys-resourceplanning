@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
@@ -33,7 +34,7 @@ public class DatabaseOperationsTest
         String qry = "FROM " + Helper.class.getSimpleName() + " h WHERE h." + Helper.ATTR_HELPER_STATE + " = :helperState";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
-        DatasourceRegistry.getDatasource(Helper.class).find(qry, parameters);
+        Datasources.getDatasource(Helper.class).find(qry, parameters);
     }
 
     @Test
@@ -44,7 +45,7 @@ public class DatabaseOperationsTest
 
         Helper helper = EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
 
-        DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
+        DefaultDatasource<Helper> datasource = Datasources.getDatasource(Helper.class);
         datasource.findById(helper.getId());
     }
 
@@ -57,7 +58,7 @@ public class DatabaseOperationsTest
         EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
         EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).persist();
 
-        List<Helper> found = DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        List<Helper> found = Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         assertEquals(2, found.size());
     }
 
@@ -74,7 +75,7 @@ public class DatabaseOperationsTest
 
         assertEquals(
                 1,
-                DatasourceRegistry.getDatasource(MessageQueue.class)
+                Datasources.getDatasource(MessageQueue.class)
                         .find(MessageQueue.ATTR_SUBJECT, "SUB1", MessageQueue.ATTR_BODY, "BODY1", MessageQueue.ATTR_FROM_ADDRESS, "klaus")
                         .size());
 
@@ -104,16 +105,44 @@ public class DatabaseOperationsTest
             EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), false).persist();
         }
         // fetch w/o parameters (all entries)
-        assertEquals(10, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName()).size());
+        assertEquals(10, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName()).size());
         // fetch with class (all entries)
-        assertEquals(10, DatasourceRegistry.getDatasource(Position.class).findAll(Position.class).size());
+        assertEquals(10, Datasources.getDatasource(Position.class).findAll(Position.class).size());
         // fetch with query string
-        assertEquals(1, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
-        assertEquals(4, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());
+        assertEquals(1, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
+        assertEquals(4, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());
         // fetch with parameters
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("minimalAge", 5);
-        assertEquals(1, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", parameters).size());
-        assertEquals(1, DatasourceRegistry.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", "minimalAge", 5).size());
+        assertEquals(1, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", parameters).size());
+        assertEquals(1, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = :minimalAge", "minimalAge", 5).size());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testFindSingleResultFailing()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        // create helpers
+        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+        
+        Datasources.getDatasource(Helper.class).findSingle(Helper.ATTR_LAST_NAME, "Helfer");
+    }
+    
+    @Test
+    public void testFindSingleResultOk()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        // create helpers
+        EntityFactory.buildHelper("Hansen", "Klaus", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Meier", "Peter", "", HelperState.INACTIVE, 1, 1, 1980).persist();
+        
+        Helper activeHelper = Datasources.getDatasource(Helper.class).findSingle(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        
+        assertTrue(activeHelper != null);
     }
 }

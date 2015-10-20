@@ -111,6 +111,49 @@ public abstract class DefaultDatasource<T> implements IDatasource
         return find(qryString, parameters);
     }
     
+    public <T> T findSingle(String qryString, HashMap<String, Object> parameters)
+    {
+        List<T> result = find(qryString, parameters);
+        assertSingle(result);
+        return result.get(0);
+    }
+
+    public <T> T findSingle(String qryString)
+    {
+        List<T> result = (List<T>) find(qryString);
+        assertSingle(result);
+        return result.get(0);
+    }
+
+    public <T> T findSingle(String qryString, String paramaterName, Object paramaterValue)
+    {
+        List<T> result = (List<T>) find(qryString, paramaterName, paramaterValue);
+        assertSingle(result);
+        return result.get(0);
+    }
+
+    public <T> T findSingle(String paramaterName, Object paramaterValue)
+    {
+        List<T> result = find(paramaterName, paramaterValue);
+        assertSingle(result);
+        return result.get(0);
+    }
+
+    public <T> T findSingle(Object... filters)
+    {
+        List<T> result = find(filters);
+        assertSingle(result);
+        return result.get(0);
+    }    
+    
+    private void assertSingle(List<?> result)
+    {
+        if ((result == null) || (result.size() != 1))
+        {
+            throw new IllegalArgumentException("single result excepted");
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     public <T> T findById(Long primaryKeyValue)
     {

@@ -8,7 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
@@ -18,7 +18,7 @@ public class PositionService
 {
     public static List<Position> findPositionsInEvent(Event event)
     {
-        List<EventPosition> list = DatasourceRegistry.getDatasource(EventPosition.class).find(
+        List<EventPosition> list = Datasources.getDatasource(EventPosition.class).find(
                         "FROM " +
                                 EventPosition.class.getSimpleName() +
                                 " ep INNER JOIN ep.position pos WHERE ep.event = :event", "event", event);
@@ -34,8 +34,8 @@ public class PositionService
     
     public static boolean isPositionAvailable(Long eventId, Long positionId)
     {
-        Position position = (Position) DatasourceRegistry.getDatasource(Position.class).findById(positionId);
-        Event event = (Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId);
+        Position position = (Position) Datasources.getDatasource(Position.class).findById(positionId);
+        Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);
         return isPositionAvailable(event, position);
     }
 
@@ -55,7 +55,7 @@ public class PositionService
         HashMap<String, Object> variables = new HashMap<String, Object>();
         variables.put(HelperAssignment.ATTR_EVENT, event);
         variables.put(HelperAssignment.ATTR_POSITION, position);
-        List<HelperAssignment> helperAssignments = DatasourceRegistry.getDatasource(HelperAssignment.class).find(queryString, variables);
+        List<HelperAssignment> helperAssignments = Datasources.getDatasource(HelperAssignment.class).find(queryString, variables);
         // no helper assignments -> position available
         return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
@@ -73,7 +73,7 @@ public class PositionService
         parameters.put("position", position);
         parameters.put("event", event);
         List<?> result =
-                DatasourceRegistry.getDatasource(EventPosition.class).find(
+                Datasources.getDatasource(EventPosition.class).find(
                         "FROM " +
                                 EventPosition.class.getSimpleName() +
                                 " ep WHERE ep.position = :position AND ep.event = :event", parameters);

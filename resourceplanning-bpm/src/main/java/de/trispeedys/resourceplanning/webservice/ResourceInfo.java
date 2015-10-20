@@ -8,7 +8,7 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
 import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -33,9 +33,9 @@ public class ResourceInfo
 
     public void assignHelper(Long helperId, Long positionId, Long eventId)
     {
-        Helper helper = DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
-        Event event = DatasourceRegistry.getDatasource(Event.class).findById(eventId);
-        Position position = DatasourceRegistry.getDatasource(Position.class).findById(positionId);
+        Helper helper = Datasources.getDatasource(Helper.class).findById(helperId);
+        Event event = Datasources.getDatasource(Event.class).findById(eventId);
+        Position position = Datasources.getDatasource(Position.class).findById(positionId);
         AssignmentService.assignHelper(helper, event,
                 position);
     }
@@ -64,6 +64,6 @@ public class ResourceInfo
     
     public void startProcessesForActiveHelpers(String templateName)
     {
-        DatasourceRegistry.getDatasource(EventTemplate.class).find(EventTemplate.ATTR_DESCRIPTION, templateName).get(0);
+        Datasources.getDatasource(EventTemplate.class).find(EventTemplate.ATTR_DESCRIPTION, templateName).get(0);
     }
 }

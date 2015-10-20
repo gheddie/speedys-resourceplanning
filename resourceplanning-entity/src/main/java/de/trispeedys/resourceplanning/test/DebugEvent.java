@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
@@ -17,7 +17,7 @@ public class DebugEvent
     {
         HibernateUtil.clearAll();
         TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
-        List<Event> allEvents = (List<Event>) DatasourceRegistry.getDatasource(Event.class).findAll(Event.class);
+        List<Event> allEvents = (List<Event>) Datasources.getDatasource(Event.class).findAll(Event.class);
         System.out.println(allEvents.size());
         for (Event ev : allEvents)
         {
@@ -27,7 +27,7 @@ public class DebugEvent
     
     public static StringBuffer debugEvent(Long eventId)
     {
-        return debugEvent((Event) DatasourceRegistry.getDatasource(Event.class).findById(eventId));
+        return debugEvent((Event) Datasources.getDatasource(Event.class).findById(eventId));
     }
 
     public static StringBuffer debugEvent(Event event)
@@ -67,7 +67,7 @@ public class DebugEvent
     private static String getHelperString(HashMap<String, Object> variables)
     {
         List<?> helperAssignments =
-                DatasourceRegistry.getDatasource(HelperAssignment.class).find("FROM " +
+                Datasources.getDatasource(HelperAssignment.class).find("FROM " +
                         HelperAssignment.class.getSimpleName() +
                         " ec WHERE ec.position = :position AND ec.event = :event", variables);
         if ((helperAssignments == null) || helperAssignments.size() != 1)

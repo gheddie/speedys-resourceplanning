@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.delegate.requesthelp;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
@@ -17,7 +17,7 @@ public class CheckPriorAssignmentsDelegate implements JavaDelegate
         AppConfiguration.getInstance();
         
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperId);
+        Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         boolean firstAssignment = AssignmentService.isFirstAssignment(helperId);
         if (firstAssignment)
         {

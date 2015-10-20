@@ -12,7 +12,7 @@ import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -212,7 +212,7 @@ public class RequestHelpTest
         Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
-                DatasourceRegistry.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
+                Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
         String businessKey = null;
         for (Helper helper : activeHelpers)
         {
@@ -221,7 +221,7 @@ public class RequestHelpTest
         }
         // a mail for every helper must have been sent
         assertEquals(activeHelpers.size(),
-                DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
+                Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
     }
 
     /**
@@ -244,7 +244,7 @@ public class RequestHelpTest
         Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> helpers =
-                DatasourceRegistry.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
+                Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
         String businessKey = null;
         for (Helper helper : helpers)
         {
@@ -252,7 +252,7 @@ public class RequestHelpTest
             RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         }
         // a mail for every helper must have been sent
-        assertEquals(5, DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
+        assertEquals(5, Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
         // three manual assignment tasks must have been generated
         assertEquals(
                 3,
@@ -279,7 +279,7 @@ public class RequestHelpTest
         // duplicate event
         Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
         // select created helper
-        Helper helper = (Helper) DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0);
+        Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll(Helper.class).get(0);
         // start process
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);

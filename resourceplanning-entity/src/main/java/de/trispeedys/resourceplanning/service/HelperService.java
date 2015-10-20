@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
@@ -18,7 +18,7 @@ public class HelperService
     public static List<Long> queryActiveHelperIds()
     {
         List<Long> result = new ArrayList<Long>();
-        for (Object helper : DatasourceRegistry.getDatasource(Helper.class).find("helperState",
+        for (Object helper : Datasources.getDatasource(Helper.class).find("helperState",
                 HelperState.ACTIVE))
         {
             result.add(((AbstractDbObject) helper).getId());
@@ -28,7 +28,7 @@ public class HelperService
 
     public static void deactivateHelper(Long helperId)
     {
-        DefaultDatasource<Helper> datasource = DatasourceRegistry.getDatasource(Helper.class);
+        DefaultDatasource<Helper> datasource = Datasources.getDatasource(Helper.class);
         Helper helper = (Helper) datasource.findById(helperId);
         helper.setHelperState(HelperState.INACTIVE);
         helper.persist();
@@ -41,7 +41,7 @@ public class HelperService
         parameters.put("event", event);
         parameters.put("position", position);
         List<HelperAssignment> list =
-                DatasourceRegistry.getDatasource(Helper.class)
+                Datasources.getDatasource(Helper.class)
                         .find("FROM " +
                                 HelperAssignment.class.getSimpleName() +
                                 " ec WHERE ec.helper = :helper AND ec.event = :event AND ec.position = :position",
@@ -55,7 +55,7 @@ public class HelperService
         parameters.put("helper", helper);
         parameters.put("event", event);
         List<HelperAssignment> helperAssignments =
-                DatasourceRegistry.getDatasource(HelperAssignment.class).find(
+                Datasources.getDatasource(HelperAssignment.class).find(
                         "FROM " +
                                 HelperAssignment.class.getSimpleName() +
                                 " ec WHERE ec.event = :event AND ec.helper = :helper", parameters);

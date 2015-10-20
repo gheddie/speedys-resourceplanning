@@ -2,7 +2,7 @@ package de.trispeedys.resourceplanning;
 
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
@@ -43,7 +43,7 @@ public class MailTemplateTest
         Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, evTemplate).persist();
         // send mail
         ProposePositionsMailTemplate template =
-                new ProposePositionsMailTemplate(helper, event, DatasourceRegistry.getDatasource(Position.class)
+                new ProposePositionsMailTemplate(helper, event, Datasources.getDatasource(Position.class)
                         .findAll(Position.class), HelperCallback.ASSIGNMENT_AS_BEFORE, pos3);
         MessagingService.createMessage("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com",
                 template.getSubject(), template.getBody(), MessagingType.NONE, MessagingFormat.HTML);

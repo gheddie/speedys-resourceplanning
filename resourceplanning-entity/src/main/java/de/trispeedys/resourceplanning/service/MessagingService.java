@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.service;
 import java.util.HashMap;
 import java.util.List;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
@@ -17,7 +17,7 @@ public class MessagingService
     {
         HashMap<String, Object> variables = new HashMap<String, Object>();
         variables.put("messagingState", MessagingState.UNPROCESSED);
-        return DatasourceRegistry.getDatasource(MessageQueue.class).find(
+        return Datasources.getDatasource(MessageQueue.class).find(
                 "FROM " + MessageQueue.class.getSimpleName() + " mq WHERE mq.messagingState = :messagingState",
                 variables);
     }

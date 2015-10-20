@@ -11,7 +11,7 @@ import javax.jws.soap.SOAPBinding.Style;
 import org.camunda.bpm.BpmPlatform;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -45,7 +45,7 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 = SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
-        List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        List<Helper> helpers = Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         for (Helper helper : helpers)
         {
             startHelperRequestProcess(helper.getId(), event2016.getId());
@@ -64,10 +64,10 @@ public class TestDataProvider
 
         // block one of the positions with a new helper
         Helper blockingHelper = EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
-        AssignmentService.assignHelper(blockingHelper, event2016, (Position) DatasourceRegistry.getDatasource(Position.class).findAll(Position.class).get(0));
+        AssignmentService.assignHelper(blockingHelper, event2016, (Position) Datasources.getDatasource(Position.class).findAll(Position.class).get(0));
 
         // start process for the created helper 'H2_Last'
-        startHelperRequestProcess(((Helper) DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_LAST_NAME, "H2_Last").get(0)).getId(), event2016.getId());
+        startHelperRequestProcess(((Helper) Datasources.getDatasource(Helper.class).find(Helper.ATTR_LAST_NAME, "H2_Last").get(0)).getId(), event2016.getId());
     }
 
     /**
@@ -83,7 +83,7 @@ public class TestDataProvider
 
         Event event2016 = SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        startHelperRequestProcess(DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class).get(0).getId(), event2016.getId());
+        startHelperRequestProcess(Datasources.getDatasource(Helper.class).findAll(Helper.class).get(0).getId(), event2016.getId());
 
         EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
         EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
@@ -99,8 +99,8 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 = SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
-        List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
-        List<Position> positions = DatasourceRegistry.getDatasource(Position.class).findAll(Position.class);
+        List<Helper> helpers = Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        List<Position> positions = Datasources.getDatasource(Position.class).findAll(Position.class);
         // new helper 1 with assignment
         Helper newHelper1 = EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
         AssignmentService.assignHelper(newHelper1, event2016, positions.get(1));
@@ -118,7 +118,7 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 = SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
-        List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        List<Helper> helpers = Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         startHelperRequestProcess(helpers.get(0).getId(), event2016.getId());
     }
 }

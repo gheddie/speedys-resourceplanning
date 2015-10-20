@@ -1,7 +1,7 @@
 package de.trispeedys.resourceplanning.test;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
@@ -215,7 +215,7 @@ public class TestDataGenerator
 
     private static Helper findHelperByCode(String helperCode)
     {
-        return (Helper) DatasourceRegistry.getDatasource(Helper.class).find(Helper.ATTR_CODE, helperCode).get(0);
+        return (Helper) Datasources.getDatasource(Helper.class).find(Helper.ATTR_CODE, helperCode).get(0);
     }
 
     public static void main(String[] args)

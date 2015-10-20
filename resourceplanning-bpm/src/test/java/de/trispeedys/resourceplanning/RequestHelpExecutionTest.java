@@ -13,7 +13,7 @@ import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
@@ -69,7 +69,7 @@ public class RequestHelpExecutionTest
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
         // (3)
-        List<Helper> allHelpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
         Helper helperB = allHelpers.get(3);
@@ -129,7 +129,7 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> allHelpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
 
@@ -163,7 +163,7 @@ public class RequestHelpExecutionTest
         Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
-                DatasourceRegistry.getDatasource(Helper.class).find("helperState",
+                Datasources.getDatasource(Helper.class).find("helperState",
                         HelperState.ACTIVE);
         Helper notCooperativeHelper = activeHelpers.get(0);
         String businessKey =
@@ -183,7 +183,7 @@ public class RequestHelpExecutionTest
         // helper state remains 'ACTIVE'
         assertEquals(
                 HelperState.ACTIVE,
-                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
+                ((Helper) Datasources.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
     }
 
     /**
@@ -202,7 +202,7 @@ public class RequestHelpExecutionTest
         Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
-                DatasourceRegistry.getDatasource(Helper.class).find("helperState",
+                Datasources.getDatasource(Helper.class).find("helperState",
                         HelperState.ACTIVE);
         Helper notCooperativeHelper = activeHelpers.get(0);
         String businessKey =
@@ -222,7 +222,7 @@ public class RequestHelpExecutionTest
         // helper state changes to 'INACTIVE'
         assertEquals(
                 HelperState.INACTIVE,
-                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
+                ((Helper) Datasources.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
     }
 
     /**
@@ -242,7 +242,7 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> allHelpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
 
@@ -259,7 +259,7 @@ public class RequestHelpExecutionTest
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
         assertEquals(
                 HelperState.ACTIVE,
-                ((Helper) DatasourceRegistry.getDatasource(Helper.class).findById(helperA.getId())).getHelperState());
+                ((Helper) Datasources.getDatasource(Helper.class).findById(helperA.getId())).getHelperState());
     }
 
     /**
@@ -280,7 +280,7 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> allHelpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
         Helper helperB = allHelpers.get(3);
@@ -328,7 +328,7 @@ public class RequestHelpExecutionTest
                         TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
                         "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> helpers = DatasourceRegistry.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> helpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
 
         Helper helperA = helpers.get(0);
         String businessKeyA =
@@ -351,7 +351,7 @@ public class RequestHelpExecutionTest
         // 'B' is booked for desired position...
         assertEquals(
                 1,
-                DatasourceRegistry.getDatasource(HelperAssignment.class)
+                Datasources.getDatasource(HelperAssignment.class)
                         .find(HelperAssignment.ATTR_EVENT, event2016,
                                 HelperAssignment.ATTR_HELPER, helperB, HelperAssignment.ATTR_POSITION,
                                 desiredPosition)
@@ -363,7 +363,7 @@ public class RequestHelpExecutionTest
         // 'A' has two mails of type 'PROPOSE_POSITIONS'...
         assertEquals(
                 2,
-                DatasourceRegistry.getDatasource(MessageQueue.class)
+                Datasources.getDatasource(MessageQueue.class)
                         .find(MessageQueue.ATTR_MESSAGING_TYPE,
                                 MessagingType.PROPOSE_POSITIONS, MessageQueue.ATTR_TO_ADDRESS,
                                 helperA.getEmail())
@@ -409,7 +409,7 @@ public class RequestHelpExecutionTest
                         .get(0);
         HashMap<String, Object> variables = new HashMap<String, Object>();
         Position someUnassignedTask =
-                DatasourceRegistry.getDatasource(Position.class).findAll(Position.class).get(0);
+                Datasources.getDatasource(Position.class).findAll(Position.class).get(0);
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, someUnassignedTask.getId());
         processEngine.getTaskService().complete(task.getId(), variables);
 
@@ -423,7 +423,7 @@ public class RequestHelpExecutionTest
         // check canncelled assignment
         assertEquals(
                 HelperAssignmentState.CANCELLED,
-                ((HelperAssignment) DatasourceRegistry.getDatasource(HelperAssignment.class)
+                ((HelperAssignment) Datasources.getDatasource(HelperAssignment.class)
                         .find(HelperAssignment.ATTR_EVENT, event2016,
                                 HelperAssignment.ATTR_HELPER, helper)
                         .get(0))

@@ -10,7 +10,7 @@ import java.util.Map;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
@@ -51,12 +51,12 @@ public class RequestHelpTestUtil
 
     public static int countMails()
     {
-        return DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size();
+        return Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size();
     }
 
     public static boolean checkMails(int expectedMailCount, MessagingType... types)
     {
-        List<MessageQueue> messages = DatasourceRegistry.getDatasource(MessageQueue.class).findAll(MessageQueue.class);
+        List<MessageQueue> messages = Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class);
         if ((messages == null) || (messages.size() != expectedMailCount))
         {
             return false;

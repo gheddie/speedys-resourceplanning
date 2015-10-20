@@ -6,7 +6,7 @@ import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
 
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;
@@ -29,6 +29,6 @@ public class MailTriggerTest
         
         processEngine.getRuntimeService().startProcessInstanceByKey("MailTriggerProcess");   
         
-        assertEquals(3, DatasourceRegistry.getDatasource(MessageQueue.class).find("messagingState", MessagingState.PROCESSED).size());
+        assertEquals(3, Datasources.getDatasource(MessageQueue.class).find("messagingState", MessagingState.PROCESSED).size());
     }
 }

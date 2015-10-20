@@ -11,13 +11,23 @@ public interface IDatasource
     
     public <T> List<T> find(String qryString, HashMap<String, Object> parameters);
     
+    public <T> T findSingle(String qryString, HashMap<String, Object> parameters);
+    
     public <T> List<T> find(String qryString);
+    
+    public <T> T findSingle(String qryString);
 
     public <T> List<T> find(String qryString, String paramaterName, Object paramaterValue);
+    
+    public <T> T findSingle(String qryString, String paramaterName, Object paramaterValue);
 
-    public <T> List<T> findAll(Class<T> entityClass);
+    public <T> List<T> findAll(Class<T> entityClass);    
 
     public <T> List<T> find(String paramaterName, Object paramaterValue);
     
+    public <T> T findSingle(String paramaterName, Object paramaterValue);
+    
     public <T> List<T> find(Object... filters);
+    
+    public <T> T findSingle(Object... filters);
 }

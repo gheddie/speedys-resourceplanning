@@ -6,7 +6,7 @@ import java.util.List;
 import org.joda.time.Days;
 
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
-import de.trispeedys.resourceplanning.entity.DatasourceRegistry;
+import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -41,7 +41,7 @@ public class AssignmentService
 
     public static List<HelperAssignment> getAllHelperAssignments(Long helperId)
     {
-        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(
+        return Datasources.getDatasource(HelperAssignment.class).find(
                 "From " + HelperAssignment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId",
                 "helperId", helperId);
     }
@@ -56,7 +56,7 @@ public class AssignmentService
      */
     public static List<HelperAssignment> getHelperAssignments(Helper helper, Event event)
     {
-        return DatasourceRegistry.getDatasource(HelperAssignment.class).find(HelperAssignment.ATTR_HELPER, helper, HelperAssignment.ATTR_EVENT, event);
+        return Datasources.getDatasource(HelperAssignment.class).find(HelperAssignment.ATTR_HELPER, helper, HelperAssignment.ATTR_EVENT, event);
     }
 
     public static boolean isFirstAssignment(Long helperId)
@@ -70,7 +70,7 @@ public class AssignmentService
      */
     public static void cancelHelperAssignment(Helper helper, Event event)
     {
-        DefaultDatasource<HelperAssignment> datasource = DatasourceRegistry.getDatasource(HelperAssignment.class);
+        DefaultDatasource<HelperAssignment> datasource = Datasources.getDatasource(HelperAssignment.class);
         HelperAssignment assignment =
                 (HelperAssignment) datasource
                         .find(HelperAssignment.ATTR_HELPER, helper,
@@ -89,7 +89,7 @@ public class AssignmentService
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("helperId", helper.getId());
         parameters.put("eventTemplate", eventTemplate);
-        List<Object[]> list = DatasourceRegistry.getDatasource(HelperAssignment.class).find(queryString, parameters);
+        List<Object[]> list = Datasources.getDatasource(HelperAssignment.class).find(queryString, parameters);
         if (list.size() == 0)
         {
             return null;
