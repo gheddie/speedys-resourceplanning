@@ -7,6 +7,8 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
+import org.camunda.bpm.BpmPlatform;
+
 import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
 import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -15,6 +17,7 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.interaction.EventManager;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.service.AssignmentService;
@@ -66,5 +69,10 @@ public class ResourceInfo
     public void startProcessesForActiveHelpers(String templateName)
     {
         EventManager.triggerHelperProcesses(templateName);
+    }
+    
+    public void finishUp()
+    {
+        BpmPlatform.getDefaultProcessEngine().getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
     }
 }

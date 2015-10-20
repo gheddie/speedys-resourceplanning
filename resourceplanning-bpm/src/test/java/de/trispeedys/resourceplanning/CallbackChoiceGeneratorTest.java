@@ -63,6 +63,12 @@ public class CallbackChoiceGeneratorTest
         assertTrue(checkChoices(new HelperCallback[] {HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME},
                 new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
     }
+    
+    @Test
+    public void testChoicesWennDieVorherigePositionInDiesemEeventNichtMehrDa()
+    {
+        assertTrue(1 == 3);
+    }
 
     // ---
 

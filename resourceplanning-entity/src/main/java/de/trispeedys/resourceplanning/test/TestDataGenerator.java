@@ -13,7 +13,7 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 
 public class TestDataGenerator
 {
-    private static final String MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
+    private static final String DEFAULT_MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
 
     /**
      * creates an {@link Event} like {@link TestDataGenerator#createMinimalEvent(String, String, int, int, int)}, but
@@ -32,9 +32,9 @@ public class TestDataGenerator
                         template).persist();
 
         // create helpers
-        EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
+        EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
                 .persist();
-        EntityFactory.buildHelper("H3_First", "H3_Last", MAIL_ADDRESS, HelperState.ACTIVE, 3, 1, 1980)
+        EntityFactory.buildHelper("H3_First", "H3_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 3, 1, 1980)
                 .persist();
 
         // build domains
@@ -127,7 +127,7 @@ public class TestDataGenerator
                         .persist();
         // create helper
         Helper helper =
-                EntityFactory.buildHelper("H1_First", "H1_Last", MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
+                EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
                         .persist();
         // build domain
         Domain domain = EntityFactory.buildDomain("D1", 1).persist();
@@ -151,20 +151,20 @@ public class TestDataGenerator
                         template).persist();
 
         // ------------------------ create helpers ('old')
-        EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
-        EntityFactory.buildHelper("Beyer", "Lars", "a@b.de", HelperState.ACTIVE, 4, 4, 1971).persist();
-        EntityFactory.buildHelper("Elsner", "Conny", "a@b.de", HelperState.ACTIVE, 25, 7, 1973).persist();
-        EntityFactory.buildHelper("Deyhle", "Ingo", "a@b.de", HelperState.ACTIVE, 1, 8, 1968).persist();
-        EntityFactory.buildHelper("Meitzner", "Daniela", "a@b.de", HelperState.ACTIVE, 16, 12, 1961)
+        EntityFactory.buildHelper("Schulz", "Stefan", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976).persist();
+        EntityFactory.buildHelper("Beyer", "Lars", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 4, 4, 1971).persist();
+        EntityFactory.buildHelper("Elsner", "Conny", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 25, 7, 1973).persist();
+        EntityFactory.buildHelper("Deyhle", "Ingo", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 8, 1968).persist();
+        EntityFactory.buildHelper("Meitzner", "Daniela", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 16, 12, 1961)
                 .persist();
-        EntityFactory.buildHelper("Grabbe", "Jimi", "a@b.de", HelperState.ACTIVE, 7, 5, 1991).persist();
-        EntityFactory.buildHelper("Päge", "Denny", "a@b.de", HelperState.ACTIVE, 29, 5, 1964).persist();
-        EntityFactory.buildHelper("Thierse", "Ulrich", "a@b.de", HelperState.ACTIVE, 16, 5, 1983).persist();
+        EntityFactory.buildHelper("Grabbe", "Jimi", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 7, 5, 1991).persist();
+        EntityFactory.buildHelper("Päge", "Denny", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 29, 5, 1964).persist();
+        EntityFactory.buildHelper("Thierse", "Ulrich", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 16, 5, 1983).persist();
 
         // ------------------------ create helpers ('new')
-        EntityFactory.buildHelper("Klemm", "Peter", "a@b.de", HelperState.ACTIVE, 17, 7, 1983).persist();
-        EntityFactory.buildHelper("Walther", "Tina", "a@b.de", HelperState.ACTIVE, 28, 4, 1967).persist();
-        EntityFactory.buildHelper("Klopp", "Willi", "a@b.de", HelperState.ACTIVE, 13, 11, 1964).persist();
+        EntityFactory.buildHelper("Klemm", "Peter", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 17, 7, 1983).persist();
+        EntityFactory.buildHelper("Walther", "Tina", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 28, 4, 1967).persist();
+        EntityFactory.buildHelper("Klopp", "Willi", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 13, 11, 1964).persist();
 
         // ------------------------ create event templates
         EntityFactory.buildEventTemplate("TriathlonTemplate").persist();
