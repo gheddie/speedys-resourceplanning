@@ -6,8 +6,10 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
+
 @Entity
-public class Position extends AbstractDbObject
+public class Position extends AbstractDbObject implements HierarchicalEventItem
 {
     // @Min(value = 2)
     private String description;
@@ -70,5 +72,15 @@ public class Position extends AbstractDbObject
     public String toString()
     {
         return getClass().getSimpleName() + " ["+description+", "+minimalAge+"]";
+    }
+
+    public int getHierarchyLevel()
+    {
+        return HierarchicalEventItem.LEVEL_POSITION;
+    }
+    
+    public String getOutline()
+    {
+        return "[P]";
     }
 }

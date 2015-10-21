@@ -9,12 +9,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames =
 {
         "name"
 }))
-public class Domain extends AbstractDbObject
+public class Domain extends AbstractDbObject implements HierarchicalEventItem
 {
     private String name;
     
@@ -76,5 +78,20 @@ public class Domain extends AbstractDbObject
     public void setPositions(List<Position> positions)
     {
         this.positions = positions;
+    }
+
+    public int getHierarchyLevel()
+    {
+        return HierarchicalEventItem.LEVEL_DOMAIN;
+    }
+    
+    public String toString()
+    {
+        return getClass().getSimpleName() + " ["+name+", "+domainNumber+"]";
+    }
+
+    public String getOutline()
+    {
+        return "[D]";
     }
 }

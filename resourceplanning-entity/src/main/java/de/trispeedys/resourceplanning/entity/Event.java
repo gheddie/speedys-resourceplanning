@@ -17,10 +17,11 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import de.trispeedys.resourceplanning.entity.misc.EventState;
+import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 
 @Entity
 @Table(name = "event")
-public class Event extends AbstractDbObject
+public class Event extends AbstractDbObject implements HierarchicalEventItem
 {
     public static final String ATTR_EVENT_STATE = "eventState";
     
@@ -112,5 +113,15 @@ public class Event extends AbstractDbObject
     public String toString()
     {
         return getClass().getSimpleName() + " ["+description+", "+eventKey+"]";
+    }
+
+    public int getHierarchyLevel()
+    {
+        return HierarchicalEventItem.LEVEL_EVENT;
+    }
+    
+    public String getOutline()
+    {
+        return "[E]";
     }
 }
