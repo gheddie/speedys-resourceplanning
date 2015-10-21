@@ -11,7 +11,7 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
-import de.trispeedys.resourceplanning.test.SpeedyRoutines;
+import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 /**
  * Tests the unique criterias for the {@link HelperAssignment} entity.

@@ -22,9 +22,9 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
-import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
+import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 @SuppressWarnings("restriction")
 @WebService

@@ -14,7 +14,7 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.service.PositionService;
-import de.trispeedys.resourceplanning.test.SpeedyRoutines;
+import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 public class PositionTest
 {

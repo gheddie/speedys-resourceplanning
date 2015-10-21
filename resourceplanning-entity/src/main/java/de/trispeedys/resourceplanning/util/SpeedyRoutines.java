@@ -1,7 +1,5 @@
-package de.trispeedys.resourceplanning.test;
+package de.trispeedys.resourceplanning.util;
 
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 

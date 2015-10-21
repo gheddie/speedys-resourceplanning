@@ -29,7 +29,7 @@ import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.service.PositionService;
-import de.trispeedys.resourceplanning.test.SpeedyRoutines;
+import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class EntityFactory

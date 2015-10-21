@@ -1,17 +1,17 @@
 package de.trispeedys.resourceplanning;
 
+import static org.junit.Assert.assertEquals;
+
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
-import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.interaction.EventManager;
-import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
-import static org.junit.Assert.assertEquals;
+import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 public class EventTest
 {

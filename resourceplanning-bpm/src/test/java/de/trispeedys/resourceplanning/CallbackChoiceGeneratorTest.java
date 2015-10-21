@@ -12,9 +12,8 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.service.AssignmentService;
-import de.trispeedys.resourceplanning.service.PositionService;
-import de.trispeedys.resourceplanning.test.SpeedyRoutines;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
+import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 public class CallbackChoiceGeneratorTest
 {
@@ -64,7 +63,7 @@ public class CallbackChoiceGeneratorTest
                 new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
     }
     
-    //@Test
+    @Test
     public void testChoicesWennDieVorherigePositionInDiesemEeventNichtMehrDa()
     {
         HibernateUtil.clearAll();
@@ -73,9 +72,10 @@ public class CallbackChoiceGeneratorTest
         Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
         Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         
-        // remove prior position of helper 'A' from event 2016        
+        // remove prior position of helper 'A' from event 2016
+        Helper helperA = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);                       
         
-        assertTrue(1 == 3);
+        // assertTrue(1 == 3);
     }
 
     // ---
