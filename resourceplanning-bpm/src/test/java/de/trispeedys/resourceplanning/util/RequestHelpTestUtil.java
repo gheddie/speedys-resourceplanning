@@ -51,12 +51,12 @@ public class RequestHelpTestUtil
 
     public static int countMails()
     {
-        return Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size();
+        return Datasources.getDatasource(MessageQueue.class).findAll().size();
     }
 
     public static boolean checkMails(int expectedMailCount, MessagingType... types)
     {
-        List<MessageQueue> messages = Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class);
+        List<MessageQueue> messages = Datasources.getDatasource(MessageQueue.class).findAll();
         if ((messages == null) || (messages.size() != expectedMailCount))
         {
             return false;

@@ -75,7 +75,7 @@ public class TestDataProvider
         Helper blockingHelper =
                 EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
         AssignmentService.assignHelper(blockingHelper, event2016,
-                (Position) Datasources.getDatasource(Position.class).findAll(Position.class).get(0));
+                (Position) Datasources.getDatasource(Position.class).findAll().get(0));
 
         // start process for the created helper 'H2_Last'
         startHelperRequestProcess(
@@ -100,9 +100,9 @@ public class TestDataProvider
                         TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015)
                                 .getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        startHelperRequestProcess(Datasources.getDatasource(Helper.class)
-                .findAll(Helper.class)
-                .get(0)
+        startHelperRequestProcess(((Helper) Datasources.getDatasource(Helper.class)
+                .findAll()
+                .get(0))
                 .getId(), event2016.getId());
 
         EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
@@ -124,7 +124,7 @@ public class TestDataProvider
                                 .getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
-        List<Position> positions = Datasources.getDatasource(Position.class).findAll(Position.class);
+        List<Position> positions = Datasources.getDatasource(Position.class).findAll();
         // new helper 1 with assignment
         Helper newHelper1 =
                 EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();

@@ -21,7 +21,7 @@ public interface IDatasource
     
     public <T> T findSingle(String qryString, String paramaterName, Object paramaterValue);
 
-    public <T> List<T> findAll(Class<T> entityClass);    
+    public <T> List<T> findAll();    
 
     public <T> List<T> find(String paramaterName, Object paramaterValue);
     

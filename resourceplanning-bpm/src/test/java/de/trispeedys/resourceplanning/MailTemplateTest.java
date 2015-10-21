@@ -1,5 +1,7 @@
 package de.trispeedys.resourceplanning;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Datasources;
@@ -42,9 +44,9 @@ public class MailTemplateTest
         
         Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, evTemplate).persist();
         // send mail
+        List<Position> positions = Datasources.getDatasource(Position.class).findAll();
         ProposePositionsMailTemplate template =
-                new ProposePositionsMailTemplate(helper, event, Datasources.getDatasource(Position.class)
-                        .findAll(Position.class), HelperCallback.ASSIGNMENT_AS_BEFORE, pos3);
+                new ProposePositionsMailTemplate(helper, event, positions, HelperCallback.ASSIGNMENT_AS_BEFORE, pos3);
         MessagingService.createMessage("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com",
                 template.getSubject(), template.getBody(), MessagingType.NONE, MessagingFormat.HTML);
         MessagingService.sendAllUnprocessedMessages();

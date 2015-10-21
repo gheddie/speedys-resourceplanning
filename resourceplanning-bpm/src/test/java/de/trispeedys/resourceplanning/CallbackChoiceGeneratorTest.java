@@ -32,7 +32,7 @@ public class CallbackChoiceGeneratorTest
         
         // get helper
         Helper helper =
-                Datasources.getDatasource(Helper.class).findAll(Helper.class).get(0);
+                (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
         
         assertTrue(checkChoices(HelperCallback.values(),
                 new CallbackChoiceGenerator().generateChoices(helper, event2016)));
@@ -53,9 +53,9 @@ public class CallbackChoiceGeneratorTest
         
         // get helpers
         Helper helperA =
-                Datasources.getDatasource(Helper.class).findAll(Helper.class).get(0);
+                (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
         Helper helperB =
-                Datasources.getDatasource(Helper.class).findAll(Helper.class).get(1);
+                (Helper) Datasources.getDatasource(Helper.class).findAll().get(1);
         
         // assign 'B' to 'A's prior position...
         AssignmentService.assignHelper(helperB, event2016, AssignmentService.getPriorAssignment(helperA, event2015.getEventTemplate()).getPosition());
@@ -64,9 +64,17 @@ public class CallbackChoiceGeneratorTest
                 new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
     }
     
-    @Test
+    //@Test
     public void testChoicesWennDieVorherigePositionInDiesemEeventNichtMehrDa()
     {
+        HibernateUtil.clearAll();
+
+        // create events
+        Event event2015 = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+        
+        // remove prior position of helper 'A' from event 2016        
+        
         assertTrue(1 == 3);
     }
 

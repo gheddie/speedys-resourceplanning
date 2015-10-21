@@ -69,7 +69,7 @@ public class RequestHelpExecutionTest
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
         // (3)
-        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
         Helper helperB = allHelpers.get(3);
@@ -129,7 +129,7 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
 
@@ -242,7 +242,7 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
 
@@ -280,7 +280,7 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(event2015.getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
         Helper helperB = allHelpers.get(3);
@@ -328,7 +328,7 @@ public class RequestHelpExecutionTest
                         TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId(),
                         "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        List<Helper> helpers = Datasources.getDatasource(Helper.class).findAll(Helper.class);
+        List<Helper> helpers = Datasources.getDatasource(Helper.class).findAll();
 
         Helper helperA = helpers.get(0);
         String businessKeyA =
@@ -409,7 +409,7 @@ public class RequestHelpExecutionTest
                         .get(0);
         HashMap<String, Object> variables = new HashMap<String, Object>();
         Position someUnassignedTask =
-                Datasources.getDatasource(Position.class).findAll(Position.class).get(0);
+                (Position) Datasources.getDatasource(Position.class).findAll().get(0);
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, someUnassignedTask.getId());
         processEngine.getTaskService().complete(task.getId(), variables);
 

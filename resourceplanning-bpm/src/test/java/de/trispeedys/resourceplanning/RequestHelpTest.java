@@ -221,7 +221,7 @@ public class RequestHelpTest
         }
         // a mail for every helper must have been sent
         assertEquals(activeHelpers.size(),
-                Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
+                Datasources.getDatasource(MessageQueue.class).findAll().size());
     }
 
     /**
@@ -252,7 +252,7 @@ public class RequestHelpTest
             RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         }
         // a mail for every helper must have been sent
-        assertEquals(5, Datasources.getDatasource(MessageQueue.class).findAll(MessageQueue.class).size());
+        assertEquals(5, Datasources.getDatasource(MessageQueue.class).findAll().size());
         // three manual assignment tasks must have been generated
         assertEquals(
                 3,
@@ -279,7 +279,7 @@ public class RequestHelpTest
         // duplicate event
         Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
         // select created helper
-        Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll(Helper.class).get(0);
+        Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
         // start process
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);

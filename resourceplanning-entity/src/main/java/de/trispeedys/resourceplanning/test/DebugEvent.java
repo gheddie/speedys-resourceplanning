@@ -18,7 +18,7 @@ public class DebugEvent
     {
         HibernateUtil.clearAll();
         TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED);
-        List<Event> allEvents = (List<Event>) Datasources.getDatasource(Event.class).findAll(Event.class);
+        List<Event> allEvents = Datasources.getDatasource(Event.class).findAll();
         System.out.println(allEvents.size());
         for (Event ev : allEvents)
         {

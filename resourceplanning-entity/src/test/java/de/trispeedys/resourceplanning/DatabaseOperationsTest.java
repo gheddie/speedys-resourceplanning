@@ -107,7 +107,7 @@ public class DatabaseOperationsTest
         // fetch w/o parameters (all entries)
         assertEquals(10, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName()).size());
         // fetch with class (all entries)
-        assertEquals(10, Datasources.getDatasource(Position.class).findAll(Position.class).size());
+        assertEquals(10, Datasources.getDatasource(Position.class).findAll().size());
         // fetch with query string
         assertEquals(1, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge = 3").size());
         assertEquals(4, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName() + " pos WHERE pos.minimalAge >= 3 AND pos.minimalAge <= 6").size());

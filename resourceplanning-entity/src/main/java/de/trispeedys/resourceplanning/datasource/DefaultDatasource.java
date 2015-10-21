@@ -71,9 +71,9 @@ public abstract class DefaultDatasource<T> implements IDatasource
     }    
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> findAll(Class<T> entityClass)
+    public <T> List<T> findAll()
     {
-        return (List<T>) find("FROM " + entityClass.getSimpleName());
+        return (List<T>) find("FROM " + getGenericType().getSimpleName());
     }
     
     public <T> List<T> find(Object... filters)
@@ -81,7 +81,7 @@ public abstract class DefaultDatasource<T> implements IDatasource
         if ((filters == null) || (filters.length == 0))
         {
             // no filters
-            return (List<T>) findAll(getGenericType());
+            return (List<T>) findAll();
         }
         if (!(filters.length % 2 == 0))
         {
