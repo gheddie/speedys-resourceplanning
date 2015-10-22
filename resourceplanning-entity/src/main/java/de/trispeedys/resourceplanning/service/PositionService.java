@@ -48,6 +48,10 @@ public class PositionService
      */
     public static boolean isPositionAvailable(Event event, Position position)
     {
+        if (!(isPositionPresentInEvent(position, event)))
+        {
+            return false;
+        }
         String queryString =
                 "FROM " +
                         HelperAssignment.class.getSimpleName() +

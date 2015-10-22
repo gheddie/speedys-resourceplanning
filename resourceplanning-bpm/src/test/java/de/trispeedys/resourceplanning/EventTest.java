@@ -28,8 +28,8 @@ public class EventTest
         // there is a new event (with 7 active helpers)...
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createRealLifeEvent("Triathlon 2016",
-                        "TRI-2016", 21, 6, 2016, EventState.FINISHED), "Triathlon 2016", "TRI-2016", 21, 6,
-                        2016);
+                        "TRI-2016", 21, 6, 2016, EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6,
+                        2016, null);
 
         // start processes...
         EventManager.triggerHelperProcesses(EventTemplate.TEMPLATE_TRI);

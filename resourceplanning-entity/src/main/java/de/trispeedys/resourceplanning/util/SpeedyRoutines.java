@@ -23,7 +23,7 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 public class SpeedyRoutines
 {
     public static Event duplicateEvent(Event event, String description, String eventKey, int day, int month,
-            int year)
+            int year, List<Integer> positionExcludes)
     {
         if (event == null)
         {
@@ -36,16 +36,23 @@ public class SpeedyRoutines
         Event newEvent =
                 EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
                         event.getEventTemplate()).persist();
-        List<EventPosition> positions = Datasources.getDatasource(EventPosition.class).find("event", event);
-        System.out.println(positions.size());
-        Position newPosRelation = null;
-        for (EventPosition evtpos : positions)
+        List<EventPosition> posRelations = Datasources.getDatasource(EventPosition.class).find("event", event);
+        Position pos = null;
+        for (EventPosition evtpos : posRelations)
         {
-            newPosRelation = evtpos.getPosition();
+            pos = evtpos.getPosition();
             // attach every old position to the new event
-            EntityFactory.buildEventPosition(newEvent, newPosRelation).persist();
+            if (!(excludePosition(pos, positionExcludes)))
+            {
+                EntityFactory.buildEventPosition(newEvent, pos).persist();
+            }
         }
         return newEvent;
+    }
+
+    private static boolean excludePosition(Position position, List<Integer> positionExcludes)
+    {
+        return ((positionExcludes != null) && (positionExcludes.contains(position.getPositionNumber())));
     }
 
     public static String createHelperCode(Helper helper)
@@ -113,8 +120,14 @@ public class SpeedyRoutines
             return null;
         }
         HashMap<Domain, List<Position>> positionsPerDomain = new HashMap<Domain, List<Position>>();
+        EntityTreeNode<Event> eventNode = new EntityTreeNode<Event>(event);
         Domain key = null;
-        for (EventPosition pos : event.getEventPositions())
+        List<EventPosition> eventPositions = event.getEventPositions();
+        if ((eventPositions == null) || (eventPositions.size() == 0))
+        {
+            return eventNode;
+        }
+        for (EventPosition pos : eventPositions)
         {
             key = pos.getPosition().getDomain();
             if (positionsPerDomain.get(key) == null)
@@ -123,16 +136,15 @@ public class SpeedyRoutines
             }
             positionsPerDomain.get(key).add(pos.getPosition());
         }
-        EntityTreeNode<Event> eventNode = new EntityTreeNode<Event>(event);
         EntityTreeNode<Domain> domainNode = null;
         // build tree
         EnumeratedEventItemComparator itemComparator = new EnumeratedEventItemComparator();
         List<EntityTreeNode<Domain>> domainNodes = new ArrayList<EntityTreeNode<Domain>>();
         for (Domain dom : positionsPerDomain.keySet())
         {
-            domainNode = new EntityTreeNode<Domain>(dom);            
+            domainNode = new EntityTreeNode<Domain>(dom);
             List<Position> positionList = positionsPerDomain.get(dom);
-            // sort positions            
+            // sort positions
             Collections.sort(positionList, itemComparator);
             for (Position pos : positionList)
             {
@@ -144,8 +156,8 @@ public class SpeedyRoutines
         Collections.sort(domainNodes, new TreeNodeComparator());
         for (Object domNode : domainNodes)
         {
-            eventNode.acceptChild(domNode);   
-        }        
+            eventNode.acceptChild(domNode);
+        }
         // return result
         return eventNode;
     }

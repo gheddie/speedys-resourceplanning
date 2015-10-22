@@ -53,7 +53,7 @@ public abstract class DefaultDatasource<T> implements IDatasource
                 paramaterValue);
     }
     
-    public <T> void delete(T entity)
+    public <T> void remove(T entity)
     {
         Transaction tx = null;
         Session session = HibernateUtil.getSessionFactory().openSession();

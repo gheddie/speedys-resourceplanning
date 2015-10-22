@@ -36,8 +36,8 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class RequestHelpTest
 {
-    private static final Helper DEFAULT_HELPER = EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE,
-            13, 2, 1976).persist();
+    private static final Helper DEFAULT_HELPER = EntityFactory.buildHelper("Stefan", "Schulz", "",
+            HelperState.ACTIVE, 13, 2, 1976).persist();
 
     @Rule
     public ProcessEngineRule rule = new ProcessEngineRule();
@@ -67,9 +67,9 @@ public class RequestHelpTest
     {
         // clear db
         HibernateUtil.clearAll();
-        
+
         EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
-        
+
         // ...
         Event event = EntityFactory.buildEvent("", "", 1, 1, 2000, EventState.PLANNED, template).persist();
         RequestHelpTestUtil.startHelperRequestProcess(DEFAULT_HELPER, event, null, rule);
@@ -80,14 +80,17 @@ public class RequestHelpTest
     public void testReceiveReminderMail()
     {
         HibernateUtil.clearAll();
-        
+
         EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
 
         Position position =
-                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0).persist();
-        Event event = EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).persist();
+                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
+                        .persist();
+        Event event =
+                EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).persist();
         Helper helper =
-                EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
+                EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976)
+                        .persist();
 
         // assign position to event
         SpeedyRoutines.relatePositionsToEvent(event, position);
@@ -114,18 +117,22 @@ public class RequestHelpTest
     {
         // clear all tables in db
         HibernateUtil.clearAll();
-        
+
         EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
-        
+
         // create event
-        Event evt2016 = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
+        Event evt2016 =
+                EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED,
+                        template).persist();
         // create helper
-        Helper helper = EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
+        Helper helper =
+                EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
         // start process
         RequestHelpTestUtil.startHelperRequestProcess(helper, evt2016,
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), evt2016.getId()), rule);
         // check
-        assertTrue(RequestHelpTestUtil.wasTaskGenerated(BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, rule));
+        assertTrue(RequestHelpTestUtil.wasTaskGenerated(
+                BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, rule));
     }
 
     /**
@@ -142,11 +149,15 @@ public class RequestHelpTest
         HibernateUtil.clearAll();
         // create position
         Position positionBikeEntry =
-                EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
-                        .persist();
+                EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12,
+                        SpeedyTestUtil.buildDefaultDomain(1), false, 0).persist();
         // create events
-        Event evt2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, null).persist();
-        Event evt2015 = EntityFactory.buildEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED, null).persist();
+        Event evt2014 =
+                EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, null)
+                        .persist();
+        Event evt2015 =
+                EntityFactory.buildEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED, null)
+                        .persist();
         // create helper
         Helper createdHelper =
                 EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
@@ -165,11 +176,12 @@ public class RequestHelpTest
         // correlate callback message
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
-        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey,
-                variables);
+        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK,
+                businessKey, variables);
         // now the helper must choose a proposed position
         // as the desired position is blocked by 'blocking helper' in 2015...
-        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
+        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey,
+                variables);
     }
 
     // TODO fix test
@@ -181,7 +193,8 @@ public class RequestHelpTest
         HibernateUtil.clearAll();
 
         // create event
-        TestDataGenerator.createSimpleEvent("TRI", "TRI", 1, 1, 1980);
+        TestDataGenerator.createSimpleEvent("TRI", "TRI", 1, 1, 1980, EventState.FINISHED,
+                EventTemplate.TEMPLATE_TRI);
 
         // there should be 5 active helpers...
         RequestHelpTestUtil.startTriggerHelperProcess(rule);
@@ -207,21 +220,23 @@ public class RequestHelpTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'little' event for 2015
-        Event event2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 =
+                TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,
+                        EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null);
         // start request process for every helper
         List<Helper> activeHelpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
         String businessKey = null;
         for (Helper helper : activeHelpers)
         {
-            businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+            businessKey =
+                    ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
             RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         }
         // a mail for every helper must have been sent
-        assertEquals(activeHelpers.size(),
-                Datasources.getDatasource(MessageQueue.class).findAll().size());
+        assertEquals(activeHelpers.size(), Datasources.getDatasource(MessageQueue.class).findAll().size());
     }
 
     /**
@@ -239,16 +254,19 @@ public class RequestHelpTest
         EntityFactory.buildHelper("Helper2", "Helper2", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
         EntityFactory.buildHelper("Helper3", "Helper3", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
         // create 'little' event for 2015
-        Event event2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 =
+                TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,
+                        EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null);
         // start request process for every helper
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
         String businessKey = null;
         for (Helper helper : helpers)
         {
-            businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+            businessKey =
+                    ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
             RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         }
         // a mail for every helper must have been sent
@@ -268,26 +286,29 @@ public class RequestHelpTest
      * Helper wants to be assigned on the same position as before, which is available, so he gets assigned to it by the
      * system without human interaction.
      */
-    //@Test
+    // @Test
     @Deployment(resources = "RequestHelp.bpmn")
     public void testAutonomicBooking()
     {
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'minimal' event for 2015
-        Event event2015 = TestDataGenerator.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
+        Event event2015 =
+                TestDataGenerator.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015,
+                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null);
         // select created helper
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
         // start process
-        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+        String businessKey =
+                ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, rule);
         // answer to mail
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
-        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey,
-                variables);
+        rule.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK,
+                businessKey, variables);
         // position the helper was assigned to in 2015
         Position priorPosition = HelperService.getHelperAssignment(helper, event2015);
         // helper should be (in 2016) booked to the same position as in 2015 now...

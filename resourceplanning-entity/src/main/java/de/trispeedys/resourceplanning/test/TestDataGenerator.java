@@ -56,6 +56,8 @@ public class TestDataGenerator
      * creates a litte test event ('My little event') with 2 domains D1 (positios: P1, P2) and D2 (positios: P3, P4,
      * P5). Every position is assigned to helper with a similar name (H1<->P1 etc. pp.). Every domain is lead by by the
      * first helper (H1 leads D1, H3 leads D2).
+     * @param templateTri 
+     * @param finished 
      * 
      * @param k
      * @param j
@@ -64,9 +66,9 @@ public class TestDataGenerator
      * @param string
      * @return
      */
-    public static Event createSimpleEvent(String description, String eventKey, int day, int month, int year)
+    public static Event createSimpleEvent(String description, String eventKey, int day, int month, int year, EventState eventState, String templateName)
     {
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123ggg").persist();
 
         // build event
         Event myLittleEvent =
@@ -117,22 +119,26 @@ public class TestDataGenerator
      * @param day
      * @param month
      * @param year
+     * @param templateTri 
+     * @param finished 
      * @return
      */
-    public static Event createMinimalEvent(String description, String eventKey, int day, int month, int year)
+    public static Event createMinimalEvent(String description, String eventKey, int day, int month, int year, EventState eventState, String templateName)
     {
+        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        
         // build event
         Event myMinimalEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, null)
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, template)
                         .persist();
         // create helper
         Helper helper =
                 EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
                         .persist();
         // build domain
-        Domain domain = EntityFactory.buildDomain("D1", 1).persist();
+        Domain domain = EntityFactory.buildDomain("D1", 787).persist();
         // build position
-        Position pos = EntityFactory.buildPosition("P1", 12, domain, false, 0).persist();
+        Position pos = EntityFactory.buildPosition("P1", 12, domain, false, 53).persist();
         // assign position to event
         SpeedyRoutines.relatePositionsToEvent(myMinimalEvent, pos);
         // assign helper to position
@@ -140,10 +146,10 @@ public class TestDataGenerator
         return myMinimalEvent;
     }
 
-    public static Event createRealLifeEvent(String description, String eventKey, int day, int month, int year, EventState eventState)
+    public static Event createRealLifeEvent(String description, String eventKey, int day, int month, int year, EventState eventState, String templateName)
     {
         // build event template
-        EventTemplate template = EntityFactory.buildEventTemplate(EventTemplate.TEMPLATE_TRI).persist();
+        EventTemplate template = EntityFactory.buildEventTemplate(templateName).persist();
 
         // build event
         Event event =

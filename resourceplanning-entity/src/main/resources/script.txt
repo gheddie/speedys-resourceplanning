@@ -99,8 +99,8 @@ create sequence event_position_id_seq;
 create table event_position
 (
 	id bigint not null default nextval('event_position_id_seq'),
-	position_id bigint,
-	event_id bigint,	
+	position_id bigint not null,
+	event_id bigint not null,	
 	primary key (id)
 );
 
