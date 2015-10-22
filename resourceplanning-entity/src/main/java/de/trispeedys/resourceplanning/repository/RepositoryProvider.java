@@ -19,7 +19,21 @@ public class RepositoryProvider
 
     private void registerRepositories()
     {
-        repositoryCache.put(PositionRepository.class, new PositionRepository());
+        moo(PositionRepository.class);
+    }
+
+    private void moo(Class<? extends AbstractDatabaseRepository> clazz)
+    {
+        try
+        {
+            AbstractDatabaseRepository repositoryInstance = clazz.newInstance();
+            repositoryInstance.createDataSource();
+            repositoryCache.put(clazz, repositoryInstance);
+        }
+        catch (Exception e)
+        {
+            // ...
+        }        
     }
 
     private static RepositoryProvider getInstance()
@@ -42,6 +56,7 @@ public class RepositoryProvider
     
     public static <T extends AbstractDatabaseRepository<T>> T getRepository(Class<T> repositoryClass)
     {
-        return (T) getInstance().getRepositoryForClass((Class<? extends AbstractDbObject>) repositoryClass);
+        T repositoryForClass = (T) getInstance().getRepositoryForClass((Class<? extends AbstractDbObject>) repositoryClass);        
+        return repositoryForClass;
     }    
 }
