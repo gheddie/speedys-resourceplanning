@@ -12,6 +12,8 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
     private Domain domain;
 
     private boolean authorityOverride;
+
+    private int positionNumber;
     
     public PositionBuilder withDomain(Domain aDomain)
     {
@@ -37,6 +39,12 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
         return this;
     }
     
+    public PositionBuilder withPositionNumber(int aPositionNumber)
+    {
+        positionNumber = aPositionNumber;
+        return this;
+    }
+    
     public Position build()
     {
         Position position = new Position();
@@ -44,6 +52,7 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
         position.setMinimalAge(minimalAge);
         position.setDomain(domain);
         position.setAuthorityOverride(authorityOverride);
+        position.setPositionNumber(positionNumber);
         return position;
     }
 }

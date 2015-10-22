@@ -30,11 +30,11 @@ public class MailTemplateTest
         Domain domain1 = EntityFactory.buildDomain("dom1", 1).persist();
         Domain domain2 = EntityFactory.buildDomain("dom2", 2).persist();
         // create positions
-        EntityFactory.buildPosition("Pos1", 12, domain1, false).persist();
-        EntityFactory.buildPosition("Pos2", 12, domain1, false).persist();
-        Position pos3 = EntityFactory.buildPosition("Pos3", 12, domain2, false).persist();
-        EntityFactory.buildPosition("Pos4", 12, domain2, false).persist();
-        EntityFactory.buildPosition("Pos5", 12, domain2, false).persist();
+        EntityFactory.buildPosition("Pos1", 12, domain1, false, 0).persist();
+        EntityFactory.buildPosition("Pos2", 12, domain1, false, 1).persist();
+        Position pos3 = EntityFactory.buildPosition("Pos3", 12, domain2, false, 2).persist();
+        EntityFactory.buildPosition("Pos4", 12, domain2, false, 3).persist();
+        EntityFactory.buildPosition("Pos5", 12, domain2, false, 4).persist();
         // create helper and event
         Helper helper =
                 EntityFactory.buildHelper("H1_First", "H1_Last", "testhelper1.trispeedys@gmail.com ",

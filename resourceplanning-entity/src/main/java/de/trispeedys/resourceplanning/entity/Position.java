@@ -6,10 +6,11 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import de.trispeedys.resourceplanning.entity.misc.EnumeratedEventItem;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 
 @Entity
-public class Position extends AbstractDbObject implements HierarchicalEventItem
+public class Position extends AbstractDbObject implements EnumeratedEventItem
 {
     // @Min(value = 2)
     private String description;
@@ -28,6 +29,9 @@ public class Position extends AbstractDbObject implements HierarchicalEventItem
      */
     @Column(name = "authority_override")
     private boolean authorityOverride;
+    
+    @Column(name = "position_number")
+    private int positionNumber;
 
     public String getDescription()
     {
@@ -69,6 +73,16 @@ public class Position extends AbstractDbObject implements HierarchicalEventItem
         this.authorityOverride = authorityOverride;
     }
     
+    public int getPositionNumber()
+    {
+        return positionNumber;
+    }
+    
+    public void setPositionNumber(int positionNumber)
+    {
+        this.positionNumber = positionNumber;
+    }
+    
     public String toString()
     {
         return getClass().getSimpleName() + " ["+description+", "+minimalAge+"]";
@@ -82,5 +96,10 @@ public class Position extends AbstractDbObject implements HierarchicalEventItem
     public String getOutline()
     {
         return "[P]";
+    }
+    
+    public int getPagination()
+    {
+        return positionNumber;
     }
 }

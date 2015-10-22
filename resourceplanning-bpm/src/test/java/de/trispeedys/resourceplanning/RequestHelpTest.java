@@ -84,7 +84,7 @@ public class RequestHelpTest
         EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
 
         Position position =
-                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false).persist();
+                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0).persist();
         Event event = EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).persist();
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
@@ -142,7 +142,7 @@ public class RequestHelpTest
         HibernateUtil.clearAll();
         // create position
         Position positionBikeEntry =
-                EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain(1), false)
+                EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
                         .persist();
         // create events
         Event evt2014 = EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, null).persist();

@@ -102,7 +102,7 @@ public class DatabaseOperationsTest
         // create positions
         for (int i = 1; i <= 10; i++)
         {
-            EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), false).persist();
+            EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), false, i).persist();
         }
         // fetch w/o parameters (all entries)
         assertEquals(10, Datasources.getDatasource(Position.class).find("FROM " + Position.class.getSimpleName()).size());

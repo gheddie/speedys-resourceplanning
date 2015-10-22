@@ -22,9 +22,10 @@ create table domain
 (
 	id bigint not null default nextval('domain_id_seq'),
 	name varchar(255),
-	domain_number int,	
+	domain_number int not null,	
 	primary key (id),
-	constraint dom_unique_name unique (name)
+	constraint dom_unique_name unique (name),
+	constraint dom_unique_number unique (domain_number)
 );
 
 ------------------------------------------------ Position
@@ -35,9 +36,12 @@ create table position
 	id bigint not null default nextval('position_id_seq'),
 	description varchar(255),
 	minimal_age int,
+	position_number int not null,
 	domain_id bigint,
 	authority_override boolean,
-	primary key (id)
+	primary key (id),
+	constraint pos_unique_desc unique (description),
+	constraint pos_unique_number unique (position_number)
 );
 
 alter table position add constraint fk_position_domain foreign key (domain_id) references domain (id);

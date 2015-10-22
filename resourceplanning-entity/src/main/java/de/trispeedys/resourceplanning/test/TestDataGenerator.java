@@ -40,13 +40,13 @@ public class TestDataGenerator
 
         // build domains
         Domain domain1 = EntityFactory.buildDomain("D1", 1).persist();
-        Domain domain2 = EntityFactory.buildDomain("D2", 1).persist();
+        Domain domain2 = EntityFactory.buildDomain("D2", 2).persist();
         // build positions
-        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, false).persist();
-        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, false).persist();
-        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2, false).persist();
-        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2, false).persist();
-        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2, false).persist();
+        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, false, 0).persist();
+        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, false, 1).persist();
+        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2, false, 2).persist();
+        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2, false, 3).persist();
+        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2, false, 4).persist();
         // assign positions to event
         SpeedyRoutines.relatePositionsToEvent(myLittleEvent, pos1, pos2, pos3, pos4, pos5);
 
@@ -91,13 +91,13 @@ public class TestDataGenerator
                         .persist();
         // build domains
         Domain domain1 = EntityFactory.buildDomain("D1", 1).persist();
-        Domain domain2 = EntityFactory.buildDomain("D2", 1).persist();
+        Domain domain2 = EntityFactory.buildDomain("D2", 2).persist();
         // build positions
-        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, true).persist();
-        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, true).persist();
-        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2, true).persist();
-        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2, true).persist();
-        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2, true).persist();
+        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, true, 0).persist();
+        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, true, 1).persist();
+        Position pos3 = EntityFactory.buildPosition("P3", 12, domain2, true, 2).persist();
+        Position pos4 = EntityFactory.buildPosition("P4", 12, domain2, true, 3).persist();
+        Position pos5 = EntityFactory.buildPosition("P5", 12, domain2, true, 4).persist();
         // assign positions to event
         SpeedyRoutines.relatePositionsToEvent(myLittleEvent, pos1, pos2, pos3, pos4, pos5);
         // assign helpers to positions
@@ -133,7 +133,7 @@ public class TestDataGenerator
         // build domain
         Domain domain = EntityFactory.buildDomain("D1", 1).persist();
         // build position
-        Position pos = EntityFactory.buildPosition("P1", 12, domain, false).persist();
+        Position pos = EntityFactory.buildPosition("P1", 12, domain, false, 0).persist();
         // assign position to event
         SpeedyRoutines.relatePositionsToEvent(myMinimalEvent, pos);
         // assign helper to position
@@ -175,18 +175,18 @@ public class TestDataGenerator
 
         // Domain 'Laufstrecke'
         Domain domLauf = EntityFactory.buildDomain("Laufstrecke", 1).persist();
-        Position posAnsageZieleinlauf = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, domLauf, false).persist();
-        Position posVerpflegungPark = EntityFactory.buildPosition("Verpflegung Park", 12, domLauf, false).persist();
+        Position posAnsageZieleinlauf = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, domLauf, false, 0).persist();
+        Position posVerpflegungPark = EntityFactory.buildPosition("Verpflegung Park", 12, domLauf, false, 1).persist();
         SpeedyRoutines.relatePositionsToEvent(event, posAnsageZieleinlauf, posVerpflegungPark);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("SCST13021976"), event, posAnsageZieleinlauf);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("BELA04041971"), event, posVerpflegungPark);
 
         // Domain 'Radstrecke'
-        Domain domRad = EntityFactory.buildDomain("Radstrecke", 1).persist();
-        Position posKontrolleAbstieg = EntityFactory.buildPosition("Kontrolle Abstieg", 12, domRad, false).persist();
-        Position posEinweisungNachStartnummerWZ = EntityFactory.buildPosition("Einweisung nach Startnummer WZ", 12, domRad, false).persist();
-        Position posSicherungAbzweigRunde = EntityFactory.buildPosition("Sicherung Abzweig Runde 2/Zieleinfahrt", 12, domRad, false).persist();
-        Position posMotorrad1 = EntityFactory.buildPosition("Motorrad 1", 12, domRad, false).persist();
+        Domain domRad = EntityFactory.buildDomain("Radstrecke", 2).persist();
+        Position posKontrolleAbstieg = EntityFactory.buildPosition("Kontrolle Abstieg", 12, domRad, false, 2).persist();
+        Position posEinweisungNachStartnummerWZ = EntityFactory.buildPosition("Einweisung nach Startnummer WZ", 12, domRad, false, 137).persist();
+        Position posSicherungAbzweigRunde = EntityFactory.buildPosition("Sicherung Abzweig Runde 2/Zieleinfahrt", 12, domRad, false, 398).persist();
+        Position posMotorrad1 = EntityFactory.buildPosition("Motorrad 1", 12, domRad, false, 232).persist();
         SpeedyRoutines.relatePositionsToEvent(event, posKontrolleAbstieg, posEinweisungNachStartnummerWZ, posSicherungAbzweigRunde, posMotorrad1);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("PADE29051964"), event, posKontrolleAbstieg);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("ELCO25071973"), event, posEinweisungNachStartnummerWZ);
@@ -194,17 +194,17 @@ public class TestDataGenerator
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("THUL16051983"), event, posMotorrad1);
 
         // Domain 'Zielverpflegung'
-        Domain domZiel = EntityFactory.buildDomain("Zielverpflegung", 1).persist();
-        Position posAusgabeGetraenke = EntityFactory.buildPosition("Ausgabe Getränke", 12, domZiel, false).persist();
-        Position posObstschneiden = EntityFactory.buildPosition("Obstschneiden", 12, domZiel, false).persist();
+        Domain domZiel = EntityFactory.buildDomain("Zielverpflegung", 17).persist();
+        Position posAusgabeGetraenke = EntityFactory.buildPosition("Ausgabe Getränke", 12, domZiel, false, 38).persist();
+        Position posObstschneiden = EntityFactory.buildPosition("Obstschneiden", 12, domZiel, false, 39).persist();
         SpeedyRoutines.relatePositionsToEvent(event, posAusgabeGetraenke, posObstschneiden);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("MEDA16121961"), event, posAusgabeGetraenke);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("PADE29051964"), event, posObstschneiden);
 
         // Domain 'Siegerehrung'
-        Domain domSieger = EntityFactory.buildDomain("Siegerehrung", 1).persist();
-        Position posModeration = EntityFactory.buildPosition("Moderation", 12, domSieger, false).persist();
-        Position posAnreichenUrkunden = EntityFactory.buildPosition("Anreichen Urkunden", 12, domSieger, false).persist();
+        Domain domSieger = EntityFactory.buildDomain("Siegerehrung", 92).persist();
+        Position posModeration = EntityFactory.buildPosition("Moderation", 12, domSieger, false, 93).persist();
+        Position posAnreichenUrkunden = EntityFactory.buildPosition("Anreichen Urkunden", 12, domSieger, false, 94).persist();
         SpeedyRoutines.relatePositionsToEvent(event, posModeration, posAnreichenUrkunden);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("THUL16051983"), event, posModeration);
         SpeedyRoutines.assignHelperToPositions(findHelperByCode("SCST13021976"), event, posAnreichenUrkunden);

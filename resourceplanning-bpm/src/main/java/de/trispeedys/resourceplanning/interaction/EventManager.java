@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.camunda.bpm.BpmPlatform;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
 
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
+import de.trispeedys.resourceplanning.datasource.EventDatasource;
 import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -27,9 +28,7 @@ public class EventManager
         {
             throw new ResourcePlanningException("template name must not be blank!!");
         }
-        
         List<Event> events = EventService.findEventsByTemplateAndStatus(templateName, EventState.PLANNED);
-        
         if ((events == null) || (events.size() != 1))
         {
             throw new ResourcePlanningException("there must be exactly one planned event of template '"+templateName+"'!!");

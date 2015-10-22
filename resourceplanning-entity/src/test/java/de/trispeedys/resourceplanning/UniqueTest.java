@@ -19,14 +19,14 @@ import de.trispeedys.resourceplanning.util.SpeedyRoutines;
  * @author Stefan.Schulz
  *
  */
-public class HelperAssignmentUniqueTest
+public class UniqueTest
 {
     /**
      * Combination of {@link HelperAssignment#getEvent()} and {@link HelperAssignment#getPosition()} MUST be unique.
      * Otherwise, it would mean that a {@link Position} is assigned twice or more in the same {@link Event}.
      */
     @Test(expected = org.hibernate.exception.ConstraintViolationException.class)
-    public void testEventAndPositionUnique()
+    public void testHelperAssignmentEventAndPositionUnique()
     {
         // clear db
         HibernateUtil.clearAll();
@@ -36,7 +36,7 @@ public class HelperAssignmentUniqueTest
         // create domain
         Domain domain1 = EntityFactory.buildDomain("dom1", 1).persist();
 
-        Position position = EntityFactory.buildPosition("Some position", 12, domain1, false).persist();
+        Position position = EntityFactory.buildPosition("Some position", 12, domain1, false, 0).persist();
         Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
         Helper helper1 =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
@@ -49,4 +49,25 @@ public class HelperAssignmentUniqueTest
         EntityFactory.buildHelperAssignment(helper1, event, position).persist();
         EntityFactory.buildHelperAssignment(helper2, event, position).persist();
     }
+    
+    @Test(expected = org.hibernate.exception.ConstraintViolationException.class)
+    public void testPositionUniqueByEnumeration()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        Domain dom = EntityFactory.buildDomain("123", 123).persist();
+        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom , false, 173).persist();
+        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom, false, 173).persist();
+    }
+    
+    @Test(expected = org.hibernate.exception.ConstraintViolationException.class)
+    public void testDomainUniqueByEnumeration()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        EntityFactory.buildDomain("D1", 173).persist();
+        EntityFactory.buildDomain("D1", 173).persist();
+    }    
 }

@@ -64,9 +64,9 @@ public class EntityFactory
                 .build();
     }
 
-    public static Position buildPosition(String description, int minimalAge, Domain domain, boolean authorityOverride)
+    public static Position buildPosition(String description, int minimalAge, Domain domain, boolean authorityOverride, int positionNumber)
     {
-        return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).withAuthorityOverride(authorityOverride).build();
+        return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).withAuthorityOverride(authorityOverride).withPositionNumber(positionNumber).build();
     }
     
     public static EventTemplate buildEventTemplate(String description)
@@ -110,16 +110,6 @@ public class EntityFactory
     
     public static Domain buildDomain(String name, int domainNumber)
     {
-        //if a leader is set for the domain, he must be an active helper!!
-        /*
-        if (leader != null)
-        {
-            if (!(leader.isActive()))
-            {
-                throw new ResourcePlanningException("helper '"+leader+"' can not be the leader of a domain is he is not active!!.");
-            }
-        }
-        */
         return new DomainBuilder().withDomainNumber(domainNumber).withName(name).build();
     }
 

@@ -9,25 +9,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import de.trispeedys.resourceplanning.entity.misc.EnumeratedEventItem;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames =
+@Table(uniqueConstraints =
+@UniqueConstraint(columnNames =
 {
         "name"
 }))
-public class Domain extends AbstractDbObject implements HierarchicalEventItem
+public class Domain extends AbstractDbObject implements EnumeratedEventItem
 {
     private String name;
-    
-    /**
-     * the {@link Helper} who is in charge for this {@link Domain}
-     */
-    /*
-    @OneToOne
-    @JoinColumn(name = "helper_id")
-    private Helper leader;
-    */
     
     @Column(name = "domain_number")
     private int domainNumber;
@@ -93,5 +86,10 @@ public class Domain extends AbstractDbObject implements HierarchicalEventItem
     public String getOutline()
     {
         return "[D]";
+    }
+
+    public int getPagination()
+    {
+        return 0;
     }
 }

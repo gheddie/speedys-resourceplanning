@@ -10,6 +10,6 @@ public class SpeedyTestUtil
     {
         return EntityFactory.buildDomain(
                 "name_" + index,
-                1).persist();
+                index).persist();
     }
 }

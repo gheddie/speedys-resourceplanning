@@ -44,8 +44,8 @@ public class HelperTest
         // create domain
         Domain domain = EntityFactory.buildDomain("someDomain", 1).persist();
         // create positions
-        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false).persist();
-        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false).persist();
+        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false, 0).persist();
+        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false, 1).persist();
 
         EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
 

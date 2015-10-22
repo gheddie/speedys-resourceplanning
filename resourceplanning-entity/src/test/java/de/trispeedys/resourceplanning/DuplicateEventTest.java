@@ -17,6 +17,7 @@ public class DuplicateEventTest
     public void testEventAsTree()
     {
         HibernateUtil.clearAll();
+        
         TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED);
         Event event = (Event) Datasources.getDatasource(Event.class).findAll().get(0);
         System.out.println(SpeedyRoutines.eventAsTree(event));
@@ -28,6 +29,7 @@ public class DuplicateEventTest
     public void testEventOutline()
     {
         HibernateUtil.clearAll();
+        
         TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED);
         Event event = (Event) Datasources.getDatasource(Event.class).findAll().get(0);
         System.out.println(SpeedyRoutines.eventOutline(event));

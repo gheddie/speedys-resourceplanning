@@ -5,13 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.trispeedys.resourceplanning.entity.Datasources;
-import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
-import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
-import de.trispeedys.resourceplanning.util.EntityTreeNode;
 
 public class EventService
 {
@@ -31,5 +27,5 @@ public class EventService
             result.add((Event) o[0]);
         }
         return result;
-    }      
+    }
 }
