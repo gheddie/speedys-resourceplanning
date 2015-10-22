@@ -3,7 +3,6 @@ package de.trispeedys.resourceplanning.repository;
 import java.util.HashMap;
 
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.entity.Position;
 
 public class RepositoryProvider
 {

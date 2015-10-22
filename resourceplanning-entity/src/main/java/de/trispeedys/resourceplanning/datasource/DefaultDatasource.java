@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningPersistenceException;
 
 public abstract class DefaultDatasource<T> implements IDatasource
 {
@@ -96,7 +97,7 @@ public abstract class DefaultDatasource<T> implements IDatasource
         if (!(filters.length % 2 == 0))
         {
             // odd number of filters arguments
-            return null;
+            throw new ResourcePlanningPersistenceException("odd number of filters arguments ("+filters.length+")!");
         }
         if (filters.length == 2)
         {

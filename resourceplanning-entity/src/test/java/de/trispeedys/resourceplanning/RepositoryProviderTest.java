@@ -23,6 +23,6 @@ public class RepositoryProviderTest
         // build position
         Position pos = EntityFactory.buildPosition("P1", 12, domain, false, 0).persist();
         
-        assertTrue(RepositoryProvider.getRepository(PositionRepository.class).findPositionByPositionNumber() != null);
+        assertTrue(RepositoryProvider.getRepository(PositionRepository.class).findPositionByPositionNumber(0) != null);
     }
 }

@@ -7,9 +7,9 @@ public class PositionRepository implements DatabaseRepository<PositionRepository
 {
     private PositionDatasource datasource;
 
-    public Position findPositionByPositionNumber()
+    public Position findPositionByPositionNumber(int positionNumber)
     {
-        return (Position) datasource.findAll().get(0);       
+        return (Position) datasource.findSingle(Position.ATTR_POS_NUMBER, positionNumber);       
     }
 
     public void createDataSource()
