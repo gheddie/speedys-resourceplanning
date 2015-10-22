@@ -11,6 +11,8 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.DomainRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
@@ -40,7 +42,7 @@ public class DuplicateEventTest
                 "Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED);
         
         // add a position to a domain in that event
-        Position posNew = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, null, false, 0).persist();
+        Position posNew = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, null, false, 0).persist();              
         
         List<Event> events = Datasources.getDatasource(Event.class).findAll();
         System.out.println(SpeedyRoutines.eventOutline(events.get(0)));

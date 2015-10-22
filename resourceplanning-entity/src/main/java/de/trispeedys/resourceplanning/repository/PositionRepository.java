@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.repository;
 import de.trispeedys.resourceplanning.datasource.PositionDatasource;
 import de.trispeedys.resourceplanning.entity.Position;
 
-public class PositionRepository implements AbstractDatabaseRepository<PositionRepository>
+public class PositionRepository implements DatabaseRepository<PositionRepository>
 {
     private PositionDatasource datasource;
 

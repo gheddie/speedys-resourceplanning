@@ -1,6 +1,6 @@
 package de.trispeedys.resourceplanning.repository;
 
-public interface AbstractDatabaseRepository<T extends AbstractDatabaseRepository<T>>
+public interface DatabaseRepository<T extends DatabaseRepository<T>>
 {
     public void createDataSource();
 }

@@ -9,30 +9,31 @@ public class RepositoryProvider
 {
     private static RepositoryProvider instance;
     
-    private HashMap<Class<? extends AbstractDatabaseRepository>, AbstractDatabaseRepository> repositoryCache;
+    private HashMap<Class<? extends DatabaseRepository>, DatabaseRepository> repositoryCache;
     
     private RepositoryProvider()
     {
-        repositoryCache = new HashMap<Class<? extends AbstractDatabaseRepository>, AbstractDatabaseRepository>();
+        repositoryCache = new HashMap<Class<? extends DatabaseRepository>, DatabaseRepository>();
         registerRepositories();
     }
 
     private void registerRepositories()
     {
-        moo(PositionRepository.class);
+        registerRepository(PositionRepository.class);
+        registerRepository(DomainRepository.class);
     }
 
-    private void moo(Class<? extends AbstractDatabaseRepository> clazz)
+    private void registerRepository(Class<? extends DatabaseRepository> clazz)
     {
         try
         {
-            AbstractDatabaseRepository repositoryInstance = clazz.newInstance();
+            DatabaseRepository repositoryInstance = clazz.newInstance();
             repositoryInstance.createDataSource();
             repositoryCache.put(clazz, repositoryInstance);
         }
         catch (Exception e)
         {
-            // ...
+            e.printStackTrace();
         }        
     }
 
@@ -45,7 +46,7 @@ public class RepositoryProvider
         return RepositoryProvider.instance;
     }
     
-    private <T extends AbstractDatabaseRepository<T>> T getRepositoryForClass(Class<? extends AbstractDbObject> entityClass)
+    private <T extends DatabaseRepository<T>> T getRepositoryForClass(Class<? extends AbstractDbObject> entityClass)
     {
         if (entityClass == null)
         {
@@ -54,7 +55,7 @@ public class RepositoryProvider
         return (T) repositoryCache.get(entityClass);        
     }
     
-    public static <T extends AbstractDatabaseRepository<T>> T getRepository(Class<T> repositoryClass)
+    public static <T extends DatabaseRepository<T>> T getRepository(Class<T> repositoryClass)
     {
         T repositoryForClass = (T) getInstance().getRepositoryForClass((Class<? extends AbstractDbObject>) repositoryClass);        
         return repositoryForClass;
