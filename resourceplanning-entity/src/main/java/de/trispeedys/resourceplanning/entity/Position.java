@@ -85,7 +85,7 @@ public class Position extends AbstractDbObject implements EnumeratedEventItem
     
     public String toString()
     {
-        return getClass().getSimpleName() + " ["+description+", "+minimalAge+"]";
+        return getClass().getSimpleName() + " ["+getPagination()+"] ["+description+", "+minimalAge+"]";
     }
 
     public int getHierarchyLevel()
@@ -95,7 +95,7 @@ public class Position extends AbstractDbObject implements EnumeratedEventItem
     
     public String getOutline()
     {
-        return "[P]";
+        return "[P"+getPagination()+"]";
     }
     
     public int getPagination()

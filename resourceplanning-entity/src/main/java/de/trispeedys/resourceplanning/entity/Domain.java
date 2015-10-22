@@ -85,11 +85,11 @@ public class Domain extends AbstractDbObject implements EnumeratedEventItem
 
     public String getOutline()
     {
-        return "[D]";
+        return "[D"+getPagination()+"]";
     }
 
     public int getPagination()
     {
-        return 0;
+        return domainNumber;
     }
 }

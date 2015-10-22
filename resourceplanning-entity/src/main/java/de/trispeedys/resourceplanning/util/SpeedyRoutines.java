@@ -2,6 +2,7 @@ package de.trispeedys.resourceplanning.util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.util.comparator.EnumeratedEventItemComparator;
+import de.trispeedys.resourceplanning.util.comparator.TreeNodeComparator;
 
 public class SpeedyRoutines
 {
@@ -112,24 +115,36 @@ public class SpeedyRoutines
             }
             positionsPerDomain.get(key).add(pos.getPosition());
         }
-        EntityTreeNode eventNode = new EntityTreeNode(event);
-        EntityTreeNode domainNode = null;
+        EntityTreeNode<Event> eventNode = new EntityTreeNode<Event>(event);
+        EntityTreeNode<Domain> domainNode = null;
+        // build tree
+        EnumeratedEventItemComparator itemComparator = new EnumeratedEventItemComparator();
+        List<EntityTreeNode<Domain>> domainNodes = new ArrayList<EntityTreeNode<Domain>>();
         for (Domain dom : positionsPerDomain.keySet())
         {
-            domainNode = new EntityTreeNode(dom);
-            eventNode.acceptChild(domainNode);
-            for (Position pos : positionsPerDomain.get(dom))
+            domainNode = new EntityTreeNode<Domain>(dom);            
+            List<Position> positionList = positionsPerDomain.get(dom);
+            // sort positions            
+            Collections.sort(positionList, itemComparator);
+            for (Position pos : positionList)
             {
-                domainNode.acceptChild(new EntityTreeNode(pos));
+                domainNode.acceptChild(new EntityTreeNode<Position>(pos));
             }
+            domainNodes.add(domainNode);
         }
-
+        // add domain nodes to root (sort domains before)...
+        Collections.sort(domainNodes, new TreeNodeComparator());
+        for (Object domNode : domainNodes)
+        {
+            eventNode.acceptChild(domNode);   
+        }        
+        // return result
         return eventNode;
     }
 
     public static List<AbstractDbObject> flattenedEventTree(Event event)
     {
-        EntityTreeNode root = eventAsTree(event);
+        EntityTreeNode<Event> root = eventAsTree(event);
         return flattenedEventTreeRecursive(root, new ArrayList<AbstractDbObject>());
     }
 

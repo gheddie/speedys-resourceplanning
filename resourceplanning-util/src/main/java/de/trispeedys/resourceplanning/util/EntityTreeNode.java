@@ -1,12 +1,13 @@
 package de.trispeedys.resourceplanning.util;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EntityTreeNode
+public class EntityTreeNode<T>
 {
     private Object payLoad;
     
-    private HashSet<Object> children;
+    private List<Object> children;
 
     public EntityTreeNode(Object payLoad)
     {
@@ -18,7 +19,7 @@ public class EntityTreeNode
     {
         if (children == null)
         {
-            children = new HashSet<Object>();
+            children = new ArrayList<Object>();
         }
         children.add(child);
     }
@@ -28,7 +29,7 @@ public class EntityTreeNode
         return payLoad;
     }
     
-    public HashSet<Object> getChildren()
+    public List<Object> getChildren()
     {
         return children;
     }
