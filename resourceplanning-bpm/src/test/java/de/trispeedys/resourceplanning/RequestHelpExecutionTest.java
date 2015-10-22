@@ -13,7 +13,7 @@ import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.entity.Datasources;
+import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;

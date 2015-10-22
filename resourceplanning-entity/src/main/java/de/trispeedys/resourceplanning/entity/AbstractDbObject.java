@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 
 @MappedSuperclass

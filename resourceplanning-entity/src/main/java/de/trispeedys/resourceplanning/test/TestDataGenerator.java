@@ -1,6 +1,6 @@
 package de.trispeedys.resourceplanning.test;
 
-import de.trispeedys.resourceplanning.entity.Datasources;
+import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;

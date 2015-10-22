@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.service;
 import java.util.HashMap;
 import java.util.List;
 
-import de.trispeedys.resourceplanning.entity.Datasources;
+import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;

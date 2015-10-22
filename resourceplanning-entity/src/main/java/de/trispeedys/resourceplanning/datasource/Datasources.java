@@ -1,17 +1,17 @@
-package de.trispeedys.resourceplanning.entity;
+package de.trispeedys.resourceplanning.datasource;
 
 import java.util.HashMap;
 
-import de.trispeedys.resourceplanning.datasource.DatabaseLoggerDatasource;
-import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
-import de.trispeedys.resourceplanning.datasource.DomainDatasource;
-import de.trispeedys.resourceplanning.datasource.EventDatasource;
-import de.trispeedys.resourceplanning.datasource.EventPositionDatasource;
-import de.trispeedys.resourceplanning.datasource.EventTemplateDatasource;
-import de.trispeedys.resourceplanning.datasource.HelperAssignmentDatasource;
-import de.trispeedys.resourceplanning.datasource.HelperDatasource;
-import de.trispeedys.resourceplanning.datasource.MessageQueueDatasource;
-import de.trispeedys.resourceplanning.datasource.PositionDatasource;
+import de.trispeedys.resourceplanning.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.entity.DatabaseLogger;
+import de.trispeedys.resourceplanning.entity.Domain;
+import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventPosition;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
+import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
+import de.trispeedys.resourceplanning.entity.MessageQueue;
+import de.trispeedys.resourceplanning.entity.Position;
 
 public class Datasources
 {

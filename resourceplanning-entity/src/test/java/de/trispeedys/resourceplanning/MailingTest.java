@@ -1,7 +1,7 @@
 package de.trispeedys.resourceplanning;
 
 import static org.junit.Assert.assertEquals;
-import de.trispeedys.resourceplanning.entity.Datasources;
+import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;

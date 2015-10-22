@@ -2,7 +2,7 @@ package de.trispeedys.resourceplanning.interaction;
 
 import javax.servlet.http.HttpServletRequest;
 
-import de.trispeedys.resourceplanning.entity.Datasources;
+import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 
