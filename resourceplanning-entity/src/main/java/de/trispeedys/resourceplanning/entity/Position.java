@@ -12,6 +12,8 @@ import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 @Entity
 public class Position extends AbstractDbObject implements EnumeratedEventItem
 {
+    public static final String ATTR_POS_NUMBER = "positionNumber";
+    
     // @Min(value = 2)
     private String description;
     

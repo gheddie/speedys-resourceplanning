@@ -20,6 +20,8 @@ import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 }))
 public class Domain extends AbstractDbObject implements EnumeratedEventItem
 {
+    public static final String ATTR_DOMAIN_NUMBER = "domainNumber";
+    
     private String name;
     
     @Column(name = "domain_number")

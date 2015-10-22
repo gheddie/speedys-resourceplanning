@@ -17,6 +17,8 @@ public class EventPosition extends AbstractDbObject
 {
     public static final String ATTR_EVENT = "event";
 
+    public static final String ATTR_POSITION = "position";
+
     @OneToOne
     @JoinColumn(name = "position_id")
     private Position position;

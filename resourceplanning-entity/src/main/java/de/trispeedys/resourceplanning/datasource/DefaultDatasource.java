@@ -51,7 +51,17 @@ public abstract class DefaultDatasource<T> implements IDatasource
                 getGenericType().getSimpleName() + " WHERE " + paramaterName + " = :" + paramaterName, paramaterName,
                 paramaterValue);
     }
-
+    
+    public <T> void delete(T entity)
+    {
+        Transaction tx = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        tx = session.beginTransaction();
+        session.delete(entity);
+        tx.commit();
+        session.close();        
+    }
+    
     public <T> T saveOrUpdate(T entity)
     {
         Transaction tx = null;

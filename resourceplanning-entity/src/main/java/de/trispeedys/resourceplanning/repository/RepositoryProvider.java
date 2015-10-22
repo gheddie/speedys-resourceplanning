@@ -21,6 +21,7 @@ public class RepositoryProvider
     {
         registerRepository(PositionRepository.class);
         registerRepository(DomainRepository.class);
+        registerRepository(EventPositionRepository.class);
     }
 
     private void registerRepository(Class<? extends DatabaseRepository> clazz)
