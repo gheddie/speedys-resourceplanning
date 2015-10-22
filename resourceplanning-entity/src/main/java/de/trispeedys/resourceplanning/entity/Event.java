@@ -120,7 +120,7 @@ public class Event extends AbstractDbObject implements HierarchicalEventItem
         return HierarchicalEventItem.LEVEL_EVENT;
     }
     
-    public String getOutline()
+    public String getDifferentiator()
     {
         return "[E]";
     }

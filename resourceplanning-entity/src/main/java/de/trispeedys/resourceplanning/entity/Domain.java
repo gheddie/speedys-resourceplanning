@@ -83,7 +83,7 @@ public class Domain extends AbstractDbObject implements EnumeratedEventItem
         return getClass().getSimpleName() + " ["+name+", "+domainNumber+"]";
     }
 
-    public String getOutline()
+    public String getDifferentiator()
     {
         return "[D"+getPagination()+"]";
     }

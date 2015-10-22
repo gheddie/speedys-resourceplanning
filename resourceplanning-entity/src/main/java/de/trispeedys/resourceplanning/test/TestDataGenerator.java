@@ -1,6 +1,5 @@
 package de.trispeedys.resourceplanning.test;
 
-import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.Datasources;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -71,7 +70,7 @@ public class TestDataGenerator
 
         // build event
         Event myLittleEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.FINISHED,
                         template).persist();
         // create helpers
         Helper helper1 =
@@ -217,21 +216,5 @@ public class TestDataGenerator
     private static Helper findHelperByCode(String helperCode)
     {
         return (Helper) Datasources.getDatasource(Helper.class).find(Helper.ATTR_CODE, helperCode).get(0);
-    }
-
-    public static void main(String[] args)
-    {
-        HibernateUtil.clearAll();
-        // ---
-// Long event1 = createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId();
-// Long event2 = DatabaseRoutines.duplicateEvent(event1, "Triathlon 2016", "TRI-2016", 21, 6, 2016).getId();
-// System.out.println(DebugEvent.debugEvent(event1));
-// System.out.println(DebugEvent.debugEvent(event2));
-        // ---
-// Long eventId = createMinimalEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId();
-// System.out.println(DebugEvent.debugEvent(eventId));
-        // ---
-        Long evtId = createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015).getId();
-        SpeedyRoutines.duplicateEvent(evtId, "Triathlon 2016", "TRI-2016", 21, 6, 2016);
     }
 }

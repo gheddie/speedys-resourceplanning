@@ -93,7 +93,7 @@ public class Position extends AbstractDbObject implements EnumeratedEventItem
         return HierarchicalEventItem.LEVEL_POSITION;
     }
     
-    public String getOutline()
+    public String getDifferentiator()
     {
         return "[P"+getPagination()+"]";
     }

@@ -11,5 +11,5 @@ public interface HierarchicalEventItem
     
     public int getHierarchyLevel();
 
-    public String getOutline();
+    public String getDifferentiator();
 }

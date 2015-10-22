@@ -18,16 +18,20 @@ import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.util.comparator.EnumeratedEventItemComparator;
 import de.trispeedys.resourceplanning.util.comparator.TreeNodeComparator;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class SpeedyRoutines
 {
-    public static Event duplicateEvent(Long eventId, String description, String eventKey, int day, int month,
+    public static Event duplicateEvent(Event event, String description, String eventKey, int day, int month,
             int year)
     {
-        Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);
         if (event == null)
         {
             return null;
+        }
+        if (!(event.getEventState().equals(EventState.FINISHED)))
+        {
+            throw new ResourcePlanningException("only a finished event can be duplicated!!");
         }
         Event newEvent =
                 EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
@@ -104,6 +108,10 @@ public class SpeedyRoutines
 
     public static EntityTreeNode eventAsTree(Event event)
     {
+        if (event == null)
+        {
+            return null;
+        }
         HashMap<Domain, List<Position>> positionsPerDomain = new HashMap<Domain, List<Position>>();
         Domain key = null;
         for (EventPosition pos : event.getEventPositions())
@@ -188,7 +196,7 @@ public class SpeedyRoutines
         String result = "";
         for (AbstractDbObject obj : flattenedEventTree(event))
         {
-            result += ((HierarchicalEventItem) obj).getOutline();
+            result += ((HierarchicalEventItem) obj).getDifferentiator();
         }
         return result;
     }

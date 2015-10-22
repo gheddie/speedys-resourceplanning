@@ -48,8 +48,8 @@ public class TestDataProvider
 
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(
-                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015)
-                                .getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         for (Helper helper : helpers)
@@ -68,8 +68,8 @@ public class TestDataProvider
 
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(
-                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015)
-                                .getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
         // block one of the positions with a new helper
         Helper blockingHelper =
@@ -97,13 +97,12 @@ public class TestDataProvider
 
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(
-                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015)
-                                .getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016);
 
-        startHelperRequestProcess(((Helper) Datasources.getDatasource(Helper.class)
-                .findAll()
-                .get(0))
-                .getId(), event2016.getId());
+        startHelperRequestProcess(
+                ((Helper) Datasources.getDatasource(Helper.class).findAll().get(0)).getId(),
+                event2016.getId());
 
         EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
         EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
@@ -120,8 +119,8 @@ public class TestDataProvider
 
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(
-                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015)
-                                .getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         List<Position> positions = Datasources.getDatasource(Position.class).findAll();
@@ -145,8 +144,8 @@ public class TestDataProvider
 
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(
-                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015)
-                                .getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016);
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         startHelperRequestProcess(helpers.get(0).getId(), event2016.getId());
@@ -160,6 +159,6 @@ public class TestDataProvider
         // there is a new event (with 7 active helpers)...
         SpeedyRoutines.duplicateEvent(
                 TestDataGenerator.createRealLifeEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016,
-                        EventState.FINISHED).getId(), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
+                        EventState.FINISHED), "Triathlon 2016", "TRI-2016", 21, 6, 2016);
     }
 }

@@ -207,9 +207,9 @@ public class RequestHelpTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 'little' event for 2015
-        Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        Event event2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> activeHelpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
@@ -239,9 +239,9 @@ public class RequestHelpTest
         EntityFactory.buildHelper("Helper2", "Helper2", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
         EntityFactory.buildHelper("Helper3", "Helper3", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
         // create 'little' event for 2015
-        Long eventId2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015).getId();
+        Event event2015 = TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(eventId2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // start request process for every helper
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
@@ -277,7 +277,7 @@ public class RequestHelpTest
         // create 'minimal' event for 2015
         Event event2015 = TestDataGenerator.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015.getId(), "TRI-2016", "TRI-2016", 21, 6, 2015);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015);
         // select created helper
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
         // start process
