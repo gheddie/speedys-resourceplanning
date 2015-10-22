@@ -69,7 +69,7 @@ public class SpeedyRoutines
         result.append(cal.get(Calendar.YEAR));
         return result.toString();
     }
-    
+
     public static void relatePositionsToEvent(Event event, Position... positions)
     {
         for (Position position : positions)
@@ -77,7 +77,7 @@ public class SpeedyRoutines
             EntityFactory.buildEventPosition(event, position).persist();
         }
     }
-    
+
     public static void relateEventsToPosition(Position position, Event... events)
     {
         for (Event event : events)
@@ -91,9 +91,9 @@ public class SpeedyRoutines
         for (Position position : positions)
         {
             EntityFactory.buildHelperAssignment(helper, event, position).persist();
-        }       
+        }
     }
-    
+
     public static EntityTreeNode eventAsTree(Long eventId)
     {
         return eventAsTree((Event) Datasources.getDatasource(Event.class).findById(eventId));
@@ -123,17 +123,18 @@ public class SpeedyRoutines
                 domainNode.acceptChild(new EntityTreeNode(pos));
             }
         }
-        
+
         return eventNode;
-    }   
-    
+    }
+
     public static List<AbstractDbObject> flattenedEventTree(Event event)
     {
         EntityTreeNode root = eventAsTree(event);
-        return flattenedEventTreeRecursive(root, new ArrayList<AbstractDbObject>());        
+        return flattenedEventTreeRecursive(root, new ArrayList<AbstractDbObject>());
     }
-    
-    private static List<AbstractDbObject> flattenedEventTreeRecursive(EntityTreeNode root, List<AbstractDbObject> values)
+
+    private static List<AbstractDbObject> flattenedEventTreeRecursive(EntityTreeNode root,
+            List<AbstractDbObject> values)
     {
         values.add((AbstractDbObject) root.getPayLoad());
         if ((root.getChildren() != null) && (root.getChildren().size() > 0))
@@ -141,7 +142,7 @@ public class SpeedyRoutines
             for (Object child : root.getChildren())
             {
                 flattenedEventTreeRecursive((EntityTreeNode) child, values);
-            }   
+            }
         }
         return values;
     }
@@ -157,13 +158,13 @@ public class SpeedyRoutines
                 case HierarchicalEventItem.LEVEL_EVENT:
                     System.out.println(" + " + item);
                     break;
-                case HierarchicalEventItem.LEVEL_DOMAIN:                    
+                case HierarchicalEventItem.LEVEL_DOMAIN:
                     System.out.println("   + " + item);
-                    break;                    
+                    break;
                 case HierarchicalEventItem.LEVEL_POSITION:
                     System.out.println("      + " + item);
-                    break;                    
-            }            
+                    break;
+            }
         }
     }
 
@@ -173,7 +174,7 @@ public class SpeedyRoutines
         for (AbstractDbObject obj : flattenedEventTree(event))
         {
             result += ((HierarchicalEventItem) obj).getOutline();
-        }        
+        }
         return result;
     }
 }
