@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.datasource.EventDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.HelperAssignment;
 
 public class EventRepository implements DatabaseRepository<EventRepository>
 {
@@ -26,7 +24,7 @@ public class EventRepository implements DatabaseRepository<EventRepository>
                         " ev INNER JOIN ev.eventTemplate et WHERE et.description = :description ORDER BY ev.eventDate ASC";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("description", eventTemplateName);
-        List<Object[]> list = Datasources.getDatasource(Event.class).find(queryString, parameters);
+        List<Object[]> list = datasource.find(queryString, parameters);
         if (list.size() == 0)
         {
             return null;

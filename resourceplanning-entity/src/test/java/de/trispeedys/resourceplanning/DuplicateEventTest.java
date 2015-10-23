@@ -1,7 +1,7 @@
 package de.trispeedys.resourceplanning;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,11 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.repository.DomainRepository;
-import de.trispeedys.resourceplanning.repository.EventPositionRepository;
 import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class DuplicateEventTest
 {
@@ -91,5 +91,44 @@ public class DuplicateEventTest
         
         assertEquals("[E][D1][P0][P1][D2][P2][P232][D17][P38][D92][P93][P94]",
                 SpeedyRoutines.eventOutline(loadedEvent2016));
+    }
+
+    /**
+     * Trying to exclude a positon on using {@link SpeedyRoutines#duplicateEvent(Event, String, String, int, int, int, List)} which is not there
+     * in the actual event --> the must not be any db changes.
+     */
+    @Test(expected = ResourcePlanningException.class)
+    public void testDuplicationExcludeFault()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        // this position can not be excluded (this is a fault) !!
+        List<Integer> excludes = new ArrayList<Integer>();
+        excludes.add(9876);
+        
+        // real life event for 2015
+        Event realLifeEvent = TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
+        
+        SpeedyRoutines.duplicateEvent(realLifeEvent, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes);
+    }
+    
+    @Test
+    public void testSuccessfulEventDuplication()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        // an event with 5 positions...
+        Event minimalEvent = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
+        
+        SpeedyRoutines.duplicateEvent(minimalEvent, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+        
+        // checks (event + event pos count must be doubled, pos count must remain the same)
+        assertEquals(2, Datasources.getDatasource(Event.class).findAll().size());
+        assertEquals(10, Datasources.getDatasource(EventPosition.class).findAll().size());
+        assertEquals(5, Datasources.getDatasource(Position.class).findAll().size());
     }
 }

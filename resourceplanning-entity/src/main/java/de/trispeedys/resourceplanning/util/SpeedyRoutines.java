@@ -16,6 +16,8 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.util.comparator.EnumeratedEventItemComparator;
 import de.trispeedys.resourceplanning.util.comparator.TreeNodeComparator;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
@@ -33,6 +35,7 @@ public class SpeedyRoutines
         {
             throw new ResourcePlanningException("only a finished event can be duplicated!!");
         }
+        checkExcludes(event, positionExcludes);
         Event newEvent =
                 EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
                         event.getEventTemplate()).persist();
@@ -48,6 +51,27 @@ public class SpeedyRoutines
             }
         }
         return newEvent;
+    }
+
+    private static void checkExcludes(Event event, List<Integer> positionExcludes)
+    {
+        if ((positionExcludes == null) || (positionExcludes.size() == 0))
+        {
+            return;
+        }
+        // list with all pos numbers in the given event...
+        List<Integer> posNumbersInEvent = new ArrayList<Integer>();
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findPositionsInEvent(event))
+        {            
+            posNumbersInEvent.add(pos.getPositionNumber());
+        }
+        for (Integer exclude : positionExcludes)
+        {
+            if (!(posNumbersInEvent.contains(exclude)))
+            {
+                throw new ResourcePlanningException("pos number '"+exclude+"' can not be excluded from event as it is not present!!");
+            }
+        }
     }
 
     private static boolean excludePosition(Position position, List<Integer> positionExcludes)
