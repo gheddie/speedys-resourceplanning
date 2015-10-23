@@ -26,6 +26,8 @@ import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.repository.MessageQueueRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
@@ -102,7 +104,7 @@ public class RequestHelpTest
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event.getId()), rule);
 
         // mail must have been sent
-        List<MessageQueue> messages = MessagingService.findAllUnprocessedMessages();
+        List<MessageQueue> messages = RepositoryProvider.getRepository(MessageQueueRepository.class).findAllUnprocessedMessages();
         System.out.println(messages.size() + " messages found.");
         assertEquals(1, messages.size());
     }

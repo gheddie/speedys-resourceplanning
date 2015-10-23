@@ -13,6 +13,8 @@ import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
@@ -22,6 +24,8 @@ public class PositionTest
     public void testEventPositions()
     {
         HibernateUtil.clearAll();
+        
+        PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
         
         EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
 
@@ -44,11 +48,11 @@ public class PositionTest
         EntityFactory.buildEventPosition(event2, position1).persist();
         EntityFactory.buildEventPosition(event2, position3).persist();
 
-        // event 1 should have 3 positions
-        assertEquals(3, PositionService.findPositionsInEvent(event1).size());
+        // event 1 should have 3 positions        
+        assertEquals(3, positionRepository.findPositionsInEvent(event1).size());
 
         // event 2 should have 2 positions
-        assertEquals(2, PositionService.findPositionsInEvent(event2).size());
+        assertEquals(2, positionRepository.findPositionsInEvent(event2).size());
     }
 
     @Test

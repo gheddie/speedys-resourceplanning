@@ -19,6 +19,8 @@ import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
@@ -278,6 +280,8 @@ public class HelperAssignmentTest
     {
         // clear db
         HibernateUtil.clearAll();
+        
+        PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
 
         // event
         Event event = TestDataGenerator.createSimpleUnassignedEvent("TRI-2016", "TRI-2016", 21, 6, 2016);
@@ -298,6 +302,6 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(helper2, event, positions.get(1)).persist();
 
         // ..and we expect 3 of them to be unassigned!!
-        assertEquals(3, PositionService.findUnassignedPositionsInEvent(event).size());
+        assertEquals(3, positionRepository.findUnassignedPositionsInEvent(event).size());
     }
 }

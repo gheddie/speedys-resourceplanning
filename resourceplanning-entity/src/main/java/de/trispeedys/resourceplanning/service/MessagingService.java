@@ -9,24 +9,17 @@ import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.misc.MessagingState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.MessageQueueRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.util.MailSender;
 
 public class MessagingService
 {
-    public static List<MessageQueue> findAllUnprocessedMessages()
-    {
-        HashMap<String, Object> variables = new HashMap<String, Object>();
-        variables.put("messagingState", MessagingState.UNPROCESSED);
-        return Datasources.getDatasource(MessageQueue.class).find(
-                "FROM " + MessageQueue.class.getSimpleName() + " mq WHERE mq.messagingState = :messagingState",
-                variables);
-    }
-
     public static void sendAllUnprocessedMessages()
     {
         LoggerService.log("sending all unprocessed messages...");
         
-        for (MessageQueue message : findAllUnprocessedMessages())
+        for (MessageQueue message : RepositoryProvider.getRepository(MessageQueueRepository.class).findAllUnprocessedMessages())
         {
             try
             {

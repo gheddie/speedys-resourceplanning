@@ -31,6 +31,8 @@ import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
@@ -62,6 +64,8 @@ public class RequestHelpExecutionTest
     {
         // (0)
         HibernateUtil.clearAll();
+        
+        PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
 
         // (1)
         Event event2015 =
@@ -97,7 +101,7 @@ public class RequestHelpExecutionTest
 
         // (7) --> mails with types 'MessagingType.REMINDER_STEP_0' and 'MessagingType.PROPOSE_POSITIONS' must be
 // there...
-        List<Position> unassignedPositionsIn2016 = PositionService.findUnassignedPositionsInEvent(event2016);
+        List<Position> unassignedPositionsIn2016 = positionRepository.findUnassignedPositionsInEvent(event2016);
         assertEquals(4, unassignedPositionsIn2016.size());
         assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.REMINDER_STEP_0,
                 MessagingType.REMINDER_STEP_1, MessagingType.PROPOSE_POSITIONS));
@@ -243,8 +247,6 @@ public class RequestHelpExecutionTest
         // clear all tables in db
         HibernateUtil.clearAll();
 
-        HibernateUtil.clearAll();
-
         Event event2015 =
                 TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
@@ -283,6 +285,8 @@ public class RequestHelpExecutionTest
     public void testChangePositions()
     {
         HibernateUtil.clearAll();
+        
+        PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
 
         Event event2015 =
                 TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
@@ -306,10 +310,10 @@ public class RequestHelpExecutionTest
         // check mails ('REMINDER_STEP_0' und 'PROPOSE_POSITIONS' must be there)
         assertTrue(RequestHelpTestUtil.checkMails(2, MessagingType.REMINDER_STEP_0,
                 MessagingType.PROPOSE_POSITIONS));
-
+        
         // (B) we assign one of the proposed prosition to another helper and let 'helperA' choose it...
-        Position blockedPosition = PositionService.findUnassignedPositionsInEvent(event2016).get(0);
-        Position notBlockedPosition = PositionService.findUnassignedPositionsInEvent(event2016).get(1);
+        Position blockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016).get(0);
+        Position notBlockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016).get(1);
         AssignmentService.assignHelper(helperB, event2016, blockedPosition);
         RequestHelpTestUtil.choosePosition(businessKey, blockedPosition, processEngine, event2016.getId());
 
@@ -333,6 +337,8 @@ public class RequestHelpExecutionTest
     public void testPositionBlockedOnChoosePosition()
     {
         HibernateUtil.clearAll();
+        
+        PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
 
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015",
@@ -353,7 +359,7 @@ public class RequestHelpExecutionTest
         RequestHelpTestUtil.startHelperRequestProcess(helperB, event2016, businessKeyB, processEngine);
         RequestHelpTestUtil.doCallback(HelperCallback.CHANGE_POS, businessKeyB, processEngine);
 
-        List<Position> allUnassignedPositions = PositionService.findUnassignedPositionsInEvent(event2016);
+        List<Position> allUnassignedPositions = positionRepository.findUnassignedPositionsInEvent(event2016);
         Position desiredPosition = allUnassignedPositions.get(2);
 
         // 'B' is faster...
