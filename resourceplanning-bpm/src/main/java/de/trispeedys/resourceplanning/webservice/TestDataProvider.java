@@ -12,6 +12,8 @@ import org.camunda.bpm.BpmPlatform;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.datasource.Datasources;
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
+import de.trispeedys.resourceplanning.datasource.EventDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -161,5 +163,27 @@ public class TestDataProvider
         SpeedyRoutines.duplicateEvent(TestDataGenerator.createRealLifeEvent("Triathlon 2016", "TRI-2016", 21,
                 6, 2016, EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21,
                 6, 2016, null);
+    }
+
+    // --- Real life test
+
+    public void finish2015()
+    {
+        HibernateUtil.clearAll();
+        TestDataGenerator.createRealLifeEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.FINISHED,
+                EventTemplate.TEMPLATE_TRI);
+    }
+
+    public void debugEvent(Long eventId)
+    {
+        DefaultDatasource<Event> datasource = Datasources.getDatasource(Event.class);
+        SpeedyRoutines.debugEvent((Event) datasource.findById(eventId));
+    }
+    
+    // --- main
+    
+    public static void main(String[] args)
+    {
+        new TestDataProvider().debugEvent(42260l);
     }
 }

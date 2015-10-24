@@ -12,10 +12,12 @@ import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.util.comparator.EnumeratedEventItemComparator;
@@ -143,8 +145,14 @@ public class SpeedyRoutines
         {
             return null;
         }
+        List<HelperAssignment> helperAssignments = RepositoryProvider.getRepository(HelperAssignmentRepository.class).findByEvent(event);
+        HashMap<Long, HelperAssignment> assignmentMap = new HashMap<Long, HelperAssignment>();
+        for (HelperAssignment assignment : helperAssignments)
+        {
+            assignmentMap.put(assignment.getPosition().getId(), assignment);
+        }
         HashMap<Domain, List<Position>> positionsPerDomain = new HashMap<Domain, List<Position>>();
-        EntityTreeNode<Event> eventNode = new EntityTreeNode<Event>(event);
+        EntityTreeNode<Event> eventNode = new EventTreeNode<Event>(event);
         Domain key = null;
         List<EventPosition> eventPositions = event.getEventPositions();
         if ((eventPositions == null) || (eventPositions.size() == 0))
@@ -166,13 +174,13 @@ public class SpeedyRoutines
         List<EntityTreeNode<Domain>> domainNodes = new ArrayList<EntityTreeNode<Domain>>();
         for (Domain dom : positionsPerDomain.keySet())
         {
-            domainNode = new EntityTreeNode<Domain>(dom);
+            domainNode = new DomainTreeNode<Domain>(dom);
             List<Position> positionList = positionsPerDomain.get(dom);
             // sort positions
             Collections.sort(positionList, itemComparator);
             for (Position pos : positionList)
             {
-                domainNode.acceptChild(new EntityTreeNode<Position>(pos));
+                domainNode.acceptChild(new PositionTreeNode<Position>(new AssignmentContainer(pos, getAssignment(assignmentMap, pos))));
             }
             domainNodes.add(domainNode);
         }
@@ -186,6 +194,31 @@ public class SpeedyRoutines
         return eventNode;
     }
 
+    private static Helper getAssignment(HashMap<Long, HelperAssignment> assignmentMap, Position pos)
+    {
+        return (assignmentMap.get(pos.getId()) != null ? assignmentMap.get(pos.getId()).getHelper() : null);
+    }
+    
+    public static List<EntityTreeNode> flattenedEventNodes(Event event)
+    {
+        EntityTreeNode<Event> root = eventAsTree(event);
+        return flattenedEventNodesRecursive(root, new ArrayList<EntityTreeNode>());
+    }
+    
+    private static List<EntityTreeNode> flattenedEventNodesRecursive(EntityTreeNode root,
+            List<EntityTreeNode> nodes)
+    {
+        nodes.add(root);
+        if ((root.getChildren() != null) && (root.getChildren().size() > 0))
+        {
+            for (Object child : root.getChildren())
+            {
+                flattenedEventNodesRecursive((EntityTreeNode) child, nodes);
+            }
+        }
+        return nodes;
+    }
+
     public static List<AbstractDbObject> flattenedEventTree(Event event)
     {
         EntityTreeNode<Event> root = eventAsTree(event);
@@ -195,7 +228,7 @@ public class SpeedyRoutines
     private static List<AbstractDbObject> flattenedEventTreeRecursive(EntityTreeNode root,
             List<AbstractDbObject> values)
     {
-        values.add((AbstractDbObject) root.getPayLoad());
+        values.add((AbstractDbObject) root.getHierarchicalItem());
         if ((root.getChildren() != null) && (root.getChildren().size() > 0))
         {
             for (Object child : root.getChildren())
@@ -208,23 +241,25 @@ public class SpeedyRoutines
 
     public static void debugEvent(Event event)
     {
-        HierarchicalEventItem item = null;
-        for (AbstractDbObject object : flattenedEventTree(event))
+        System.out.println(" ---------- EVENT --------------------------------- ");
+        EntityTreeNode node = null;
+        for (EntityTreeNode object : flattenedEventNodes(event))
         {
-            item = (HierarchicalEventItem) object;
-            switch (item.getHierarchyLevel())
+            node = (EntityTreeNode) object;
+            switch (node.getHierarchyLevel())
             {
                 case HierarchicalEventItem.LEVEL_EVENT:
-                    System.out.println(" + " + item);
+                    System.out.println(" + " + node.infoString());
                     break;
                 case HierarchicalEventItem.LEVEL_DOMAIN:
-                    System.out.println("   + " + item);
+                    System.out.println("   + " + node.infoString());
                     break;
                 case HierarchicalEventItem.LEVEL_POSITION:
-                    System.out.println("      + " + item);
+                    System.out.println("      + " + node.infoString());
                     break;
             }
         }
+        System.out.println(" ---------- EVENT --------------------------------- ");
     }
 
     public static String eventOutline(Event event)

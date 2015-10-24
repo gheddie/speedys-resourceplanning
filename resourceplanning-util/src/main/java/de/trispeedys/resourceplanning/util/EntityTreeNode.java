@@ -3,7 +3,7 @@ package de.trispeedys.resourceplanning.util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityTreeNode<T>
+public abstract class EntityTreeNode<T>
 {
     private Object payLoad;
     
@@ -37,6 +37,16 @@ public class EntityTreeNode<T>
     @Override
     public String toString()
     {
-        return getClass().getSimpleName() + "[payLoad : "+payLoad+", "+children.size()+" children]";
+        //return getClass().getSimpleName() + "[payLoad : "+payLoad+", "+children.size()+" children]";
+        return getClass().getSimpleName();
     }
+
+    public Object getHierarchicalItem()
+    {
+        return payLoad;
+    }
+
+    public abstract int getHierarchyLevel();
+
+    public abstract String infoString();
 }
