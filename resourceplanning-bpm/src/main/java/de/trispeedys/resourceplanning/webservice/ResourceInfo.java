@@ -93,6 +93,8 @@ public class ResourceInfo
             dto.setItemType(node.getItemType().toString());
             dto.setInfoString(node.infoString());
             dto.setHierarchyLevel(node.getHierarchyLevel());
+            dto.setItemKey(node.itemKey());
+            dto.setAssignmentString(node.getAssignmentString());
             dtos.add(dto);
         }
         return dtos.toArray(new HierarchicalEventItemDTO[dtos.size()]);

@@ -1,5 +1,6 @@
 package de.trispeedys.resourceplanning.components.treetable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +54,20 @@ public class TreeTableDataNode
     public List<TreeTableDataNode> getChildren()
     {
         return children;
+    }
+    
+    public void setChildren(List<TreeTableDataNode> children)
+    {
+        this.children = children;
+    }
+    
+    public void addChild(TreeTableDataNode child)
+    {
+        if (children == null)
+        {
+            children = new ArrayList<TreeTableDataNode>();
+        }
+        children.add(child);
     }
 
     /**

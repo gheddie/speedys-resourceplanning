@@ -24,4 +24,15 @@ public class DomainTreeNode<T> extends EntityTreeNode<Domain>
     {
         return HierarchicalEventItemType.DOMAIN;
     }
+
+    public String itemKey()
+    {
+        Domain eventItem = (Domain) getPayLoad();
+        return eventItem.getDifferentiator();
+    }
+
+    public String getAssignmentString()
+    {
+        return "";
+    }
 }

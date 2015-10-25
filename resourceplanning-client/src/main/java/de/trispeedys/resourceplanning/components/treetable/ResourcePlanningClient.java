@@ -28,9 +28,8 @@ public class ResourcePlanningClient
         
 //        new ResourceInfoService().getResourceInfoPort().processHelperCallback(arg0, arg1);
         
-        for (HierarchicalEventItemDTO node : new ResourceInfoService().getResourceInfoPort().getNodes(new Long(1032)).getItem())
+        for (HierarchicalEventItemDTO node : new ResourceInfoService().getResourceInfoPort().getNodes(new Long(5200)).getItem())
         {
-            HierarchicalEventItemType value = HierarchicalEventItemType.valueOf(node.getItemType());
             switch (node.getHierarchyLevel())
             {
                 case HierarchicalEventItem.LEVEL_EVENT:

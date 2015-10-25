@@ -55,4 +55,8 @@ public abstract class EntityTreeNode<T>
     public abstract String infoString();
 
     public abstract HierarchicalEventItemType getItemType();
+
+    public abstract String itemKey();
+
+    public abstract String getAssignmentString();
 }

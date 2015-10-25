@@ -24,4 +24,15 @@ public class EventTreeNode<T> extends EntityTreeNode<Event>
     {
         return HierarchicalEventItemType.EVENT;
     }
+    
+    public String itemKey()
+    {
+        Event eventItem = (Event) getPayLoad();
+        return eventItem.getDifferentiator();
+    }
+    
+    public String getAssignmentString()
+    {
+        return "";
+    }
 }

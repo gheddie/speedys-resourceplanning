@@ -16,8 +16,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="assignmentString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="hierarchyLevel" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="infoString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="itemKey" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="itemType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -29,15 +31,43 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hierarchicalEventItemDTO", propOrder = {
+    "assignmentString",
     "hierarchyLevel",
     "infoString",
+    "itemKey",
     "itemType"
 })
 public class HierarchicalEventItemDTO {
 
+    protected String assignmentString;
     protected int hierarchyLevel;
     protected String infoString;
+    protected String itemKey;
     protected String itemType;
+
+    /**
+     * Gets the value of the assignmentString property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAssignmentString() {
+        return assignmentString;
+    }
+
+    /**
+     * Sets the value of the assignmentString property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAssignmentString(String value) {
+        this.assignmentString = value;
+    }
 
     /**
      * Gets the value of the hierarchyLevel property.
@@ -77,6 +107,30 @@ public class HierarchicalEventItemDTO {
      */
     public void setInfoString(String value) {
         this.infoString = value;
+    }
+
+    /**
+     * Gets the value of the itemKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    /**
+     * Sets the value of the itemKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setItemKey(String value) {
+        this.itemKey = value;
     }
 
     /**
