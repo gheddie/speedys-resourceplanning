@@ -9,10 +9,9 @@ public abstract class EntityTreeNode<T>
     
     private List<Object> children;
 
-    public EntityTreeNode(Object payLoad)
+    public EntityTreeNode()
     {
         super();
-        this.payLoad = payLoad;
     }
     
     public void acceptChild(Object child)
@@ -27,6 +26,11 @@ public abstract class EntityTreeNode<T>
     public Object getPayLoad()
     {
         return payLoad;
+    }
+    
+    public void setPayLoad(Object payLoad)
+    {
+        this.payLoad = payLoad;
     }
     
     public List<Object> getChildren()
@@ -49,4 +53,6 @@ public abstract class EntityTreeNode<T>
     public abstract int getHierarchyLevel();
 
     public abstract String infoString();
+
+    public abstract HierarchicalEventItemType getItemType();
 }

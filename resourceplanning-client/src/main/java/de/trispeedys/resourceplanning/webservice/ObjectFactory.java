@@ -38,11 +38,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link HierarchicalEventItemDTOArray }
+     * 
+     */
+    public HierarchicalEventItemDTOArray createHierarchicalEventItemDTOArray() {
+        return new HierarchicalEventItemDTOArray();
+    }
+
+    /**
      * Create an instance of {@link HelperAssignmentDTOArray }
      * 
      */
     public HelperAssignmentDTOArray createHelperAssignmentDTOArray() {
         return new HelperAssignmentDTOArray();
+    }
+
+    /**
+     * Create an instance of {@link HierarchicalEventItemDTO }
+     * 
+     */
+    public HierarchicalEventItemDTO createHierarchicalEventItemDTO() {
+        return new HierarchicalEventItemDTO();
     }
 
 }

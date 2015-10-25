@@ -5,9 +5,9 @@ import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 
 public class EventTreeNode<T> extends EntityTreeNode<Event>
 {
-    public EventTreeNode(Object payLoad)
+    public EventTreeNode()
     {
-        super(payLoad);
+        super();
     }
     
     public int getHierarchyLevel()
@@ -18,5 +18,10 @@ public class EventTreeNode<T> extends EntityTreeNode<Event>
     public String infoString()
     {
         return getPayLoad().toString();
+    }
+    
+    public HierarchicalEventItemType getItemType()
+    {
+        return HierarchicalEventItemType.EVENT;
     }
 }

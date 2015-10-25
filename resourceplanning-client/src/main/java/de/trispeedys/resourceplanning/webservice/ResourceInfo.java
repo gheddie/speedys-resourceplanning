@@ -25,6 +25,27 @@ public interface ResourceInfo {
 
     /**
      * 
+     * @param arg0
+     */
+    @WebMethod
+    public void startProcessesForActiveHelpers(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0);
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void processHelperCallback(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        String arg1);
+
+    /**
+     * 
      * @param arg1
      * @param arg0
      * @return
@@ -42,48 +63,39 @@ public interface ResourceInfo {
      * 
      */
     @WebMethod
-    public void startSomeProcesses();
-
-    /**
-     * 
-     */
-    @WebMethod
-    public void startOneProcesses();
-
-    /**
-     * 
-     */
-    @WebMethod
     public void sendAllMessages();
 
     /**
      * 
+     * @param arg2
      * @param arg1
      * @param arg0
      */
     @WebMethod
-    public void processHelperCallback(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        HelperCallback arg1);
-
-    /**
-     * 
-     * @param arg1
-     * @param arg0
-     */
-    @WebMethod
-    public void startHelperRequestProcess(
+    public void assignHelper(
         @WebParam(name = "arg0", partName = "arg0")
         long arg0,
         @WebParam(name = "arg1", partName = "arg1")
-        long arg1);
+        long arg1,
+        @WebParam(name = "arg2", partName = "arg2")
+        long arg2);
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public HierarchicalEventItemDTOArray getNodes(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0);
 
     /**
      * 
      */
     @WebMethod
-    public void startSomeProcessesWithNewHelpers();
+    public void finishUp();
 
 }

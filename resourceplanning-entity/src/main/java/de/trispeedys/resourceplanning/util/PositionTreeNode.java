@@ -6,9 +6,9 @@ import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 
 public class PositionTreeNode<T> extends EntityTreeNode<Position>
 {
-    public PositionTreeNode(Object payLoad)
+    public PositionTreeNode()
     {
-        super(payLoad);
+        super();
     }
     
     public Object getHierarchicalItem()
@@ -34,5 +34,10 @@ public class PositionTreeNode<T> extends EntityTreeNode<Position>
             helperString = "[--N/A--]";
         }
         return ((AssignmentContainer) getPayLoad()).getPosition() + " ["+helperString+"]";
+    }
+    
+    public HierarchicalEventItemType getItemType()
+    {
+        return HierarchicalEventItemType.POSITION;
     }
 }

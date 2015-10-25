@@ -9,6 +9,7 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
+import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
@@ -22,11 +23,11 @@ import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 public class UniqueTest
 {
     /**
-     * Combination of {@link HelperAssignment#getEvent()} and {@link HelperAssignment#getPosition()} MUST be unique.
-     * Otherwise, it would mean that a {@link Position} is assigned twice or more in the same {@link Event}.
+     * It must be possible to have more than one {@link HelperAssignment} with the same event and position, as long
+     * as only one of them is {@link HelperAssignmentState#CONFIRMED}.
      */
-    @Test(expected = org.hibernate.exception.ConstraintViolationException.class)
-    public void testHelperAssignmentEventAndPositionUnique()
+    @Test
+    public void testReassignCancelledAssignment()
     {
         // clear db
         HibernateUtil.clearAll();
@@ -46,8 +47,8 @@ public class UniqueTest
         //assign position to event to avoid resource planning exception
         SpeedyRoutines.relatePositionsToEvent(event, position);
         
-        EntityFactory.buildHelperAssignment(helper1, event, position).persist();
-        EntityFactory.buildHelperAssignment(helper2, event, position).persist();
+        EntityFactory.buildHelperAssignment(helper1, event, position, HelperAssignmentState.CONFIRMED).persist();
+        EntityFactory.buildHelperAssignment(helper2, event, position, HelperAssignmentState.CANCELLED).persist();
     }
     
     @Test(expected = org.hibernate.exception.ConstraintViolationException.class)

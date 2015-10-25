@@ -5,9 +5,9 @@ import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 
 public class DomainTreeNode<T> extends EntityTreeNode<Domain>
 {
-    public DomainTreeNode(Object payLoad)
+    public DomainTreeNode()
     {
-        super(payLoad);
+        super();
     }
 
     public int getHierarchyLevel()
@@ -18,5 +18,10 @@ public class DomainTreeNode<T> extends EntityTreeNode<Domain>
     public String infoString()
     {
         return getPayLoad().toString();
+    }
+
+    public HierarchicalEventItemType getItemType()
+    {
+        return HierarchicalEventItemType.DOMAIN;
     }
 }

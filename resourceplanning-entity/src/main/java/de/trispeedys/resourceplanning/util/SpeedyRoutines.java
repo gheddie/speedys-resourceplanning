@@ -152,7 +152,8 @@ public class SpeedyRoutines
             assignmentMap.put(assignment.getPosition().getId(), assignment);
         }
         HashMap<Domain, List<Position>> positionsPerDomain = new HashMap<Domain, List<Position>>();
-        EntityTreeNode<Event> eventNode = new EventTreeNode<Event>(event);
+        EntityTreeNode<Event> eventNode = new EventTreeNode<Event>();
+        eventNode.setPayLoad(event);
         Domain key = null;
         List<EventPosition> eventPositions = event.getEventPositions();
         if ((eventPositions == null) || (eventPositions.size() == 0))
@@ -174,13 +175,16 @@ public class SpeedyRoutines
         List<EntityTreeNode<Domain>> domainNodes = new ArrayList<EntityTreeNode<Domain>>();
         for (Domain dom : positionsPerDomain.keySet())
         {
-            domainNode = new DomainTreeNode<Domain>(dom);
+            domainNode = new DomainTreeNode<Domain>();
+            domainNode.setPayLoad(dom);
             List<Position> positionList = positionsPerDomain.get(dom);
             // sort positions
             Collections.sort(positionList, itemComparator);
             for (Position pos : positionList)
             {
-                domainNode.acceptChild(new PositionTreeNode<Position>(new AssignmentContainer(pos, getAssignment(assignmentMap, pos))));
+                PositionTreeNode<Position> childPosNode = new PositionTreeNode<Position>();
+                childPosNode.setPayLoad(new AssignmentContainer(pos, getAssignment(assignmentMap, pos)));
+                domainNode.acceptChild(childPosNode);
             }
             domainNodes.add(domainNode);
         }

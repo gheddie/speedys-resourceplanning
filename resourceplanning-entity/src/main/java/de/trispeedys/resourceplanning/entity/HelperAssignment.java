@@ -8,16 +8,12 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 
 @Entity
-@Table(name = "helper_assignment", uniqueConstraints = @UniqueConstraint(columnNames =
-{
-        "event_id", "position_id"
-}))
+@Table(name = "helper_assignment")
 public class HelperAssignment extends AbstractDbObject
 {
     public static final String ATTR_HELPER = "helper";

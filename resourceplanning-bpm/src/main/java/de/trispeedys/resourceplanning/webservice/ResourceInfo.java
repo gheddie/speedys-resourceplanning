@@ -11,8 +11,8 @@ import org.camunda.bpm.BpmPlatform;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
+import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
@@ -23,6 +23,8 @@ import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
+import de.trispeedys.resourceplanning.util.EntityTreeNode;
+import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 @SuppressWarnings("restriction")
 @WebService
@@ -40,8 +42,7 @@ public class ResourceInfo
         Helper helper = Datasources.getDatasource(Helper.class).findById(helperId);
         Event event = Datasources.getDatasource(Event.class).findById(eventId);
         Position position = Datasources.getDatasource(Position.class).findById(positionId);
-        AssignmentService.assignHelper(helper, event,
-                position);
+        AssignmentService.assignHelper(helper, event, position);
     }
 
     public void sendAllMessages()
@@ -62,17 +63,38 @@ public class ResourceInfo
             System.out.println("string '' can not be interpreted as helper callback --> returning.");
             return;
         }
-        LoggerService.log("processed helper callback '" + callbackValue + "' for business key '" + businessKey + "'...", DbLogLevel.INFO);
+        LoggerService.log("processed helper callback '" +
+                callbackValue + "' for business key '" + businessKey + "'...", DbLogLevel.INFO);
         HelperInteraction.processReminderCallback(callbackValue, businessKey);
     }
-    
+
     public void startProcessesForActiveHelpers(String templateName)
     {
         EventManager.triggerHelperProcesses(templateName);
     }
-    
+
     public void finishUp()
     {
-        BpmPlatform.getDefaultProcessEngine().getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
+        BpmPlatform.getDefaultProcessEngine()
+                .getRuntimeService()
+                .signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
+    }
+
+    public HierarchicalEventItemDTO[] getNodes(Long eventId)
+    {
+        List<EntityTreeNode> nodes =
+                SpeedyRoutines.flattenedEventNodes((Event) Datasources.getDatasource(Event.class).findById(
+                        eventId));
+        List<HierarchicalEventItemDTO> dtos = new ArrayList<HierarchicalEventItemDTO>();
+        HierarchicalEventItemDTO dto = null;
+        for (EntityTreeNode node : nodes)
+        {
+            dto = new HierarchicalEventItemDTO();
+            dto.setItemType(node.getItemType().toString());
+            dto.setInfoString(node.infoString());
+            dto.setHierarchyLevel(node.getHierarchyLevel());
+            dtos.add(dto);
+        }
+        return dtos.toArray(new HierarchicalEventItemDTO[dtos.size()]);
     }
 }

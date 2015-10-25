@@ -34,47 +34,63 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class EntityFactory
 {
-    public static Helper buildHelper(String lastName, String firstName, String email, HelperState helperState,
-            int dayOfBirth, int monthOfBirth, int yearOfBirth)
+    public static Helper buildHelper(String lastName, String firstName, String email,
+            HelperState helperState, int dayOfBirth, int monthOfBirth, int yearOfBirth)
     {
         Calendar dateOfBirth = Calendar.getInstance();
         dateOfBirth.set(Calendar.DAY_OF_MONTH, dayOfBirth);
         dateOfBirth.set(Calendar.MONTH, monthOfBirth - 1);
         dateOfBirth.set(Calendar.YEAR, yearOfBirth);
-        Helper result = new HelperBuilder().withFirstName(firstName)
-                .withLastName(lastName)
-                .withDateOfBirth(dateOfBirth.getTime())
-                .withEmail(email)
-                .withHelperState(helperState)
-                .build();
+        Helper result =
+                new HelperBuilder().withFirstName(firstName)
+                        .withLastName(lastName)
+                        .withDateOfBirth(dateOfBirth.getTime())
+                        .withEmail(email)
+                        .withHelperState(helperState)
+                        .build();
         result.setCode(SpeedyRoutines.createHelperCode(result));
         return result;
     }
-
+    
     public static HelperAssignment buildHelperAssignment(Helper helper, Event event, Position position)
+    {
+        return buildHelperAssignment(helper, event, position, HelperAssignmentState.CONFIRMED);
+    }
+
+    public static HelperAssignment buildHelperAssignment(Helper helper, Event event, Position position,
+            HelperAssignmentState helperAssignmentState)
     {
         if (!(PositionService.isPositionPresentInEvent(position, event)))
         {
-            throw new ResourcePlanningException("helper '"+helper+"' can not be commited to position '"+position+"' as it is not present in event '"+event+"'.");
+            throw new ResourcePlanningException("helper '" +
+                    helper + "' can not be commited to position '" + position +
+                    "' as it is not present in event '" + event + "'.");
         }
         return new HelperAssignmentBuilder().withHelper(helper)
                 .withPosition(position)
                 .withEvent(event)
-                .withHelperAssignmentState(HelperAssignmentState.CONFIRMED)
+                .withHelperAssignmentState(helperAssignmentState)
                 .build();
     }
 
-    public static Position buildPosition(String description, int minimalAge, Domain domain, boolean authorityOverride, int positionNumber)
+    public static Position buildPosition(String description, int minimalAge, Domain domain,
+            boolean authorityOverride, int positionNumber)
     {
-        return new PositionBuilder().withDescription(description).withMinimalAge(minimalAge).withDomain(domain).withAuthorityOverride(authorityOverride).withPositionNumber(positionNumber).build();
+        return new PositionBuilder().withDescription(description)
+                .withMinimalAge(minimalAge)
+                .withDomain(domain)
+                .withAuthorityOverride(authorityOverride)
+                .withPositionNumber(positionNumber)
+                .build();
     }
-    
+
     public static EventTemplate buildEventTemplate(String description)
     {
         return new EventTemplateBuilder().withDescription(description).build();
-    }  
- 
-    public static Event buildEvent(String description, String eventKey, int day, int month, int year, EventState eventState, EventTemplate eventTemplate)
+    }
+
+    public static Event buildEvent(String description, String eventKey, int day, int month, int year,
+            EventState eventState, EventTemplate eventTemplate)
     {
         Calendar eventDate = Calendar.getInstance();
         eventDate.set(Calendar.DAY_OF_MONTH, day);
@@ -87,27 +103,35 @@ public class EntityFactory
                 .withEventTemplate(eventTemplate)
                 .build();
     }
-    
-    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingFormat messagingFormat)
+
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject,
+            String body, MessagingFormat messagingFormat)
     {
         return buildMessageQueue(fromAddress, toAddress, subject, body, MessagingType.NONE, messagingFormat);
     }
 
-    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingType messagingType, MessagingFormat messagingFormat)
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject,
+            String body, MessagingType messagingType, MessagingFormat messagingFormat)
     {
-        return new MessageQueueBuilder().withFromAddress(fromAddress).withToAddress(toAddress).withSubject(subject).withBody(body).withMessagingType(messagingType).withMessagingFormat(messagingFormat).build();
+        return new MessageQueueBuilder().withFromAddress(fromAddress)
+                .withToAddress(toAddress)
+                .withSubject(subject)
+                .withBody(body)
+                .withMessagingType(messagingType)
+                .withMessagingFormat(messagingFormat)
+                .build();
     }
 
     public static EventPosition buildEventPosition(Event event, Position position)
     {
         return new EventPositionBuilder().withEvent(event).withPosition(position).build();
     }
-    
+
     public static DomainResponsibility buildDomainResponsibility(Domain domain, Helper helper)
     {
         return new DomainResponsibilityBuilder().withDomain(domain).withHelper(helper).build();
-    }    
-    
+    }
+
     public static Domain buildDomain(String name, int domainNumber)
     {
         return new DomainBuilder().withDomainNumber(domainNumber).withName(name).build();
@@ -120,6 +144,9 @@ public class EntityFactory
 
     public static DatabaseLogger buildLog(String businessKey, String message, DbLogLevel logLevel)
     {
-        return new DatabaseLoggerBuilder().withBusinessKey(businessKey).withMessage(message).withLogLevel(logLevel).build();
+        return new DatabaseLoggerBuilder().withBusinessKey(businessKey)
+                .withMessage(message)
+                .withLogLevel(logLevel)
+                .build();
     }
 }
