@@ -179,9 +179,9 @@ public class TestDataProvider
         DefaultDatasource<Event> datasource = Datasources.getDatasource(Event.class);
         SpeedyRoutines.debugEvent((Event) datasource.findById(eventId));
     }
-    
+
     // --- main
-    
+
     public static void main(String[] args)
     {
         new TestDataProvider().debugEvent(6291l);
