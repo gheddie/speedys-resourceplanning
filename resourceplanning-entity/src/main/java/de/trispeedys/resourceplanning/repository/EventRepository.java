@@ -36,4 +36,9 @@ public class EventRepository implements DatabaseRepository<EventRepository>
         }
         return result;
     }
+
+    public Event findEventByEventKey(String eventKey)
+    {
+        return datasource.findSingle(Event.ATTR_EVENT_KEY, eventKey);
+    }
 }

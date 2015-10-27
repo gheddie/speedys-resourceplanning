@@ -25,6 +25,8 @@ public class Event extends AbstractDbObject implements HierarchicalEventItem
 {
     public static final String ATTR_EVENT_STATE = "eventState";
     
+    public static final String ATTR_EVENT_KEY = "eventKey";
+    
     @Temporal(TemporalType.DATE)
     @Column(name = "event_date")
     private Date eventDate;

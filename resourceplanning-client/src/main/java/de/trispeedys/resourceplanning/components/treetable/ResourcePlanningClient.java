@@ -28,7 +28,7 @@ public class ResourcePlanningClient
         
 //        new ResourceInfoService().getResourceInfoPort().processHelperCallback(arg0, arg1);
         
-        for (HierarchicalEventItemDTO node : new ResourceInfoService().getResourceInfoPort().getNodes(new Long(5200)).getItem())
+        for (HierarchicalEventItemDTO node : new ResourceInfoService().getResourceInfoPort().getEventNodes(new Long(5200)).getItem())
         {
             switch (node.getHierarchyLevel())
             {

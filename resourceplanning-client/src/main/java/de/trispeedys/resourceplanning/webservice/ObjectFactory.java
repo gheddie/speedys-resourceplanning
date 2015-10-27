@@ -46,6 +46,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link EventDTO }
+     * 
+     */
+    public EventDTO createEventDTO() {
+        return new EventDTO();
+    }
+
+    /**
+     * Create an instance of {@link EventDTOArray }
+     * 
+     */
+    public EventDTOArray createEventDTOArray() {
+        return new EventDTOArray();
+    }
+
+    /**
      * Create an instance of {@link HelperAssignmentDTOArray }
      * 
      */

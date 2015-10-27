@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.GridBagLayout ) {
 			"$columnSpecs": "173:1.0"
-			"$rowSpecs": "0:1.0, 0"
+			"$rowSpecs": "0:1.0, 0:1.0, 0"
 			"$hGap": 5
 			"$vGap": 5
 			"$alignLeft": true
@@ -13,21 +13,31 @@ new FormModel {
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane1"
+				name: "scPositions"
 				add( new FormComponent( "de.trispeedys.resourceplanning.components.treetable.TreeTable" ) {
-					name: "treeTable1"
+					name: "treeTablePositions"
 				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scEvents"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tbEvents"
+					addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "tbEventsPropertyChange", true ) )
+					addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "tbEventsPropertyChange", true ) )
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+				"gridy": 1
+			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button1"
 				"text": "Fill"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "fillPressed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-				"gridy": 1
+				"gridy": 2
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"size": new java.awt.Dimension( 445, 420 )
 		} )
 	}
 }

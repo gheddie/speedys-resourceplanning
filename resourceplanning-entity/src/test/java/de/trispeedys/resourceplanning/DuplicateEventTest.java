@@ -17,9 +17,11 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.repository.DomainRepository;
+import de.trispeedys.resourceplanning.repository.EventPositionRepository;
 import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
+import de.trispeedys.resourceplanning.util.PositionInclude;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
@@ -33,7 +35,7 @@ public class DuplicateEventTest
         Event event2015 =
                 TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
-        SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+        SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         List<Event> events = Datasources.getDatasource(Event.class).findAll();
         assertTrue(SpeedyRoutines.eventOutline(events.get(0)).equals(
                 SpeedyRoutines.eventOutline(events.get(1))));
@@ -63,6 +65,52 @@ public class DuplicateEventTest
         assertEquals("[E][D1][P0][P1][D2][P2][P137][P232][P398][D17][P38][P39][P666][D92][P93][P94]",
                 SpeedyRoutines.eventOutline(loadedEvent));
     }
+    
+    /**
+     * [E][D1][P0][P1][D2][P2][P137][P232][P398][D17][P38][P39][D92][P93][P94] - [D2].[P137] + [D2].[P7777] + [D92].[P8888]
+     * =
+     * [E][D1][P0][P1][D2][P2][P232][P398][P7777][D17][P38][P39][D92][P93][P94][P8888]
+     */
+    @Test
+    public void testDuplicateEventWithAddedAndRemovedPositions()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+        
+        // create event 2015
+        Event event2015 = TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
+        
+        // create new position (no. 7777) for domain [D2]
+        Domain dom2 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(2);
+        EntityFactory.buildPosition("7777", 12, dom2, false, 7777).persist();
+        
+        // create new position (no. 8888) for domain [D92]
+        Domain dom92 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(92);
+        EntityFactory.buildPosition("8888", 12, dom92, false, 8888).persist();
+        
+        List<Integer> excludes = new ArrayList<Integer>();
+        excludes.add(137);
+        
+        List<PositionInclude> includes = new ArrayList<PositionInclude>();
+        includes.add(new PositionInclude(dom2, 7777));
+        includes.add(new PositionInclude(dom92, 8888));
+        
+        // real life event for 2015
+        SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes, includes);
+        
+        Event loadedEvent2016 = Datasources.getDatasource(Event.class).findSingle(Event.ATTR_EVENT_STATE, EventState.PLANNED);
+        
+        assertEquals("[E][D1][P0][P1][D2][P2][P232][P398][P7777][D17][P38][P39][D92][P93][P94][P8888]",
+                SpeedyRoutines.eventOutline(loadedEvent2016));
+    }
+
+    // TODO test invalid includes (transaction based : all or nothing) !!
+    @Test
+    public void testDuplicateEventWithInvalidIncludes()
+    {
+        // ...        
+    }
 
     /**
      * [E][D1][P0][P1][D2][P2][P137][P232][P398][D17][P38][P39][D92][P93][P94] - [D2].[P137] - [D2].[P398] - [D17].[P39]
@@ -81,7 +129,7 @@ public class DuplicateEventTest
         
         // real life event for 2015
         SpeedyRoutines.duplicateEvent(TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
-                EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes);
+                EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes, null);
 
         List<Event> events =
                 RepositoryProvider.getRepository(EventRepository.class).findEventByTemplateOrdered(
@@ -111,7 +159,7 @@ public class DuplicateEventTest
         Event realLifeEvent = TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
                 EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
         
-        SpeedyRoutines.duplicateEvent(realLifeEvent, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes);
+        SpeedyRoutines.duplicateEvent(realLifeEvent, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes, null);
     }
     
     @Test
@@ -124,7 +172,7 @@ public class DuplicateEventTest
         Event minimalEvent = TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
                 EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
         
-        SpeedyRoutines.duplicateEvent(minimalEvent, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+        SpeedyRoutines.duplicateEvent(minimalEvent, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         
         // checks (event + event pos count must be doubled, pos count must remain the same)
         assertEquals(2, Datasources.getDatasource(Event.class).findAll().size());

@@ -226,7 +226,7 @@ public class RequestHelpTest
                 TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,
                         EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null, null);
         // start request process for every helper
         List<Helper> activeHelpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
@@ -260,7 +260,7 @@ public class RequestHelpTest
                 TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,
                         EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null, null);
         // start request process for every helper
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
@@ -299,7 +299,7 @@ public class RequestHelpTest
                 TestDataGenerator.createMinimalEvent("TRI-2015", "TRI-2015", 21, 6, 2015,
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null);
+        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null, null);
         // select created helper
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
         // start process

@@ -7,22 +7,14 @@
 <title>Rueckmeldung</title>
 </head>
 <%@ page import="de.trispeedys.resourceplanning.entity.misc.HelperCallback"%>
-<%@page import="org.camunda.bpm.engine.MismatchingMessageCorrelationException"%>
 <%@ page import="de.trispeedys.resourceplanning.interaction.HelperInteraction"%>
-<%@page import="de.trispeedys.resourceplanning.interaction.HtmlRenderer"%>
 <body>
 	<%
-    	try
-    	{
-    	    HelperInteraction.processReminderCallback(request);
-	        //the message could be correlated
-	        out.println(HtmlRenderer.renderCorrelationSuccess(request));
-    	}
-		catch(MismatchingMessageCorrelationException e)
-    	{
-	        //the message could not be correlated
-	        out.println(HtmlRenderer.renderCorrelationFault(request));
-    	}
+      Long eventId = Long.parseLong(request.getParameter("eventId"));
+      Long helperId = Long.parseLong(request.getParameter("helperId"));            
+      HelperCallback callback = HelperCallback.valueOf(request.getParameter("callbackResult"));
+	  // render action result
+      out.println(HelperInteraction.processReminderCallback(eventId, helperId, callback));
 	%>
 </body>
 </html>

@@ -10,6 +10,7 @@ import javax.jws.soap.SOAPBinding.Style;
 import org.camunda.bpm.BpmPlatform;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
+import de.trispeedys.resourceplanning.dto.EventDTO;
 import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
 import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -25,6 +26,7 @@ import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.util.EntityTreeNode;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 @SuppressWarnings("restriction")
 @WebService
@@ -79,8 +81,37 @@ public class ResourceInfo
                 .getRuntimeService()
                 .signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
     }
+    
+    public EventDTO[] queryEvents() 
+    {
+        List<Event> allEvents = Datasources.getDatasource(Event.class).findAll();
+        List<EventDTO> dtos = new ArrayList<EventDTO>();
+        EventDTO dto = null;
+        for (Event event : allEvents)
+        {
+            dto = new EventDTO();
+            dto.setDescription(event.getDescription());
+            dto.setEventId(event.getId());
+            dtos.add(dto);
+        }
+        return dtos.toArray(new EventDTO[dtos.size()]);
+    }
+    
+    public void duplicateEvent(Long eventId, String description, String eventKey, int day, int month, int year) 
+    {
+        if (eventId == null)
+        {
+            throw new ResourcePlanningException("event id must not be null!!");
+        }
+        Event event = Datasources.getDatasource(Event.class).findById(eventId);
+        if (event == null)
+        {
+            throw new ResourcePlanningException("event with id '"+eventId+"' could not found!!");
+        }
+        SpeedyRoutines.duplicateEvent(event, description, eventKey, day, month, year, null, null);
+    }
 
-    public HierarchicalEventItemDTO[] getNodes(Long eventId)
+    public HierarchicalEventItemDTO[] getEventNodes(Long eventId)
     {
         List<EntityTreeNode> nodes =
                 SpeedyRoutines.flattenedEventNodes((Event) Datasources.getDatasource(Event.class).findById(

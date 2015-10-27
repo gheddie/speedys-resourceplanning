@@ -1,5 +1,6 @@
 package de.trispeedys.resourceplanning.webservice;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.datasource.EventDatasource;
+import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -24,8 +26,13 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.repository.DomainRepository;
+import de.trispeedys.resourceplanning.repository.EventRepository;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
+import de.trispeedys.resourceplanning.util.PositionInclude;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
@@ -52,7 +59,7 @@ public class TestDataProvider
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015",
                         "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
-                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         for (Helper helper : helpers)
@@ -72,7 +79,7 @@ public class TestDataProvider
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015",
                         "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
-                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
         // block one of the positions with a new helper
         Helper blockingHelper =
@@ -101,7 +108,7 @@ public class TestDataProvider
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015",
                         "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
-                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
         startHelperRequestProcess(
                 ((Helper) Datasources.getDatasource(Helper.class).findAll().get(0)).getId(),
@@ -123,7 +130,7 @@ public class TestDataProvider
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015",
                         "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
-                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         List<Position> positions = Datasources.getDatasource(Position.class).findAll();
@@ -148,7 +155,7 @@ public class TestDataProvider
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015",
                         "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
-                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         List<Helper> helpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         startHelperRequestProcess(helpers.get(0).getId(), event2016.getId());
@@ -162,7 +169,7 @@ public class TestDataProvider
         // there is a new event (with 7 active helpers)...
         SpeedyRoutines.duplicateEvent(TestDataGenerator.createRealLifeEvent("Triathlon 2016", "TRI-2016", 21,
                 6, 2016, EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21,
-                6, 2016, null);
+                6, 2016, null, null);
     }
 
     // --- Real life test
@@ -170,8 +177,33 @@ public class TestDataProvider
     public void finish2015()
     {
         HibernateUtil.clearAll();
-        TestDataGenerator.createRealLifeEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.FINISHED,
+        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2016, EventState.FINISHED,
                 EventTemplate.TEMPLATE_TRI);
+    }
+    
+    public void duplicate2015()
+    {
+        // create new position (no. 7777) for domain [D2]
+        Domain dom2 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(2);
+        EntityFactory.buildPosition("7777", 12, dom2, false, 7777).persist();
+        
+        // create new position (no. 8888) for domain [D92]
+        Domain dom92 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(92);
+        EntityFactory.buildPosition("8888", 12, dom92, false, 8888).persist();
+        
+        List<Integer> excludes = new ArrayList<Integer>();
+        excludes.add(137);
+        excludes.add(232);
+        excludes.add(39);
+        excludes.add(93);
+        
+        List<PositionInclude> includes = new ArrayList<PositionInclude>();
+        includes.add(new PositionInclude(dom2, 7777));
+        includes.add(new PositionInclude(dom92, 8888));
+                
+        // real life event for 2015
+        Event event2015 = RepositoryProvider.getRepository(EventRepository.class).findEventByEventKey("TRI-2015");
+        SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes, includes);        
     }
 
     public void debugEvent(Long eventId)

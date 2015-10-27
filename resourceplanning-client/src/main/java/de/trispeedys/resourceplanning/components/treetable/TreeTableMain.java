@@ -8,8 +8,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import de.trispeedys.resourceplanning.ResourcePlanningClientRoutines;
-
 public class TreeTableMain extends JFrame
 {
     public TreeTableMain()
@@ -20,7 +18,7 @@ public class TreeTableMain extends JFrame
 
         setLayout(new GridLayout(0, 1));
 
-        AbstractTreeTableModel treeTableModel = new TreeTableDataModel(ResourcePlanningClientRoutines.createDataStructure());
+        AbstractTreeTableModel treeTableModel = null;
 
         TreeTable myTreeTable = new TreeTable(treeTableModel);
 
@@ -37,7 +35,6 @@ public class TreeTableMain extends JFrame
     {
         Runnable gui = new Runnable()
         {
-
             public void run()
             {
                 try

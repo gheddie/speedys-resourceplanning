@@ -6,27 +6,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>R&uumlckmeldung erhalten</title>
 </head>
-<%@ page import="de.trispeedys.resourceplanning.interaction.HelperInteraction"%>
-<%@ page import="de.trispeedys.resourceplanning.interaction.HtmlRenderer"%>
-<%@page import="org.camunda.bpm.engine.MismatchingMessageCorrelationException"%>
 <%@page import="de.trispeedys.resourceplanning.interaction.HelperInteraction"%>
-<%@page import="de.trispeedys.resourceplanning.interaction.HtmlRenderer"%>
-<%@page import="de.trispeedys.resourceplanning.service.PositionService"%>
 <body>
 	<%
-	    try
-	    {
-	        boolean positionAvailable = PositionService.isPositionAvailable(Long.parseLong(request.getParameter("eventId")), Long.parseLong(request.getParameter("chosenPosition")));
-	        HelperInteraction.processPositionChosenCallback(request, positionAvailable);
-	        //the message could be correlated
-	        out.println(HtmlRenderer.renderCorrelationSuccess(request));
-	        out.println(HtmlRenderer.renderChosenPosAvailable(request, positionAvailable));
-	    }
-	    catch (MismatchingMessageCorrelationException e)
-	    {
-	        //the message could not be correlated
-	        out.println(HtmlRenderer.renderCorrelationFault(request));
-	    }
+      Long eventId = Long.parseLong(request.getParameter("eventId"));
+	  Long helperId = Long.parseLong(request.getParameter("helperId"));
+	  Long chosenPositionId = Long.parseLong(request.getParameter("chosenPosition"));        	        
+	  // render action result
+	  out.println(HelperInteraction.processPositionChosenCallback(eventId, helperId, chosenPositionId));
 	%>
 </body>
 </html>

@@ -27,7 +27,7 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 public class SpeedyRoutines
 {
     public static Event duplicateEvent(Event event, String description, String eventKey, int day, int month,
-            int year, List<Integer> positionExcludes)
+            int year, List<Integer> positionExcludes, List<PositionInclude> includes)
     {
         if (event == null)
         {
@@ -41,7 +41,8 @@ public class SpeedyRoutines
         Event newEvent =
                 EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
                         event.getEventTemplate()).persist();
-        List<EventPosition> posRelations = Datasources.getDatasource(EventPosition.class).find("event", event);
+        List<EventPosition> posRelations =
+                Datasources.getDatasource(EventPosition.class).find("event", event);
         Position pos = null;
         for (EventPosition evtpos : posRelations)
         {
@@ -50,6 +51,23 @@ public class SpeedyRoutines
             if (!(excludePosition(pos, positionExcludes)))
             {
                 EntityFactory.buildEventPosition(newEvent, pos).persist();
+            }
+        }
+        // process includes
+        if (includes != null)
+        {
+            Position additionalPosition = null;
+            for (PositionInclude include : includes)
+            {
+                additionalPosition = RepositoryProvider.getRepository(PositionRepository.class)
+                        .findPositionByPositionNumber(include.getPositionNumber());
+                if (additionalPosition == null)
+                {
+                    throw new ResourcePlanningException("unable to find position by position number '"+include.getPositionNumber()+"'!!");
+                }
+                EntityFactory.buildEventPosition(
+                        newEvent,
+                        additionalPosition).persist();
             }
         }
         return newEvent;
@@ -63,15 +81,17 @@ public class SpeedyRoutines
         }
         // list with all pos numbers in the given event...
         List<Integer> posNumbersInEvent = new ArrayList<Integer>();
-        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findPositionsInEvent(event))
-        {            
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findPositionsInEvent(
+                event))
+        {
             posNumbersInEvent.add(pos.getPositionNumber());
         }
         for (Integer exclude : positionExcludes)
         {
             if (!(posNumbersInEvent.contains(exclude)))
             {
-                throw new ResourcePlanningException("pos number '"+exclude+"' can not be excluded from event as it is not present!!");
+                throw new ResourcePlanningException("pos number '" +
+                        exclude + "' can not be excluded from event as it is not present!!");
             }
         }
     }
@@ -145,7 +165,8 @@ public class SpeedyRoutines
         {
             return null;
         }
-        List<HelperAssignment> helperAssignments = RepositoryProvider.getRepository(HelperAssignmentRepository.class).findByEvent(event);
+        List<HelperAssignment> helperAssignments =
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).findByEvent(event);
         HashMap<Long, HelperAssignment> assignmentMap = new HashMap<Long, HelperAssignment>();
         for (HelperAssignment assignment : helperAssignments)
         {
@@ -200,15 +221,17 @@ public class SpeedyRoutines
 
     private static Helper getAssignment(HashMap<Long, HelperAssignment> assignmentMap, Position pos)
     {
-        return (assignmentMap.get(pos.getId()) != null ? assignmentMap.get(pos.getId()).getHelper() : null);
+        return (assignmentMap.get(pos.getId()) != null
+                ? assignmentMap.get(pos.getId()).getHelper()
+                : null);
     }
-    
+
     public static List<EntityTreeNode> flattenedEventNodes(Event event)
     {
         EntityTreeNode<Event> root = eventAsTree(event);
         return flattenedEventNodesRecursive(root, new ArrayList<EntityTreeNode>());
     }
-    
+
     private static List<EntityTreeNode> flattenedEventNodesRecursive(EntityTreeNode root,
             List<EntityTreeNode> nodes)
     {

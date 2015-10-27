@@ -35,7 +35,7 @@ public class CallbackChoiceGeneratorTest
                 TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
         // get helper
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
@@ -58,7 +58,7 @@ public class CallbackChoiceGeneratorTest
                 TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null);
+                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
         // get helpers
         Helper helperA = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
@@ -93,7 +93,7 @@ public class CallbackChoiceGeneratorTest
         List<Integer> excludes = new ArrayList<Integer>();
         excludes.add(2);
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes);
+                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes, null);
 
         // remove prior position of helper 'A' from event 2016
         Helper helperA =
