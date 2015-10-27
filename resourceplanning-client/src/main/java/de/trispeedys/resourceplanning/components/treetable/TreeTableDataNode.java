@@ -7,22 +7,16 @@ import java.util.List;
 
 public class TreeTableDataNode
 {
-    private String name;
-
-    private String capital;
-
-    private Date declared;
-
-    private Integer area;
+    private String description;
+    
+    private String assignment;
 
     private List<TreeTableDataNode> children;
 
-    public TreeTableDataNode(String name, String capital, Date declared, Integer area, List<TreeTableDataNode> children)
+    public TreeTableDataNode(String description, String assignment, List<TreeTableDataNode> children)
     {
-        this.name = name;
-        this.capital = capital;
-        this.declared = declared;
-        this.area = area;
+        this.description = description;
+        this.assignment = assignment;
         this.children = children;
 
         if (this.children == null)
@@ -31,24 +25,14 @@ public class TreeTableDataNode
         }
     }
 
-    public String getName()
+    public String getDescription()
     {
-        return name;
+        return description;
     }
-
-    public String getCapital()
+    
+    public String getAssignment()
     {
-        return capital;
-    }
-
-    public Date getDeclared()
-    {
-        return declared;
-    }
-
-    public Integer getArea()
-    {
-        return area;
+        return assignment;
     }
 
     public List<TreeTableDataNode> getChildren()
@@ -75,6 +59,6 @@ public class TreeTableDataNode
      */
     public String toString()
     {
-        return name;
+        return description;
     }
 }

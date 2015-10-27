@@ -83,13 +83,15 @@ public class ResourcePlanningMainFrame extends JFrame
         else
         {
             // show all events
-            TreeTableDataNode root = new TreeTableDataNode("root", "root", new Date(), 1, null);
+            TreeTableDataNode root = new TreeTableDataNode("root", "root", null);
             for (EventDTO dto : events)
             {
                 root.addChild(ResourcePlanningClientRoutines.createDataStructure(dto.getEventId()));
             }
             treeTablePositions.setModel(new TreeTableDataModel(root));
         }
+        // TODO expand tree
+        // treeTablePositions.expandAll();
     }
 
     private void initComponents()

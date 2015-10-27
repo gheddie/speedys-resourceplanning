@@ -7,7 +7,7 @@ public class TreeTableDataModel extends AbstractTreeTableModel
     // Spalten Name.
     static protected String[] columnNames =
     {
-            "Knotentext", "String", "Datum", "Integer"
+            "Beschreibung", "Besetzung"
     };
 
     // Spalten Typen.
@@ -52,13 +52,9 @@ public class TreeTableDataModel extends AbstractTreeTableModel
         switch (column)
         {
             case 0:
-                return ((TreeTableDataNode) node).getName();
+                return ((TreeTableDataNode) node).getDescription();
             case 1:
-                return ((TreeTableDataNode) node).getCapital();
-            case 2:
-                return ((TreeTableDataNode) node).getDeclared();
-            case 3:
-                return ((TreeTableDataNode) node).getArea();
+                return ((TreeTableDataNode) node).getAssignment();
             default:
                 break;
         }

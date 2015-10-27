@@ -1,7 +1,6 @@
 package de.trispeedys.resourceplanning;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataNode;
@@ -27,8 +26,7 @@ public class ResourcePlanningClientRoutines
             {
                 case HierarchicalEventItem.LEVEL_EVENT:
                     eventNode =
-                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(),
-                                    new Date(), 1, null);
+                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), null);
                     domainNodes = new ArrayList<TreeTableDataNode>();
                     break;
                 case HierarchicalEventItem.LEVEL_DOMAIN:
@@ -40,13 +38,11 @@ public class ResourcePlanningClientRoutines
                     }
                     // create new node
                     domainNode =
-                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(),
-                                    new Date(), 1, null);
+                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), null);
                     positionNodes = new ArrayList<TreeTableDataNode>();
                     break;
                 case HierarchicalEventItem.LEVEL_POSITION:
-                    positionNodes.add(new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(),
-                            new Date(), 1, null));
+                    positionNodes.add(new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), null));
                     break;
             }
         }

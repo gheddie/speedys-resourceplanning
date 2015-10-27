@@ -24,17 +24,7 @@ public class PositionTreeNode<T> extends EntityTreeNode<Position>
     
     public String infoString()
     {
-        Helper helper = ((AssignmentContainer) getPayLoad()).getHelper();
-        String helperString = "";
-        if (helper != null)
-        {
-            helperString = helper.toString();
-        }
-        else
-        {
-            helperString = "[--N/A--]";
-        }
-        return ((AssignmentContainer) getPayLoad()).getPosition() + " ["+helperString+"]";
+        return ((AssignmentContainer) getPayLoad()).getPosition().toString();
     }
     
     public HierarchicalEventItemType getItemType()
