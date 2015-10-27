@@ -25,45 +25,27 @@ public interface ResourceInfo {
 
     /**
      * 
-     * @param arg0
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTOArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    public HierarchicalEventItemDTOArray getEventNodes(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0);
-
-    /**
-     * 
+     * @param arg5
+     * @param arg4
+     * @param arg3
      * @param arg2
      * @param arg1
      * @param arg0
      */
     @WebMethod
-    public void assignHelper(
+    public void duplicateEvent(
         @WebParam(name = "arg0", partName = "arg0")
         long arg0,
         @WebParam(name = "arg1", partName = "arg1")
-        long arg1,
+        String arg1,
         @WebParam(name = "arg2", partName = "arg2")
-        long arg2);
-
-    /**
-     * 
-     */
-    @WebMethod
-    public void finishUp();
-
-    /**
-     * 
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.EventDTOArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    public EventDTOArray queryEvents();
+        String arg2,
+        @WebParam(name = "arg3", partName = "arg3")
+        int arg3,
+        @WebParam(name = "arg4", partName = "arg4")
+        int arg4,
+        @WebParam(name = "arg5", partName = "arg5")
+        int arg5);
 
     /**
      * 
@@ -94,41 +76,68 @@ public interface ResourceInfo {
 
     /**
      * 
-     * @param arg5
-     * @param arg4
-     * @param arg3
-     * @param arg2
-     * @param arg1
-     * @param arg0
-     */
-    @WebMethod
-    public void duplicateEvent(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        String arg1,
-        @WebParam(name = "arg2", partName = "arg2")
-        String arg2,
-        @WebParam(name = "arg3", partName = "arg3")
-        int arg3,
-        @WebParam(name = "arg4", partName = "arg4")
-        int arg4,
-        @WebParam(name = "arg5", partName = "arg5")
-        int arg5);
-
-    /**
-     * 
      */
     @WebMethod
     public void sendAllMessages();
 
     /**
      * 
+     * @param arg2
+     * @param arg1
      * @param arg0
      */
     @WebMethod
-    public void startProcessesForActiveHelpers(
+    public void assignHelper(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        long arg1,
+        @WebParam(name = "arg2", partName = "arg2")
+        long arg2);
+
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod
+    public void startProcessesForActiveHelpersByEventId(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0);
+
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod
+    public void startProcessesForActiveHelpersByTemplateName(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0);
+
+    /**
+     * 
+     */
+    @WebMethod
+    public void finishUp();
+
+    /**
+     * 
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.EventDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public EventDTOArray queryEvents();
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public HierarchicalEventItemDTOArray getEventNodes(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0);
 
 }

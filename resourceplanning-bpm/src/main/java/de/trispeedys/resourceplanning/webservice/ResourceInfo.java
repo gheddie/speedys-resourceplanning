@@ -70,9 +70,14 @@ public class ResourceInfo
         HelperInteraction.processReminderCallback(callbackValue, businessKey);
     }
 
-    public void startProcessesForActiveHelpers(String templateName)
+    public void startProcessesForActiveHelpersByTemplateName(String templateName)
     {
         EventManager.triggerHelperProcesses(templateName);
+    }
+    
+    public void startProcessesForActiveHelpersByEventId(Long eventId)
+    {
+        EventManager.triggerHelperProcesses(eventId);
     }
 
     public void finishUp()

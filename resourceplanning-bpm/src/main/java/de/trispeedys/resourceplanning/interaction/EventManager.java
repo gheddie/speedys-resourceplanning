@@ -7,15 +7,14 @@ import java.util.Map;
 import org.camunda.bpm.BpmPlatform;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
-import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
-import de.trispeedys.resourceplanning.datasource.EventDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
-import de.trispeedys.resourceplanning.service.EventService;
+import de.trispeedys.resourceplanning.repository.EventRepository;
+import de.trispeedys.resourceplanning.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.StringUtil;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
@@ -28,7 +27,7 @@ public class EventManager
         {
             throw new ResourcePlanningException("template name must not be blank!!");
         }
-        List<Event> events = EventService.findEventsByTemplateAndStatus(templateName, EventState.PLANNED);
+        List<Event> events = RepositoryProvider.getRepository(EventRepository.class).findEventsByTemplateAndStatus(templateName, EventState.PLANNED);
         if ((events == null) || (events.size() != 1))
         {
             throw new ResourcePlanningException("there must be exactly one planned event of template '"+templateName+"'!!");
@@ -38,6 +37,25 @@ public class EventManager
         for (Helper helper : activeHelpers)
         {
             startHelperRequestProcess(helper, events.get(0));
+        }
+    }
+    
+    public static void triggerHelperProcesses(Long eventId)
+    {
+        if (eventId == null)
+        {
+            throw new ResourcePlanningException("event id must not be null!!");
+        }
+        Event event = Datasources.getDatasource(Event.class).findById(eventId);
+        if (event == null)
+        {
+            throw new ResourcePlanningException("event with id '"+eventId+"' could not be found!!");
+        }
+        // start request process for every active helper...
+        List<Helper> activeHelpers = Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        for (Helper helper : activeHelpers)
+        {
+            startHelperRequestProcess(helper, event);
         }
     }
     
