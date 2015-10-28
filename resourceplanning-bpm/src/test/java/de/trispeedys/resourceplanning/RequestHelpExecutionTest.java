@@ -32,8 +32,10 @@ import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
+import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
+import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
-import de.trispeedys.resourceplanning.repository.RepositoryProvider;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
@@ -83,7 +85,7 @@ public class RequestHelpExecutionTest
         Helper helperA = allHelpers.get(1);
         Helper helperB = allHelpers.get(3);
         // get assigned position for helper 'A' in 2015
-        HelperAssignment assignmentA2015 = AssignmentService.getHelperAssignments(helperA, event2015).get(0);
+        HelperAssignment assignmentA2015 = RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2015).get(0);
         AssignmentService.assignHelper(helperB, event2016, assignmentA2015.getPosition());
 
         // (4)
@@ -114,7 +116,7 @@ public class RequestHelpExecutionTest
         // (9)
         // ...
         List<HelperAssignment> helperAssignmentA2016 =
-                AssignmentService.getHelperAssignments(helperA, event2016);
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2016);
         assertEquals(1, helperAssignmentA2016.size());
 
         // (10)
@@ -140,7 +142,7 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
-        List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
+        List<Helper> allHelpers = RepositoryProvider.getRepository(HelperRepository.class).findAll();
         assertEquals(5, allHelpers.size());
         Helper helperA = allHelpers.get(1);
 
@@ -151,7 +153,7 @@ public class RequestHelpExecutionTest
         RequestHelpTestUtil.doCallback(HelperCallback.ASSIGNMENT_AS_BEFORE, businessKey, processEngine);
 
         List<HelperAssignment> helperAssignmentA2016 =
-                AssignmentService.getHelperAssignments(helperA, event2016);
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2016);
         assertEquals(1, helperAssignmentA2016.size());
 
         processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
@@ -195,8 +197,8 @@ public class RequestHelpExecutionTest
         // helper state remains 'ACTIVE'
         assertEquals(
                 HelperState.ACTIVE,
-                ((Helper) Datasources.getDatasource(Helper.class).findById(notCooperativeHelper.getId())).getHelperState());
-    }
+                (RepositoryProvider.getRepository(HelperRepository.class).findById(notCooperativeHelper.getId())).getHelperState());
+    }       
 
     /**
      * Like {@link RequestHelpExecutionTest#testNotCooperativeAndRecoveredHelper()}, but the helper does NOT respond to
@@ -324,7 +326,7 @@ public class RequestHelpExecutionTest
         RequestHelpTestUtil.choosePosition(businessKey, notBlockedPosition, processEngine, event2016.getId());
 
         // (D)
-        assertEquals(1, AssignmentService.getHelperAssignments(helperA, event2016).size());
+        assertEquals(1, RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2016).size());
         processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
     }

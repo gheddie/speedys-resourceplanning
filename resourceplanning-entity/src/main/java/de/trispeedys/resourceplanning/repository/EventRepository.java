@@ -5,20 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.datasource.EventDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
+import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
+import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
 
-public class EventRepository implements DatabaseRepository<EventRepository>
+public class EventRepository extends AbstractDatabaseRepository<Event> implements DatabaseRepository<EventRepository>
 {
-    private EventDatasource datasource;
-
-    public void createDataSource()
-    {
-        datasource = new EventDatasource();
-    }
-
     public List<Event> findEventByTemplateOrdered(String eventTemplateName)
     {
         String queryString =
@@ -27,7 +23,7 @@ public class EventRepository implements DatabaseRepository<EventRepository>
                         " ev INNER JOIN ev.eventTemplate et WHERE et.description = :description ORDER BY ev.eventDate ASC";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("description", eventTemplateName);
-        List<Object[]> list = datasource.find(queryString, parameters);
+        List<Object[]> list = dataSource().find(queryString, parameters);
         if (list.size() == 0)
         {
             return null;
@@ -42,7 +38,7 @@ public class EventRepository implements DatabaseRepository<EventRepository>
 
     public Event findEventByEventKey(String eventKey)
     {
-        return datasource.findSingle(Event.ATTR_EVENT_KEY, eventKey);
+        return dataSource().findSingle(Event.ATTR_EVENT_KEY, eventKey);
     }
     
     public List<Event> findEventsByTemplateAndStatus(String templateName, EventState eventState)
@@ -61,5 +57,20 @@ public class EventRepository implements DatabaseRepository<EventRepository>
             result.add((Event) o[0]);
         }
         return result;
+    }
+
+    protected DefaultDatasource<Event> createDataSource()
+    {
+        return new EventDatasource();
+    }
+
+    public void updateEventState(Event event, EventState eventState)
+    {
+        if (event == null)
+        {
+            return;
+        }
+        event.setEventState(eventState);
+        dataSource().saveOrUpdate(event);
     }
 }

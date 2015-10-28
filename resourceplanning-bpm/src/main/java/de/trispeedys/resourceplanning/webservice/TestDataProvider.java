@@ -29,7 +29,7 @@ import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.repository.DomainRepository;
 import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
-import de.trispeedys.resourceplanning.repository.RepositoryProvider;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.PositionInclude;
@@ -204,18 +204,5 @@ public class TestDataProvider
         // real life event for 2015
         Event event2015 = RepositoryProvider.getRepository(EventRepository.class).findEventByEventKey("TRI-2015");
         SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes, includes);        
-    }
-
-    public void debugEvent(Long eventId)
-    {
-        DefaultDatasource<Event> datasource = Datasources.getDatasource(Event.class);
-        SpeedyRoutines.debugEvent((Event) datasource.findById(eventId));
-    }
-
-    // --- main
-
-    public static void main(String[] args)
-    {
-        new TestDataProvider().debugEvent(6291l);
     }
 }

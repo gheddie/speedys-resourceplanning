@@ -5,19 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.datasource.PositionDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
+import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
 
-public class PositionRepository implements DatabaseRepository<PositionRepository>
+public class PositionRepository extends AbstractDatabaseRepository<Position> implements DatabaseRepository<PositionRepository>
 {
-    private PositionDatasource datasource;
-
     public Position findPositionByPositionNumber(int positionNumber)
     {
-        return (Position) datasource.findSingle(Position.ATTR_POS_NUMBER, positionNumber);
+        return (Position) dataSource().findSingle(Position.ATTR_POS_NUMBER, positionNumber);
     }
 
     public List<Position> findUnassignedPositionsInEvent(Event event)
@@ -56,8 +57,8 @@ public class PositionRepository implements DatabaseRepository<PositionRepository
         return result;
     }
 
-    public void createDataSource()
+    protected DefaultDatasource<Position> createDataSource()
     {
-        datasource = new PositionDatasource();
+        return new PositionDatasource();
     }
 }

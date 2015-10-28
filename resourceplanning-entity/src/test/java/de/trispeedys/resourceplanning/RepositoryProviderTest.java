@@ -8,7 +8,7 @@ import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
-import de.trispeedys.resourceplanning.repository.RepositoryProvider;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 
 public class RepositoryProviderTest
 {

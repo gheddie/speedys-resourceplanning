@@ -14,13 +14,15 @@ import de.trispeedys.resourceplanning.dto.EventDTO;
 import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
 import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.interaction.EventManager;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
+import de.trispeedys.resourceplanning.repository.EventRepository;
+import de.trispeedys.resourceplanning.repository.HelperRepository;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
@@ -41,10 +43,10 @@ public class ResourceInfo
 
     public void assignHelper(Long helperId, Long positionId, Long eventId)
     {
-        Helper helper = Datasources.getDatasource(Helper.class).findById(helperId);
-        Event event = Datasources.getDatasource(Event.class).findById(eventId);
-        Position position = Datasources.getDatasource(Position.class).findById(positionId);
-        AssignmentService.assignHelper(helper, event, position);
+        AssignmentService.assignHelper(
+                RepositoryProvider.getRepository(HelperRepository.class).findById(helperId),
+                RepositoryProvider.getRepository(EventRepository.class).findById(helperId),
+                RepositoryProvider.getRepository(PositionRepository.class).findById(helperId));
     }
 
     public void sendAllMessages()
@@ -74,7 +76,7 @@ public class ResourceInfo
     {
         EventManager.triggerHelperProcesses(templateName);
     }
-    
+
     public void startProcessesForActiveHelpersByEventId(Long eventId)
     {
         EventManager.triggerHelperProcesses(eventId);
@@ -86,8 +88,8 @@ public class ResourceInfo
                 .getRuntimeService()
                 .signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
     }
-    
-    public EventDTO[] queryEvents() 
+
+    public EventDTO[] queryEvents()
     {
         List<Event> allEvents = Datasources.getDatasource(Event.class).findAll();
         List<EventDTO> dtos = new ArrayList<EventDTO>();
@@ -101,8 +103,8 @@ public class ResourceInfo
         }
         return dtos.toArray(new EventDTO[dtos.size()]);
     }
-    
-    public void duplicateEvent(Long eventId, String description, String eventKey, int day, int month, int year) 
+
+    public void duplicateEvent(Long eventId, String description, String eventKey, int day, int month, int year)
     {
         if (eventId == null)
         {
@@ -111,16 +113,16 @@ public class ResourceInfo
         Event event = Datasources.getDatasource(Event.class).findById(eventId);
         if (event == null)
         {
-            throw new ResourcePlanningException("event with id '"+eventId+"' could not found!!");
+            throw new ResourcePlanningException("event with id '" + eventId + "' could not found!!");
         }
         SpeedyRoutines.duplicateEvent(event, description, eventKey, day, month, year, null, null);
     }
 
-    public HierarchicalEventItemDTO[] getEventNodes(Long eventId)
+    public HierarchicalEventItemDTO[] getEventNodes(Long eventId, boolean onlyUnassignedPositions)
     {
+        Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
         List<EntityTreeNode> nodes =
-                SpeedyRoutines.flattenedEventNodes((Event) Datasources.getDatasource(Event.class).findById(
-                        eventId));
+                SpeedyRoutines.flattenedEventNodes(event);
         List<HierarchicalEventItemDTO> dtos = new ArrayList<HierarchicalEventItemDTO>();
         HierarchicalEventItemDTO dto = null;
         for (EntityTreeNode node : nodes)

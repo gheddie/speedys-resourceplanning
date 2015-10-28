@@ -20,6 +20,8 @@ import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.execution.BpmJobDefinitions;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.repository.MessageQueueRepository;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.PositionService;
 
 public class RequestHelpTestUtil
@@ -51,12 +53,12 @@ public class RequestHelpTestUtil
 
     public static int countMails()
     {
-        return Datasources.getDatasource(MessageQueue.class).findAll().size();
+        return RepositoryProvider.getRepository(MessageQueueRepository.class).findAll().size();
     }
 
     public static boolean checkMails(int expectedMailCount, MessagingType... types)
     {
-        List<MessageQueue> messages = Datasources.getDatasource(MessageQueue.class).findAll();
+        List<MessageQueue> messages = RepositoryProvider.getRepository(MessageQueueRepository.class).findAll();
         if ((messages == null) || (messages.size() != expectedMailCount))
         {
             return false;

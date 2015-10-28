@@ -14,6 +14,8 @@ import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.util.DateHelper;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
@@ -39,30 +41,9 @@ public class AssignmentService
         EntityFactory.buildHelperAssignment(helper, event, position).persist();
     }
 
-    public static List<HelperAssignment> getAllHelperAssignments(Long helperId)
-    {
-        return Datasources.getDatasource(HelperAssignment.class).find(
-                "From " + HelperAssignment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId",
-                "helperId", helperId);
-    }
-
-    /**
-     * gets the {@link HelperAssignment} for the given {@link Helper} in the given year (can be more than one, as one
-     * helper can be assigned to multiple positions in one event).
-     * 
-     * @param helper
-     * @param event
-     * @return
-     */
-    public static List<HelperAssignment> getHelperAssignments(Helper helper, Event event)
-    {
-        return Datasources.getDatasource(HelperAssignment.class).find(HelperAssignment.ATTR_HELPER, helper,
-                HelperAssignment.ATTR_EVENT, event);
-    }
-
     public static boolean isFirstAssignment(Long helperId)
     {
-        List<HelperAssignment> helperAssignments = AssignmentService.getAllHelperAssignments(helperId);
+        List<HelperAssignment> helperAssignments = RepositoryProvider.getRepository(HelperAssignmentRepository.class).getAllHelperAssignments(helperId);
         return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
 
@@ -71,12 +52,10 @@ public class AssignmentService
      */
     public static void cancelHelperAssignment(Helper helper, Event event)
     {
-        DefaultDatasource<HelperAssignment> datasource = Datasources.getDatasource(HelperAssignment.class);
-        HelperAssignment assignment =
-                (HelperAssignment) datasource.find(HelperAssignment.ATTR_HELPER, helper,
-                        HelperAssignment.ATTR_EVENT, event).get(0);
+        HelperAssignmentRepository repository = RepositoryProvider.getRepository(HelperAssignmentRepository.class);
+        HelperAssignment assignment = repository.findByHelperAndEvent(helper, event).get(0);
         assignment.setHelperAssignmentState(HelperAssignmentState.CANCELLED);
-        datasource.saveOrUpdate(assignment);
+        repository.saveOrUpdate(assignment);
     }
 
     public static HelperAssignment getPriorAssignment(Helper helper, EventTemplate eventTemplate)

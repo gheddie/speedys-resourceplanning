@@ -1,8 +1,15 @@
-package de.trispeedys.resourceplanning.repository;
+package de.trispeedys.resourceplanning.repository.base;
 
 import java.util.HashMap;
 
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.repository.DomainRepository;
+import de.trispeedys.resourceplanning.repository.EventPositionRepository;
+import de.trispeedys.resourceplanning.repository.EventRepository;
+import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
+import de.trispeedys.resourceplanning.repository.HelperRepository;
+import de.trispeedys.resourceplanning.repository.MessageQueueRepository;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
 
 public class RepositoryProvider
 {
@@ -24,6 +31,7 @@ public class RepositoryProvider
         registerRepository(EventRepository.class);
         registerRepository(MessageQueueRepository.class);
         registerRepository(HelperAssignmentRepository.class);
+        registerRepository(HelperRepository.class);
     }
 
     private void registerRepository(Class<? extends DatabaseRepository> clazz)
@@ -31,7 +39,7 @@ public class RepositoryProvider
         try
         {
             DatabaseRepository repositoryInstance = clazz.newInstance();
-            repositoryInstance.createDataSource();
+            //repositoryInstance.createDataSource();
             repositoryCache.put(clazz, repositoryInstance);
         }
         catch (Exception e)

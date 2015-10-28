@@ -1,19 +1,20 @@
 package de.trispeedys.resourceplanning.repository;
 
+import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.datasource.DomainDatasource;
 import de.trispeedys.resourceplanning.entity.Domain;
+import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
+import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
 
-public class DomainRepository implements DatabaseRepository<DomainRepository>
+public class DomainRepository extends AbstractDatabaseRepository<Domain> implements DatabaseRepository<DomainRepository>
 {
-    private DomainDatasource datasource;
-
     public Domain findDomainByNumber(int domainNumber)
     {
-        return datasource.findSingle(Domain.ATTR_DOMAIN_NUMBER, domainNumber);
+        return dataSource().findSingle(Domain.ATTR_DOMAIN_NUMBER, domainNumber);
     }
-    
-    public void createDataSource()
+
+    protected DefaultDatasource<Domain> createDataSource()
     {
-        datasource = new DomainDatasource();
+        return new DomainDatasource();
     }
 }

@@ -17,9 +17,10 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
-import de.trispeedys.resourceplanning.repository.RepositoryProvider;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.util.comparator.EnumeratedEventItemComparator;
 import de.trispeedys.resourceplanning.util.comparator.TreeNodeComparator;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
@@ -156,7 +157,7 @@ public class SpeedyRoutines
 
     public static EntityTreeNode eventAsTree(Long eventId)
     {
-        return eventAsTree((Event) Datasources.getDatasource(Event.class).findById(eventId));
+        return eventAsTree(RepositoryProvider.getRepository(EventRepository.class).findById(eventId));
     }
 
     public static EntityTreeNode eventAsTree(Event event)

@@ -10,7 +10,7 @@ import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
 
 public class ResourcePlanningClientRoutines
 {
-    public static TreeTableDataNode createDataStructure(Long eventId)
+    public static TreeTableDataNode createDataStructure(Long eventId, boolean onlyUnassigned)
     {
         TreeTableDataNode eventNode = null;
         TreeTableDataNode domainNode = null;
@@ -18,7 +18,7 @@ public class ResourcePlanningClientRoutines
         List<TreeTableDataNode> positionNodes = null;
 
         List<HierarchicalEventItemDTO> eventNodes = new ResourceInfoService().getResourceInfoPort()
-                .getEventNodes(eventId)
+                .getEventNodes(eventId, onlyUnassigned)
                 .getItem();
         for (HierarchicalEventItemDTO node : eventNodes)
         {
