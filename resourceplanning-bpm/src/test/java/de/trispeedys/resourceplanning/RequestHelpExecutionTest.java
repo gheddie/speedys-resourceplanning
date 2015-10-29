@@ -36,6 +36,7 @@ import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
+import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
@@ -65,7 +66,7 @@ public class RequestHelpExecutionTest
     {
         // (0)
         HibernateUtil.clearAll();
-        
+
         PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
 
         // (1)
@@ -75,7 +76,8 @@ public class RequestHelpExecutionTest
 
         // (2)
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null,
+                        null);
 
         // (3)
         List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
@@ -83,7 +85,10 @@ public class RequestHelpExecutionTest
         Helper helperA = allHelpers.get(1);
         Helper helperB = allHelpers.get(3);
         // get assigned position for helper 'A' in 2015
-        HelperAssignment assignmentA2015 = RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2015).get(0);
+        HelperAssignment assignmentA2015 =
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class)
+                        .getHelperAssignments(helperA, event2015)
+                        .get(0);
         AssignmentService.assignHelper(helperB, event2016, assignmentA2015.getPosition());
 
         // (4)
@@ -102,7 +107,8 @@ public class RequestHelpExecutionTest
 
         // (7) --> mails with types 'MessagingType.REMINDER_STEP_0' and 'MessagingType.PROPOSE_POSITIONS' must be
 // there...
-        List<Position> unassignedPositionsIn2016 = positionRepository.findUnassignedPositionsInEvent(event2016);
+        List<Position> unassignedPositionsIn2016 =
+                positionRepository.findUnassignedPositionsInEvent(event2016);
         assertEquals(4, unassignedPositionsIn2016.size());
         assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.REMINDER_STEP_0,
                 MessagingType.REMINDER_STEP_1, MessagingType.PROPOSE_POSITIONS));
@@ -114,7 +120,8 @@ public class RequestHelpExecutionTest
         // (9)
         // ...
         List<HelperAssignment> helperAssignmentA2016 =
-                RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2016);
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(
+                        helperA, event2016);
         assertEquals(1, helperAssignmentA2016.size());
 
         // (10)
@@ -138,7 +145,8 @@ public class RequestHelpExecutionTest
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null,
+                        null);
 
         List<Helper> allHelpers = RepositoryProvider.getRepository(HelperRepository.class).findAll();
         assertEquals(5, allHelpers.size());
@@ -151,7 +159,8 @@ public class RequestHelpExecutionTest
         RequestHelpTestUtil.doCallback(HelperCallback.ASSIGNMENT_AS_BEFORE, businessKey, processEngine);
 
         List<HelperAssignment> helperAssignmentA2016 =
-                RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2016);
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(
+                        helperA, event2016);
         assertEquals(1, helperAssignmentA2016.size());
 
         processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
@@ -173,7 +182,8 @@ public class RequestHelpExecutionTest
                 TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,
                         EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null, null);
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null, null);
         // start request process for every helper
         List<Helper> activeHelpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
@@ -196,7 +206,7 @@ public class RequestHelpExecutionTest
         assertEquals(
                 HelperState.ACTIVE,
                 (RepositoryProvider.getRepository(HelperRepository.class).findById(notCooperativeHelper.getId())).getHelperState());
-    }       
+    }
 
     /**
      * Like {@link RequestHelpExecutionTest#testNotCooperativeAndRecoveredHelper()}, but the helper does NOT respond to
@@ -213,7 +223,8 @@ public class RequestHelpExecutionTest
                 TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,
                         EventTemplate.TEMPLATE_TRI);
         // duplicate event
-        Event event2016 = SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null, null);
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(event2015, "TRI-2016", "TRI-2016", 21, 6, 2015, null, null);
         // start request process for every helper
         List<Helper> activeHelpers =
                 Datasources.getDatasource(Helper.class).find("helperState", HelperState.ACTIVE);
@@ -253,7 +264,8 @@ public class RequestHelpExecutionTest
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null,
+                        null);
 
         List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
         assertEquals(5, allHelpers.size());
@@ -286,7 +298,7 @@ public class RequestHelpExecutionTest
     public void testChangePositions()
     {
         HibernateUtil.clearAll();
-        
+
         PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
 
         Event event2015 =
@@ -294,7 +306,8 @@ public class RequestHelpExecutionTest
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null,
+                        null);
 
         List<Helper> allHelpers = Datasources.getDatasource(Helper.class).findAll();
         assertEquals(5, allHelpers.size());
@@ -311,7 +324,7 @@ public class RequestHelpExecutionTest
         // check mails ('REMINDER_STEP_0' und 'PROPOSE_POSITIONS' must be there)
         assertTrue(RequestHelpTestUtil.checkMails(2, MessagingType.REMINDER_STEP_0,
                 MessagingType.PROPOSE_POSITIONS));
-        
+
         // (B) we assign one of the proposed prosition to another helper and let 'helperA' choose it...
         Position blockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016).get(0);
         Position notBlockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016).get(1);
@@ -324,7 +337,9 @@ public class RequestHelpExecutionTest
         RequestHelpTestUtil.choosePosition(businessKey, notBlockedPosition, processEngine, event2016.getId());
 
         // (D)
-        assertEquals(1, RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2016).size());
+        assertEquals(1, RepositoryProvider.getRepository(HelperAssignmentRepository.class)
+                .getHelperAssignments(helperA, event2016)
+                .size());
         processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
     }
@@ -338,7 +353,7 @@ public class RequestHelpExecutionTest
     public void testPositionBlockedOnChoosePosition()
     {
         HibernateUtil.clearAll();
-        
+
         PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
 
         Event event2016 =
@@ -402,9 +417,17 @@ public class RequestHelpExecutionTest
                         "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
                         "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
+        // there must be 5 unassigned positions
+        assertEquals(
+                TestDataGenerator.POS_COUNT_SIMPLE_EVENT,
+                RepositoryProvider.getRepository(PositionRepository.class)
+                        .findUnassignedPositionsInEvent(event2016)
+                        .size());
+
         // new helper
         Helper helper =
-                EntityFactory.buildHelper("Mee", "Moo", "a@b.de", HelperState.ACTIVE, 23, 6, 2000).saveOrUpdate();
+                EntityFactory.buildHelper("Mee", "Moo", "a@b.de", HelperState.ACTIVE, 23, 6, 2000)
+                        .saveOrUpdate();
 
         // start process
         String businessKey =
@@ -427,10 +450,24 @@ public class RequestHelpExecutionTest
         Position someUnassignedTask = (Position) Datasources.getDatasource(Position.class).findAll().get(0);
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, someUnassignedTask.getId());
         processEngine.getTaskService().complete(task.getId(), variables);
+        
+        // there must be 4 unassigned positions
+        assertEquals(
+                TestDataGenerator.POS_COUNT_SIMPLE_EVENT - 1,
+                RepositoryProvider.getRepository(PositionRepository.class)
+                        .findUnassignedPositionsInEvent(event2016)
+                        .size());
 
         // Send cancellation message
         processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED,
                 businessKey);
+        
+        // there must be 5 unassigned positions
+        assertEquals(
+                TestDataGenerator.POS_COUNT_SIMPLE_EVENT,
+                RepositoryProvider.getRepository(PositionRepository.class)
+                        .findUnassignedPositionsInEvent(event2016)
+                        .size());
 
         // process must be gone
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());

@@ -1,5 +1,6 @@
 package de.trispeedys.resourceplanning.util;
 
+import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 
@@ -34,5 +35,10 @@ public class EventTreeNode<T> extends EntityTreeNode<Event>
     public String getAssignmentString()
     {
         return "";
+    }
+    
+    public Long getEntityId()
+    {
+        return ((Event) getPayLoad()).getId();
     }
 }

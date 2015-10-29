@@ -11,6 +11,8 @@ public class HierarchicalEventItemDTO
     private String itemKey;
     
     private String assignmentString;
+
+    private Long entityId;
     
     public String getItemType()
     {
@@ -60,5 +62,15 @@ public class HierarchicalEventItemDTO
     public void setAssignmentString(String assignmentString)
     {
         this.assignmentString = assignmentString;
+    }
+    
+    public Long getEntityId()
+    {
+        return entityId;
+    }
+
+    public void setEntityId(Long entityId)
+    {
+        this.entityId = entityId;
     }
 }

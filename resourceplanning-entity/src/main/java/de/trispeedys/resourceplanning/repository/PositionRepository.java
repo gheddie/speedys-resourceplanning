@@ -11,10 +11,12 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
 import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
 
-public class PositionRepository extends AbstractDatabaseRepository<Position> implements DatabaseRepository<PositionRepository>
+public class PositionRepository extends AbstractDatabaseRepository<Position> implements
+        DatabaseRepository<PositionRepository>
 {
     public Position findPositionByPositionNumber(int positionNumber)
     {
@@ -27,7 +29,9 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
                 "FROM " +
                         EventPosition.class.getSimpleName() + " ep WHERE ep." + EventPosition.ATTR_EVENT +
                         " = :event AND ep.position.id NOT IN (SELECT ec.position.id FROM " +
-                        HelperAssignment.class.getSimpleName() + " ec WHERE ec.event = :event)";
+                        HelperAssignment.class.getSimpleName() +
+                        " ec WHERE ec.event = :event AND ec.helperAssignmentState = '" +
+                        HelperAssignmentState.CONFIRMED + "')";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("event", event);
         List<EventPosition> eventPositions =

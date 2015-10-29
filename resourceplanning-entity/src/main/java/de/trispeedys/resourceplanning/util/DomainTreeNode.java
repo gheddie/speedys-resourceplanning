@@ -35,4 +35,9 @@ public class DomainTreeNode<T> extends EntityTreeNode<Domain>
     {
         return "";
     }
+
+    public Long getEntityId()
+    {
+        return ((Domain) getPayLoad()).getId();
+    }
 }

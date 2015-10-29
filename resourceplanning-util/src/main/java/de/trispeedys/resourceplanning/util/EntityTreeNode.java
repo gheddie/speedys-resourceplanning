@@ -59,4 +59,6 @@ public abstract class EntityTreeNode<T>
     public abstract String itemKey();
 
     public abstract String getAssignmentString();
+    
+    public abstract Long getEntityId();
 }

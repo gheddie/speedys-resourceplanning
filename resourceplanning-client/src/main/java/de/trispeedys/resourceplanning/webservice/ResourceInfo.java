@@ -25,6 +25,84 @@ public interface ResourceInfo {
 
     /**
      * 
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void cancelAssignment(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        long arg1);
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.PositionDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public PositionDTOArray queryAvailablePositions(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0);
+
+    /**
+     * 
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.HelperDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public HelperDTOArray queryHelpers();
+
+    /**
+     * 
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void assignHelper(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        long arg1,
+        @WebParam(name = "arg2", partName = "arg2")
+        long arg2);
+
+    /**
+     * 
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.EventDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public EventDTOArray queryEvents();
+
+    /**
+     * 
+     */
+    @WebMethod
+    public void finishUp();
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public HierarchicalEventItemDTOArray getEventNodes(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        boolean arg1);
+
+    /**
+     * 
      * @param arg0
      */
     @WebMethod
@@ -40,15 +118,6 @@ public interface ResourceInfo {
     public void startProcessesForActiveHelpersByEventId(
         @WebParam(name = "arg0", partName = "arg0")
         long arg0);
-
-    /**
-     * 
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.ManualAssignmentDTOArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    public ManualAssignmentDTOArray queryManualAssignments();
 
     /**
      * 
@@ -88,77 +157,29 @@ public interface ResourceInfo {
 
     /**
      * 
-     * @param arg1
-     * @param arg0
      * @return
-     *     returns de.trispeedys.resourceplanning.webservice.HelperAssignmentDTOArray
+     *     returns de.trispeedys.resourceplanning.webservice.ManualAssignmentDTOArray
      */
     @WebMethod
     @WebResult(partName = "return")
-    public HelperAssignmentDTOArray queryHelperAssignments(
+    public ManualAssignmentDTOArray queryManualAssignments();
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void completeManualAssignment(
         @WebParam(name = "arg0", partName = "arg0")
         String arg0,
         @WebParam(name = "arg1", partName = "arg1")
-        String arg1);
+        long arg1);
 
     /**
      * 
      */
     @WebMethod
     public void sendAllMessages();
-
-    /**
-     * 
-     * @param arg2
-     * @param arg1
-     * @param arg0
-     */
-    @WebMethod
-    public void assignHelper(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        long arg1,
-        @WebParam(name = "arg2", partName = "arg2")
-        long arg2);
-
-    /**
-     * 
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.HelperDTOArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    public HelperDTOArray queryHelpers();
-
-    /**
-     * 
-     * @param arg1
-     * @param arg0
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTOArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    public HierarchicalEventItemDTOArray getEventNodes(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        boolean arg1);
-
-    /**
-     * 
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.EventDTOArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    public EventDTOArray queryEvents();
-
-    /**
-     * 
-     */
-    @WebMethod
-    public void finishUp();
 
 }

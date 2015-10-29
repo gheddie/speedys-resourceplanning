@@ -38,14 +38,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link HelperAssignmentDTO }
-     * 
-     */
-    public HelperAssignmentDTO createHelperAssignmentDTO() {
-        return new HelperAssignmentDTO();
-    }
-
-    /**
      * Create an instance of {@link HelperDTO }
      * 
      */
@@ -86,6 +78,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link PositionDTOArray }
+     * 
+     */
+    public PositionDTOArray createPositionDTOArray() {
+        return new PositionDTOArray();
+    }
+
+    /**
      * Create an instance of {@link EventDTOArray }
      * 
      */
@@ -94,11 +94,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link HelperAssignmentDTOArray }
+     * Create an instance of {@link PositionDTO }
      * 
      */
-    public HelperAssignmentDTOArray createHelperAssignmentDTOArray() {
-        return new HelperAssignmentDTOArray();
+    public PositionDTO createPositionDTO() {
+        return new PositionDTO();
     }
 
     /**

@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="assignmentString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="entityId" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="hierarchyLevel" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="infoString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="itemKey" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -32,6 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hierarchicalEventItemDTO", propOrder = {
     "assignmentString",
+    "entityId",
     "hierarchyLevel",
     "infoString",
     "itemKey",
@@ -40,6 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class HierarchicalEventItemDTO {
 
     protected String assignmentString;
+    protected Long entityId;
     protected int hierarchyLevel;
     protected String infoString;
     protected String itemKey;
@@ -67,6 +70,30 @@ public class HierarchicalEventItemDTO {
      */
     public void setAssignmentString(String value) {
         this.assignmentString = value;
+    }
+
+    /**
+     * Gets the value of the entityId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getEntityId() {
+        return entityId;
+    }
+
+    /**
+     * Sets the value of the entityId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
+     */
+    public void setEntityId(Long value) {
+        this.entityId = value;
     }
 
     /**

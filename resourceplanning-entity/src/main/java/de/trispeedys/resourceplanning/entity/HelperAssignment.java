@@ -94,4 +94,9 @@ public class HelperAssignment extends AbstractDbObject
     {
         this.helperAssignmentState = helperAssignmentState;
     }
+
+    public boolean isCancelled()
+    {
+        return (helperAssignmentState.equals(helperAssignmentState.CANCELLED));
+    }
 }

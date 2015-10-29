@@ -1,5 +1,7 @@
 package de.trispeedys.resourceplanning.entity.builder;
 
+import java.util.Date;
+
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
@@ -73,6 +75,7 @@ public class MessageQueueBuilder extends AbstractEntityBuilder<MessageQueue>
         messageQueue.setMessagingState(MessagingState.UNPROCESSED);
         messageQueue.setMessagingType(messagingType);
         messageQueue.setMessagingFormat(messagingFormat);
+        messageQueue.setCreationTime(new Date());
         return messageQueue;
     }
 }

@@ -2,21 +2,30 @@ package de.trispeedys.resourceplanning.components.treetable;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+
+import de.trispeedys.resourceplanning.util.HierarchicalEventItemType;
+import de.trispeedys.resourceplanning.util.StringUtil;
 
 public class TreeTableDataNode
 {
     private String description;
-    
+
     private String assignment;
 
     private List<TreeTableDataNode> children;
 
-    public TreeTableDataNode(String description, String assignment, List<TreeTableDataNode> children)
+    private String itemType;
+
+    private Long entityId;
+
+    public TreeTableDataNode(String description, String assignment, String itemType, Long entityId,
+            List<TreeTableDataNode> children)
     {
         this.description = description;
         this.assignment = assignment;
+        this.itemType = itemType;
+        this.entityId = entityId;
         this.children = children;
 
         if (this.children == null)
@@ -29,7 +38,7 @@ public class TreeTableDataNode
     {
         return description;
     }
-    
+
     public String getAssignment()
     {
         return assignment;
@@ -39,12 +48,12 @@ public class TreeTableDataNode
     {
         return children;
     }
-    
+
     public void setChildren(List<TreeTableDataNode> children)
     {
         this.children = children;
     }
-    
+
     public void addChild(TreeTableDataNode child)
     {
         if (children == null)
@@ -52,6 +61,18 @@ public class TreeTableDataNode
             children = new ArrayList<TreeTableDataNode>();
         }
         children.add(child);
+    }
+
+    public Long getEntityId()
+    {
+        return entityId;
+    }
+
+    public HierarchicalEventItemType getEventItemType()
+    {
+        return (StringUtil.isBlank(itemType)
+                ? null
+                : HierarchicalEventItemType.valueOf(itemType));
     }
 
     /**

@@ -12,6 +12,16 @@ import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
  * @author Stefan.Schulz
  *
  * http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=ASSIGNMENT_AS_BEFORE
+ * 
+ * DEBUG Tomcat:
+ * 
+ * + start by catalina.bat jpda start
+ * 
+ * + debug conf
+ *      + proj --> res....-bpm
+ *      + socket attach
+ *      + localhost:8000
+ *      + no termination
  */
 public class ResourcePlanningClient
 {

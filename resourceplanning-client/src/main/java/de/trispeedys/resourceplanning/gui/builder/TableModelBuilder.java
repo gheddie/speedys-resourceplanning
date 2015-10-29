@@ -14,7 +14,7 @@ public class TableModelBuilder
         {
             if ((objects == null) || (objects.size() == 0))
             {
-                return null;
+                return new DefaultTableModel();
             }
 
             Class<? extends Object> clazz = objects.get(0).getClass();

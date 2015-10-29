@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning.util;
 
 import de.trispeedys.resourceplanning.entity.Domain;
+import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
@@ -49,5 +50,11 @@ public class PositionTreeNode<T> extends EntityTreeNode<Position>
         {
             return "[--N/A--]";   
         }
+    }
+    
+    public Long getEntityId()
+    {
+        Helper helper = ((AssignmentContainer) getPayLoad()).getHelper();
+        return (helper != null ? helper.getId() : null);
     }
 }

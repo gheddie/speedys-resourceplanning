@@ -171,7 +171,11 @@ public class SpeedyRoutines
         HashMap<Long, HelperAssignment> assignmentMap = new HashMap<Long, HelperAssignment>();
         for (HelperAssignment assignment : helperAssignments)
         {
-            assignmentMap.put(assignment.getPosition().getId(), assignment);
+            if (!(assignment.isCancelled()))
+            {
+                // ignore cancelled asignments here...
+                assignmentMap.put(assignment.getPosition().getId(), assignment);   
+            }
         }
         HashMap<Domain, List<Position>> positionsPerDomain = new HashMap<Domain, List<Position>>();
         EntityTreeNode<Event> eventNode = new EventTreeNode<Event>();

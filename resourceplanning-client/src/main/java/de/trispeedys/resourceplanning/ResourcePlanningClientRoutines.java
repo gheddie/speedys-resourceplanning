@@ -26,7 +26,7 @@ public class ResourcePlanningClientRoutines
             {
                 case HierarchicalEventItem.LEVEL_EVENT:
                     eventNode =
-                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), null);
+                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getItemType(), node.getEntityId(), null);
                     domainNodes = new ArrayList<TreeTableDataNode>();
                     break;
                 case HierarchicalEventItem.LEVEL_DOMAIN:
@@ -38,11 +38,11 @@ public class ResourcePlanningClientRoutines
                     }
                     // create new node
                     domainNode =
-                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), null);
+                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getItemType(), node.getEntityId(), null);
                     positionNodes = new ArrayList<TreeTableDataNode>();
                     break;
                 case HierarchicalEventItem.LEVEL_POSITION:
-                    positionNodes.add(new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), null));
+                    positionNodes.add(new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getItemType(), node.getEntityId(), null));
                     break;
             }
         }

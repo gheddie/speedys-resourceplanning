@@ -9,19 +9,22 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
 import org.camunda.bpm.BpmPlatform;
+import org.camunda.bpm.engine.runtime.VariableInstance;
+import org.camunda.bpm.engine.runtime.VariableInstanceQuery;
 import org.camunda.bpm.engine.task.Task;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.dto.EventDTO;
-import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
 import de.trispeedys.resourceplanning.dto.HelperDTO;
 import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.dto.ManualAssignmentDTO;
+import de.trispeedys.resourceplanning.dto.PositionDTO;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
@@ -35,6 +38,7 @@ import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.util.EntityTreeNode;
+import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 import de.trispeedys.resourceplanning.util.StringUtil;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
@@ -44,10 +48,28 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 @SOAPBinding(style = Style.RPC)
 public class ResourceInfo
 {
-    public HelperAssignmentDTO[] queryHelperAssignments(String firstName, String lastName)
+    public PositionDTO[] queryAvailablePositions(Long eventId)
     {
-        List<HelperAssignmentDTO> helperAssignmentList = new ArrayList<HelperAssignmentDTO>();
-        return helperAssignmentList.toArray(new HelperAssignmentDTO[helperAssignmentList.size()]);
+        if (eventId == null)
+        {
+            throw new ResourcePlanningException("event id must not be null!!");
+        }
+        Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
+        if (event == null)
+        {
+            throw new ResourcePlanningException("event with id '" + eventId + "' could not found!!");
+        }
+        List<PositionDTO> dtos = new ArrayList<PositionDTO>();
+        PositionDTO dto = null;
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class)
+                .findUnassignedPositionsInEvent(event))
+        {
+            dto = new PositionDTO();
+            dto.setDescription(pos.getDescription());
+            dto.setPositionId(pos.getId());
+            dtos.add(dto);
+        }
+        return dtos.toArray(new PositionDTO[dtos.size()]);
     }
 
     public void assignHelper(Long helperId, Long positionId, Long eventId)
@@ -108,6 +130,8 @@ public class ResourceInfo
             dto = new EventDTO();
             dto.setDescription(event.getDescription());
             dto.setEventId(event.getId());
+            dto.setEventState(event.getEventState().toString());
+            dto.setEventDate(event.getEventDate());
             dtos.add(dto);
         }
         return dtos.toArray(new EventDTO[dtos.size()]);
@@ -141,6 +165,7 @@ public class ResourceInfo
             dto.setHierarchyLevel(node.getHierarchyLevel());
             dto.setItemKey(node.itemKey());
             dto.setAssignmentString(node.getAssignmentString());
+            dto.setEntityId(node.getEntityId());
             dtos.add(dto);
         }
         return dtos.toArray(new HierarchicalEventItemDTO[dtos.size()]);
@@ -157,6 +182,7 @@ public class ResourceInfo
             dto.setFirstName(helper.getFirstName());
             dto.setEmail(helper.getEmail());
             dto.setCode(helper.getCode());
+            dto.setHelperState(helper.getHelperState().toString());
             dtos.add(dto);
         }
         return dtos.toArray(new HelperDTO[dtos.size()]);
@@ -166,6 +192,7 @@ public class ResourceInfo
     {
         List<ManualAssignmentDTO> dtos = new ArrayList<ManualAssignmentDTO>();
         ManualAssignmentDTO dto = null;
+        Helper helper = null;
         for (Task manualAssignmentTask : BpmPlatform.getDefaultProcessEngine()
                 .getTaskService()
                 .createTaskQuery()
@@ -174,23 +201,60 @@ public class ResourceInfo
                 .list())
         {
             dto = new ManualAssignmentDTO();
-            dto.setMoo(manualAssignmentTask.getId());            
+            dto.setTaskId(manualAssignmentTask.getId());
+            helper = getHelper(manualAssignmentTask);
+            dto.setHelperName(helper.getLastName() + ", " + helper.getFirstName());
             dtos.add(dto);
         }
         return dtos.toArray(new ManualAssignmentDTO[dtos.size()]);
     }
-    
+
+    private Helper getHelper(Task task)
+    {
+        VariableInstanceQuery qry =
+                BpmPlatform.getDefaultProcessEngine()
+                        .getRuntimeService()
+                        .createVariableInstanceQuery()
+                        .executionIdIn(task.getExecutionId())
+                        .variableName(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
+        VariableInstance variableInstance = qry.list().get(0);
+        Long helperId = (Long) variableInstance.getValue();
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findById(helperId);
+        if (helper == null)
+        {
+            throw new ResourcePlanningException("got helper id '" +
+                    helperId + "' from process with task id '" + task.getId() +
+                    "' but NO helper from repository --> possible mismatch between camunda an speedy DB?!?");
+        }
+        return helper;
+    }
+
+    public void cancelAssignment(Long eventId, Long helperId)
+    {
+        if ((eventId == null) || (helperId == null))
+        {
+            return;
+        }
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+        BpmPlatform.getDefaultProcessEngine()
+                .getRuntimeService()
+                .correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED, businessKey);
+    }
+
     public void completeManualAssignment(String taskId, Long positionId)
     {
         if ((taskId == null) || (StringUtil.isBlank(taskId)))
         {
-            throw new ResourcePlanningException("task id must be set in order to complete manual assignment!!");
+            throw new ResourcePlanningException(
+                    "task id must be set in order to complete manual assignment!!");
         }
         if (positionId == null)
         {
-            throw new ResourcePlanningException("position id must be set in order to complete manual assignment!!");
-        }        
-        System.out.println("completing manual assignment [taskId:"+taskId+"|positionId:"+positionId+"]");
+            throw new ResourcePlanningException(
+                    "position id must be set in order to complete manual assignment!!");
+        }
+        System.out.println("completing manual assignment [taskId:" +
+                taskId + "|positionId:" + positionId + "]");
         HashMap<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, positionId);
         BpmPlatform.getDefaultProcessEngine().getTaskService().complete(taskId, variables);

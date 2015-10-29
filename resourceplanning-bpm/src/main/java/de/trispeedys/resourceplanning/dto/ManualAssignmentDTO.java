@@ -2,15 +2,27 @@ package de.trispeedys.resourceplanning.dto;
 
 public class ManualAssignmentDTO
 {
-    private String moo;
-
-    public String getMoo()
+    private String taskId;
+    
+    private String helperName;
+    
+    public String getTaskId()
     {
-        return moo;
+        return taskId;
     }
     
-    public void setMoo(String moo)
+    public void setTaskId(String taskId)
     {
-        this.moo = moo;
+        this.taskId = taskId;
+    }
+
+    public String getHelperName()
+    {
+        return helperName;
+    }
+
+    public void setHelperName(String helperName)
+    {
+        this.helperName = helperName;        
     }
 }

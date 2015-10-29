@@ -1,6 +1,5 @@
 package de.trispeedys.resourceplanning.test;
 
-import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
@@ -15,6 +14,8 @@ import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 public class TestDataGenerator
 {
+    public static final int POS_COUNT_SIMPLE_EVENT = 5;
+    
     private static final String DEFAULT_MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
 
     /**

@@ -1,10 +1,14 @@
 package de.trispeedys.resourceplanning.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
@@ -47,6 +51,10 @@ public class MessageQueue extends AbstractDbObject
     @Enumerated(EnumType.STRING)
     @Column(name = "messaging_format")
     private MessagingFormat messagingFormat;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "creation_time")
+    private Date creationTime;
     
     public String getFromAddress()
     {
@@ -116,6 +124,16 @@ public class MessageQueue extends AbstractDbObject
     public void setMessagingFormat(MessagingFormat messagingFormat)
     {
         this.messagingFormat = messagingFormat;
+    }
+    
+    public Date getCreationTime()
+    {
+        return creationTime;
+    }
+    
+    public void setCreationTime(Date creationTime)
+    {
+        this.creationTime = creationTime;
     }
     
     public String toString()

@@ -13,6 +13,8 @@ public class HelperDTO
     private String email;
     
     private String code;
+    
+    private String helperState;
 
     public String getFirstName()
     {
@@ -52,5 +54,15 @@ public class HelperDTO
     public void setCode(String code)
     {
         this.code = code;
+    }
+    
+    public String getHelperState()
+    {
+        return helperState;
+    }
+    
+    public void setHelperState(String helperState)
+    {
+        this.helperState = helperState;
     }
 }

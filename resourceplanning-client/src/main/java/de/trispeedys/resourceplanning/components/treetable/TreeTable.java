@@ -3,13 +3,14 @@ package de.trispeedys.resourceplanning.components.treetable;
 import java.awt.Dimension;
 
 import javax.swing.JTable;
-import javax.swing.plaf.basic.BasicTreeUI;
 
 public class TreeTable extends JTable
 {
     private static final long serialVersionUID = -833644592373232107L;
     
     private TreeTableCellRenderer tree;
+
+    private TreeTableDataNode pathComponent;
     
     public TreeTable()
     {
@@ -50,5 +51,15 @@ public class TreeTable extends JTable
 
         // Keine Abstaende.
         setIntercellSpacing(new Dimension(0, 0));
+    }
+    
+    public TreeTableDataNode getPathComponent()
+    {
+        return pathComponent;
+    }
+
+    public void setPathComponent(TreeTableDataNode pathComponent)
+    {
+        this.pathComponent = pathComponent;
     }
 }

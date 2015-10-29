@@ -132,6 +132,7 @@ create table message_queue
 	to_address varchar(255),
 	subject varchar(1024),
 	body text,
+	creation_time timestamp,
 	messaging_state varchar(64),
 	messaging_type varchar(64),
 	messaging_format varchar(64),
