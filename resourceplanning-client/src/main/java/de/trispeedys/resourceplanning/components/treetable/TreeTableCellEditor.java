@@ -2,15 +2,22 @@ package de.trispeedys.resourceplanning.components.treetable;
 
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.table.TableCellEditor;
 
 public class TreeTableCellEditor extends AbstractCellEditor implements TableCellEditor
 {
+    private static final long serialVersionUID = -1486651810013816291L;
+
     private JTree tree;
 
     private JTable table;
@@ -19,6 +26,12 @@ public class TreeTableCellEditor extends AbstractCellEditor implements TableCell
     {
         this.tree = tree;
         this.table = table;
+        ((BasicTreeUI) tree.getUI()).setExpandedIcon(new ImageIcon(this.getClass()
+                .getClassLoader()
+                .getResource("img/expanded16px.png")));
+        ((BasicTreeUI) tree.getUI()).setCollapsedIcon(new ImageIcon(this.getClass()
+                .getClassLoader()
+                .getResource("img/collapsed16px.png")));
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int r, int c)

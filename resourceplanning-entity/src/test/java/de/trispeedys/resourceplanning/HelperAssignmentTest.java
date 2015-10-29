@@ -44,22 +44,22 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED, template).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED, template).saveOrUpdate();
 
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
-        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false, 1).persist();
-        Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain, false, 2).persist();
+        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false, 1).saveOrUpdate();
+        Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain, false, 2).saveOrUpdate();
 
         // relate positions to event
         SpeedyRoutines.relatePositionsToEvent(event, position1, position2);
 
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976)
-                        .persist();
+                        .saveOrUpdate();
 
-        EntityFactory.buildHelperAssignment(helper, event, position2).persist();
+        EntityFactory.buildHelperAssignment(helper, event, position2).saveOrUpdate();
 
         // confirm helper for another position of the same event
         AssignmentService.assignHelper(helper, event, position1);
@@ -75,16 +75,16 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
 
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, null).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, null).saveOrUpdate();
 
         // Helfer ist zum Datum der Veranstaltung erst 15
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
-                        .persist();
+                        .saveOrUpdate();
 
         // Position erfordert Mindest-Alter 16 Jahre
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), true, 0).persist();
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), true, 0).saveOrUpdate();
 
         // Muss zu Ausnahme führen
         AssignmentService.assignHelper(helper, event, position);
@@ -100,19 +100,19 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template).persist();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template).saveOrUpdate();
 
         // Helfer ist zum Datum der Veranstaltung erst 15
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
-                        .persist();
+                        .saveOrUpdate();
 
         // Position erfordert Mindest-Alter 16 Jahre
         Position position =
                 EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 1)
-                        .persist();
+                        .saveOrUpdate();
 
         // Muss zu Ausnahme führen
         AssignmentService.assignHelper(helper, event, position);
@@ -123,24 +123,24 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         // create some events
-        Event evt2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012, EventState.FINISHED, template).persist();
-        Event evt2014 = EntityFactory.buildEvent("TRI-2012", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).persist();
+        Event evt2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012, EventState.FINISHED, template).saveOrUpdate();
+        Event evt2014 = EntityFactory.buildEvent("TRI-2012", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).saveOrUpdate();
 
         // helper was confirmed for a position in 2012, but only proposed for one in 2014...
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
-                        .persist();
+                        .saveOrUpdate();
         Position position =
                 EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
-                        .persist();
+                        .saveOrUpdate();
 
         // relate position to both events
         SpeedyRoutines.relateEventsToPosition(position, evt2012, evt2014);
 
-        EntityFactory.buildHelperAssignment(helper, evt2012, position).persist();
+        EntityFactory.buildHelperAssignment(helper, evt2012, position).saveOrUpdate();
 
         // last confirmed assignment should be in 2012
         HelperAssignment lastConfirmedAssignment = AssignmentService.getPriorAssignment(helper, evt2014.getEventTemplate());
@@ -155,19 +155,19 @@ public class HelperAssignmentTest
     {
         HibernateUtil.clearAll();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         // create some events
-        Event event2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012, EventState.FINISHED, template).persist();
-        Event event2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).persist();
+        Event event2012 = EntityFactory.buildEvent("TRI-2012", "TRI-2012", 21, 6, 2012, EventState.FINISHED, template).saveOrUpdate();
+        Event event2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).saveOrUpdate();
 
         // helper was confirmed for a position in 2012, but only proposed for one in 2014...
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
-                        .persist();
+                        .saveOrUpdate();
         Position position =
                 EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
-                        .persist();
+                        .saveOrUpdate();
 
         // assign position to event
         SpeedyRoutines.relatePositionsToEvent(event2012, position);
@@ -191,33 +191,33 @@ public class HelperAssignmentTest
         // create a position
         Position position =
                 EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
-                        .persist();
+                        .saveOrUpdate();
 
         // helper was assigned pos 'Laufverpflegung' in 2015...
         Helper helperToReassign =
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
-                        .persist();
+                        .saveOrUpdate();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
         
-        Event event2015 = EntityFactory.buildEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, template).persist();
+        Event event2015 = EntityFactory.buildEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, template).saveOrUpdate();
 
         // assign position to event
         SpeedyRoutines.relatePositionsToEvent(event2015, position);
 
-        EntityFactory.buildHelperAssignment(helperToReassign, event2015, position).persist();
+        EntityFactory.buildHelperAssignment(helperToReassign, event2015, position).saveOrUpdate();
 
         // assign that position to another helper in 2016...
         Helper blockingHelper =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
-                        .persist();
+                        .saveOrUpdate();
         
-        Event event2016 = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
+        Event event2016 = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).saveOrUpdate();
 
         // assign position to event
         SpeedyRoutines.relatePositionsToEvent(event2016, position);
 
-        EntityFactory.buildHelperAssignment(blockingHelper, event2016, position).persist();
+        EntityFactory.buildHelperAssignment(blockingHelper, event2016, position).saveOrUpdate();
 
         // 'helperToReassign' can not be reassigned in 2016 as the position is assigned to 'blockingHelper'...
         assertFalse(PositionService.isPositionAvailable(event2016, AssignmentService.getPriorAssignment(helperToReassign, event2016.getEventTemplate()).getPosition()));
@@ -232,18 +232,18 @@ public class HelperAssignmentTest
         // clear db
         HibernateUtil.clearAll();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
         
         // event
-        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
+        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).saveOrUpdate();
         // helper
         Helper helper =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
-                        .persist();
+                        .saveOrUpdate();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0).persist();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0).saveOrUpdate();
         // assign position to event
-        EntityFactory.buildEventPosition(event, position).persist();
+        EntityFactory.buildEventPosition(event, position).saveOrUpdate();
         // commit helper
         EntityFactory.buildHelperAssignment(helper, event, position);
     }
@@ -257,16 +257,16 @@ public class HelperAssignmentTest
         // clear db
         HibernateUtil.clearAll();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
         
         // event
-        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
+        Event event = EntityFactory.buildEvent("TRI-2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).saveOrUpdate();
         // helper
         Helper helper =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
-                        .persist();
+                        .saveOrUpdate();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0).persist();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0).saveOrUpdate();
         
         // commit helper (position is not present in the event) --> must throw exception
         EntityFactory.buildHelperAssignment(helper, event, position);
@@ -289,17 +289,17 @@ public class HelperAssignmentTest
         // helpers
         Helper helper1 =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
-                        .persist();
+                        .saveOrUpdate();
         Helper helper2 =
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
-                        .persist();
+                        .saveOrUpdate();
 
         // we have 5 positions...
-        List<Position> positions = Datasources.getDatasource(Position.class).findAll();
+        List<Position> positions = RepositoryProvider.getRepository(PositionRepository.class).findAll();
 
         // ...and assign 2 of them...
-        EntityFactory.buildHelperAssignment(helper1, event, positions.get(0)).persist();
-        EntityFactory.buildHelperAssignment(helper2, event, positions.get(1)).persist();
+        EntityFactory.buildHelperAssignment(helper1, event, positions.get(0)).saveOrUpdate();
+        EntityFactory.buildHelperAssignment(helper2, event, positions.get(1)).saveOrUpdate();
 
         // ..and we expect 3 of them to be unassigned!!
         assertEquals(3, positionRepository.findUnassignedPositionsInEvent(event).size());

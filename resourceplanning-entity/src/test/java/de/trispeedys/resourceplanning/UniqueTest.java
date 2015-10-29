@@ -32,23 +32,23 @@ public class UniqueTest
         // clear db
         HibernateUtil.clearAll();
         
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
         
         // create domain
-        Domain domain1 = EntityFactory.buildDomain("dom1", 1).persist();
+        Domain domain1 = EntityFactory.buildDomain("dom1", 1).saveOrUpdate();
 
-        Position position = EntityFactory.buildPosition("Some position", 12, domain1, false, 0).persist();
-        Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).persist();
+        Position position = EntityFactory.buildPosition("Some position", 12, domain1, false, 0).saveOrUpdate();
+        Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).saveOrUpdate();
         Helper helper1 =
-                EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).persist();
+                EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
         Helper helper2 =
-                EntityFactory.buildHelper("Diana", "Schulz", "a@b.de", HelperState.ACTIVE, 4, 3, 1973).persist();
+                EntityFactory.buildHelper("Diana", "Schulz", "a@b.de", HelperState.ACTIVE, 4, 3, 1973).saveOrUpdate();
         
         //assign position to event to avoid resource planning exception
         SpeedyRoutines.relatePositionsToEvent(event, position);
         
-        EntityFactory.buildHelperAssignment(helper1, event, position, HelperAssignmentState.CONFIRMED).persist();
-        EntityFactory.buildHelperAssignment(helper2, event, position, HelperAssignmentState.CANCELLED).persist();
+        EntityFactory.buildHelperAssignment(helper1, event, position, HelperAssignmentState.CONFIRMED).saveOrUpdate();
+        EntityFactory.buildHelperAssignment(helper2, event, position, HelperAssignmentState.CANCELLED).saveOrUpdate();
     }
     
     @Test(expected = org.hibernate.exception.ConstraintViolationException.class)
@@ -57,9 +57,9 @@ public class UniqueTest
         // clear db
         HibernateUtil.clearAll();
         
-        Domain dom = EntityFactory.buildDomain("123", 123).persist();
-        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom , false, 173).persist();
-        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom, false, 173).persist();
+        Domain dom = EntityFactory.buildDomain("123", 123).saveOrUpdate();
+        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom , false, 173).saveOrUpdate();
+        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom, false, 173).saveOrUpdate();
     }
     
     @Test(expected = org.hibernate.exception.ConstraintViolationException.class)
@@ -68,7 +68,7 @@ public class UniqueTest
         // clear db
         HibernateUtil.clearAll();
         
-        EntityFactory.buildDomain("D1", 173).persist();
-        EntityFactory.buildDomain("D1", 173).persist();
+        EntityFactory.buildDomain("D1", 173).saveOrUpdate();
+        EntityFactory.buildDomain("D1", 173).saveOrUpdate();
     }    
 }

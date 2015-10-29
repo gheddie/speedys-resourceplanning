@@ -31,7 +31,7 @@ public class HelperService
         DefaultDatasource<Helper> datasource = Datasources.getDatasource(Helper.class);
         Helper helper = (Helper) datasource.findById(helperId);
         helper.setHelperState(HelperState.INACTIVE);
-        helper.persist();
+        helper.saveOrUpdate();
     }
 
     public static boolean isHelperAssignedForPosition(Helper helper, Event event, Position position)

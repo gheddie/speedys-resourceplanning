@@ -3,6 +3,7 @@ package de.trispeedys.resourceplanning.components.treetable;
 import java.awt.Dimension;
 
 import javax.swing.JTable;
+import javax.swing.plaf.basic.BasicTreeUI;
 
 public class TreeTable extends JTable
 {
@@ -12,7 +13,7 @@ public class TreeTable extends JTable
     
     public TreeTable()
     {
-        this(null);
+        this(null);        
     }
 
     public TreeTable(AbstractTreeTableModel treeTableModel)

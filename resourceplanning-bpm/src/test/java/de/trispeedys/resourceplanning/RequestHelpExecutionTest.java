@@ -406,7 +406,7 @@ public class RequestHelpExecutionTest
 
         // new helper
         Helper helper =
-                EntityFactory.buildHelper("Mee", "Moo", "a@b.de", HelperState.ACTIVE, 23, 6, 2000).persist();
+                EntityFactory.buildHelper("Mee", "Moo", "a@b.de", HelperState.ACTIVE, 23, 6, 2000).saveOrUpdate();
 
         // start process
         String businessKey =

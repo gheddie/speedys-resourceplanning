@@ -40,6 +40,21 @@ public interface ResourceInfo {
 
     /**
      * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public HierarchicalEventItemDTOArray getEventNodes(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        boolean arg1);
+
+    /**
+     * 
      */
     @WebMethod
     public void finishUp();
@@ -55,18 +70,39 @@ public interface ResourceInfo {
 
     /**
      * 
-     * @param arg1
-     * @param arg0
      * @return
-     *     returns de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTOArray
+     *     returns de.trispeedys.resourceplanning.webservice.HelperDTOArray
      */
     @WebMethod
     @WebResult(partName = "return")
-    public HierarchicalEventItemDTOArray getEventNodes(
+    public HelperDTOArray queryHelpers();
+
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod
+    public void startProcessesForActiveHelpersByTemplateName(
         @WebParam(name = "arg0", partName = "arg0")
-        long arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        boolean arg1);
+        String arg0);
+
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod
+    public void startProcessesForActiveHelpersByEventId(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0);
+
+    /**
+     * 
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.ManualAssignmentDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public ManualAssignmentDTOArray queryManualAssignments();
 
     /**
      * 
@@ -124,23 +160,5 @@ public interface ResourceInfo {
      */
     @WebMethod
     public void sendAllMessages();
-
-    /**
-     * 
-     * @param arg0
-     */
-    @WebMethod
-    public void startProcessesForActiveHelpersByEventId(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0);
-
-    /**
-     * 
-     * @param arg0
-     */
-    @WebMethod
-    public void startProcessesForActiveHelpersByTemplateName(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0);
 
 }

@@ -56,7 +56,7 @@ new FormModel {
 						"gridy": 2
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button1"
+						name: "brnFill"
 						"text": "Fill"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "fillPressed", true ) )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
@@ -67,14 +67,20 @@ new FormModel {
 					"title": "Positionen"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-					"$columnSpecs": "0"
-					"$rowSpecs": "0, 0, 0"
+					"$columnSpecs": "0:1.0"
+					"$rowSpecs": "0:1.0, 0"
 					"$hGap": 5
 					"$vGap": 5
 					"$alignLeft": true
 					"$alignTop": true
 				} ) {
 					name: "pnlHelper"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scHelpers"
+						add( new FormComponent( "javax.swing.JTable" ) {
+							name: "tbHelpers"
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Helfer"
 				} )

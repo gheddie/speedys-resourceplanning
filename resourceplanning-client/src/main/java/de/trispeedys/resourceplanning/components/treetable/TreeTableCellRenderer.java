@@ -25,7 +25,7 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer
         // null ist, wenn super(model) setRowHeight aufruft!
         setRowHeight(getRowHeight());
     }
-
+    
     /**
      * Tree und Table muessen die gleiche Hoehe haben.
      */

@@ -40,7 +40,7 @@ public class MessagingService
             }
             finally
             {
-                message.persist();
+                message.saveOrUpdate();
             }
         }
     }
@@ -48,6 +48,6 @@ public class MessagingService
     public static void createMessage(String fromAddress, String toAddress, String subject, String body, MessagingType messagingType, MessagingFormat messagingFormat)
     {
         EntityFactory.buildMessageQueue(fromAddress, toAddress,
-                subject, body, messagingType, messagingFormat).persist();
+                subject, body, messagingType, messagingFormat).saveOrUpdate();
     }
 }

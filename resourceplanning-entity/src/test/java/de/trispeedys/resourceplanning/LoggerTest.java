@@ -12,8 +12,8 @@ public class LoggerTest
     {
         HibernateUtil.clearAll();
         
-        EntityFactory.buildLog("bk", "123-456-789").persist();
+        EntityFactory.buildLog("bk", "123-456-789").saveOrUpdate();
         
-        EntityFactory.buildLog("bk", "123-456-789", DbLogLevel.ERROR).persist();
+        EntityFactory.buildLog("bk", "123-456-789", DbLogLevel.ERROR).saveOrUpdate();
     }
 }

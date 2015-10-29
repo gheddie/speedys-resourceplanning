@@ -18,7 +18,7 @@ public class SendDeactivationRequestDelegate implements JavaDelegate
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         // write mail
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(),
-                "Helfermeldung zum Triathlon 2016", generateDeactivationRequestBody(), MessagingType.DEACTIVATION_REQUEST, MessagingFormat.PLAIN).persist();
+                "Helfermeldung zum Triathlon 2016", generateDeactivationRequestBody(), MessagingType.DEACTIVATION_REQUEST, MessagingFormat.PLAIN).saveOrUpdate();
     }
 
     private String generateDeactivationRequestBody()

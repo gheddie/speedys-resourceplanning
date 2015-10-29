@@ -13,24 +13,20 @@ import java.awt.event.ActionListener;
 import java.beans.*;
 import java.util.Date;
 import java.util.List;
-import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import net.coderazzi.filters.gui.TableFilterHeader;
 import de.trispeedys.resourceplanning.ResourcePlanningClientRoutines;
 import de.trispeedys.resourceplanning.components.treetable.TreeTable;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataModel;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataNode;
 import de.trispeedys.resourceplanning.webservice.EventDTO;
+import de.trispeedys.resourceplanning.webservice.HelperDTO;
 import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
 
 /**
@@ -42,11 +38,17 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private EventDTO selectedEvent;
 
+    private List<HelperDTO> helpers;
+    
+    private HelperDTO selectedHelper;
+
     public ResourcePlanningMainFrame()
     {
         initComponents();
         setSize(800, 600);
         putListeners();
+        new TableFilterHeader(tbEvents);
+        new TableFilterHeader(tbHelpers);
     }
 
     private void putListeners()
@@ -68,6 +70,25 @@ public class ResourcePlanningMainFrame extends JFrame
     private void fillPressed(ActionEvent e)
     {
         tbEvents.setModel(createEventTableModel());
+        tbHelpers.setModel(createHelperTableModel());
+    }
+
+    public TableModel createHelperTableModel()
+    {
+        helpers = new ResourceInfoService().getResourceInfoPort().queryHelpers().getItem();
+        Object[] headers = new Object[]
+        {
+            "Nachname", "Vorname"
+        };
+        Object[][] data = new Object[helpers.size()][2];
+        int index = 0;
+        for (HelperDTO helper : helpers)
+        {
+            data[index][0] = helper.getLastName();
+            data[index][1] = helper.getFirstName();
+            index++;
+        }
+        return new DefaultTableModel(data, headers);
     }
 
     public static TableModel createEventTableModel()
@@ -75,7 +96,7 @@ public class ResourcePlanningMainFrame extends JFrame
         events = new ResourceInfoService().getResourceInfoPort().queryEvents().getItem();
         Object[] headers = new Object[]
         {
-            "desc"
+            "Beschreibung"
         };
         Object[][] data = new Object[events.size()][2];
         int index = 0;
@@ -140,8 +161,10 @@ public class ResourcePlanningMainFrame extends JFrame
         scEvents = new JScrollPane();
         tbEvents = new JTable();
         btnPlanEvent = new JButton();
-        button1 = new JButton();
+        brnFill = new JButton();
         pnlHelper = new JPanel();
+        scHelpers = new JScrollPane();
+        tbHelpers = new JTable();
 
         //======== this ========
         Container contentPane = getContentPane();
@@ -211,14 +234,14 @@ public class ResourcePlanningMainFrame extends JFrame
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets(0, 0, 5, 0), 0, 0));
 
-                //---- button1 ----
-                button1.setText("Fill");
-                button1.addActionListener(new ActionListener() {
+                //---- brnFill ----
+                brnFill.setText("Fill");
+                brnFill.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         fillPressed(e);
                     }
                 });
-                pnlPositions.add(button1, new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0,
+                pnlPositions.add(brnFill, new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets(0, 0, 0, 0), 0, 0));
             }
@@ -228,9 +251,17 @@ public class ResourcePlanningMainFrame extends JFrame
             {
                 pnlHelper.setLayout(new GridBagLayout());
                 ((GridBagLayout)pnlHelper.getLayout()).columnWidths = new int[] {0, 0};
-                ((GridBagLayout)pnlHelper.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-                ((GridBagLayout)pnlHelper.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
-                ((GridBagLayout)pnlHelper.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+                ((GridBagLayout)pnlHelper.getLayout()).rowHeights = new int[] {0, 0, 0};
+                ((GridBagLayout)pnlHelper.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
+                ((GridBagLayout)pnlHelper.getLayout()).rowWeights = new double[] {1.0, 0.0, 1.0E-4};
+
+                //======== scHelpers ========
+                {
+                    scHelpers.setViewportView(tbHelpers);
+                }
+                pnlHelper.add(scHelpers, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 5, 0), 0, 0));
             }
             tabbedPane1.addTab("Helfer", pnlHelper);
         }
@@ -252,8 +283,10 @@ public class ResourcePlanningMainFrame extends JFrame
     private JScrollPane scEvents;
     private JTable tbEvents;
     private JButton btnPlanEvent;
-    private JButton button1;
+    private JButton brnFill;
     private JPanel pnlHelper;
+    private JScrollPane scHelpers;
+    private JTable tbHelpers;
     // JFormDesigner - End of variables declaration //GEN-END:variables
 
     // ---

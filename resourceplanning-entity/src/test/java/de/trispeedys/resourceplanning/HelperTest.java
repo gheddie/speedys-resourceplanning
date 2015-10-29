@@ -25,7 +25,7 @@ public class HelperTest
         HibernateUtil.clearAll();
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", HelperAssignmentTest.TEST_MAIL_ADDRESS,
-                        HelperState.ACTIVE, 13, 2, 1976).persist();
+                        HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
         assertEquals(true, AssignmentService.isFirstAssignment(helper.getId()));
     }
 
@@ -40,19 +40,19 @@ public class HelperTest
         // create helper
         Helper helper =
                 EntityFactory.buildHelper("Diana", "Schulz", "a@b.de", HelperState.ACTIVE, 4, 3, 1973)
-                        .persist();
+                        .saveOrUpdate();
         // create domain
-        Domain domain = EntityFactory.buildDomain("someDomain", 1).persist();
+        Domain domain = EntityFactory.buildDomain("someDomain", 1).saveOrUpdate();
         // create positions
-        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false, 0).persist();
-        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false, 1).persist();
+        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false, 0).saveOrUpdate();
+        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false, 1).saveOrUpdate();
 
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         // create event
         Event tri2014 =
                 EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED,
-                        template).persist();
+                        template).saveOrUpdate();
         // assign positions to that event
         SpeedyRoutines.relatePositionsToEvent(tri2014, pos1, pos2);
         // assign helper to both positions

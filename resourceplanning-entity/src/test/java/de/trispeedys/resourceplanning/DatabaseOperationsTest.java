@@ -29,8 +29,8 @@ public class DatabaseOperationsTest
         // clear db
         HibernateUtil.clearAll();
 
-        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
-        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.INACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.INACTIVE, 1, 1, 1980).saveOrUpdate();
 
         String qry =
                 "FROM " +
@@ -48,7 +48,7 @@ public class DatabaseOperationsTest
         HibernateUtil.clearAll();
 
         Helper helper =
-                EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+                EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
 
         DefaultDatasource<Helper> datasource = Datasources.getDatasource(Helper.class);
         datasource.findById(helper.getId());
@@ -60,8 +60,8 @@ public class DatabaseOperationsTest
         // clear db
         HibernateUtil.clearAll();
 
-        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
-        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
 
         List<Helper> found =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
@@ -76,11 +76,11 @@ public class DatabaseOperationsTest
 
         // create messages
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "SUB1",
-                "BODY1", MessagingFormat.PLAIN).persist();
+                "BODY1", MessagingFormat.PLAIN).saveOrUpdate();
         EntityFactory.buildMessageQueue("klaus", "testhelper1.trispeedys@gmail.com", "SUB1", "BODY1",
-                MessagingFormat.PLAIN).persist();
+                MessagingFormat.PLAIN).saveOrUpdate();
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "SUB1",
-                "BODY2", MessagingFormat.PLAIN).persist();
+                "BODY2", MessagingFormat.PLAIN).saveOrUpdate();
 
         assertEquals(
                 1,
@@ -98,12 +98,12 @@ public class DatabaseOperationsTest
         // clear db
         HibernateUtil.clearAll();
 
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template)
-                .persist();
+                .saveOrUpdate();
         EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template)
-                .persist();
+                .saveOrUpdate();
     }
 
     @Test
@@ -115,7 +115,7 @@ public class DatabaseOperationsTest
         for (int i = 1; i <= 10; i++)
         {
             EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), false, i)
-                    .persist();
+                    .saveOrUpdate();
         }
         // fetch w/o parameters (all entries)
         assertEquals(10,
@@ -163,8 +163,8 @@ public class DatabaseOperationsTest
         HibernateUtil.clearAll();
 
         // create helpers
-        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).persist();
-        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Helfer", "Eins", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Helfer", "Zwei", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
 
         Datasources.getDatasource(Helper.class).findSingle(Helper.ATTR_LAST_NAME, "Helfer");
     }
@@ -176,8 +176,8 @@ public class DatabaseOperationsTest
         HibernateUtil.clearAll();
 
         // create helpers
-        EntityFactory.buildHelper("Hansen", "Klaus", "", HelperState.ACTIVE, 1, 1, 1980).persist();
-        EntityFactory.buildHelper("Meier", "Peter", "", HelperState.INACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Hansen", "Klaus", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Meier", "Peter", "", HelperState.INACTIVE, 1, 1, 1980).saveOrUpdate();
 
         Helper activeHelper =
                 Datasources.getDatasource(Helper.class).findSingle(Helper.ATTR_HELPER_STATE,

@@ -30,11 +30,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ManualAssignmentDTOArray }
+     * 
+     */
+    public ManualAssignmentDTOArray createManualAssignmentDTOArray() {
+        return new ManualAssignmentDTOArray();
+    }
+
+    /**
      * Create an instance of {@link HelperAssignmentDTO }
      * 
      */
     public HelperAssignmentDTO createHelperAssignmentDTO() {
         return new HelperAssignmentDTO();
+    }
+
+    /**
+     * Create an instance of {@link HelperDTO }
+     * 
+     */
+    public HelperDTO createHelperDTO() {
+        return new HelperDTO();
     }
 
     /**
@@ -51,6 +67,22 @@ public class ObjectFactory {
      */
     public EventDTO createEventDTO() {
         return new EventDTO();
+    }
+
+    /**
+     * Create an instance of {@link ManualAssignmentDTO }
+     * 
+     */
+    public ManualAssignmentDTO createManualAssignmentDTO() {
+        return new ManualAssignmentDTO();
+    }
+
+    /**
+     * Create an instance of {@link HelperDTOArray }
+     * 
+     */
+    public HelperDTOArray createHelperDTOArray() {
+        return new HelperDTOArray();
     }
 
     /**

@@ -23,9 +23,9 @@ public class MailTriggerTest
     {
         HibernateUtil.clearAll();
         
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "M1", "M1", MessagingFormat.PLAIN).persist();
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "M2", "M2", MessagingFormat.PLAIN).persist();
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "M3", "M3", MessagingFormat.PLAIN).persist();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "M1", "M1", MessagingFormat.PLAIN).saveOrUpdate();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "M2", "M2", MessagingFormat.PLAIN).saveOrUpdate();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "M3", "M3", MessagingFormat.PLAIN).saveOrUpdate();
         
         processEngine.getRuntimeService().startProcessInstanceByKey("MailTriggerProcess");   
         

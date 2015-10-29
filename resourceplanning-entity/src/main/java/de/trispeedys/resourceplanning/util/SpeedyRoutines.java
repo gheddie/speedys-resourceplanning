@@ -41,7 +41,7 @@ public class SpeedyRoutines
         checkExcludes(event, positionExcludes);
         Event newEvent =
                 EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
-                        event.getEventTemplate()).persist();
+                        event.getEventTemplate()).saveOrUpdate();
         List<EventPosition> posRelations =
                 Datasources.getDatasource(EventPosition.class).find("event", event);
         Position pos = null;
@@ -51,7 +51,7 @@ public class SpeedyRoutines
             // attach every old position to the new event
             if (!(excludePosition(pos, positionExcludes)))
             {
-                EntityFactory.buildEventPosition(newEvent, pos).persist();
+                EntityFactory.buildEventPosition(newEvent, pos).saveOrUpdate();
             }
         }
         // process includes
@@ -68,7 +68,7 @@ public class SpeedyRoutines
                 }
                 EntityFactory.buildEventPosition(
                         newEvent,
-                        additionalPosition).persist();
+                        additionalPosition).saveOrUpdate();
             }
         }
         return newEvent;
@@ -135,7 +135,7 @@ public class SpeedyRoutines
     {
         for (Position position : positions)
         {
-            EntityFactory.buildEventPosition(event, position).persist();
+            EntityFactory.buildEventPosition(event, position).saveOrUpdate();
         }
     }
 
@@ -143,7 +143,7 @@ public class SpeedyRoutines
     {
         for (Event event : events)
         {
-            EntityFactory.buildEventPosition(event, position).persist();
+            EntityFactory.buildEventPosition(event, position).saveOrUpdate();
         }
     }
 
@@ -151,7 +151,7 @@ public class SpeedyRoutines
     {
         for (Position position : positions)
         {
-            EntityFactory.buildHelperAssignment(helper, event, position).persist();
+            EntityFactory.buildHelperAssignment(helper, event, position).saveOrUpdate();
         }
     }
 

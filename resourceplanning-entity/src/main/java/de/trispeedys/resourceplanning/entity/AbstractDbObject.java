@@ -24,7 +24,7 @@ public abstract class AbstractDbObject
         this.id = id;
     }
     
-    public <T> T persist()
+    public <T> T saveOrUpdate()
     {
         DefaultDatasource<T> datasource = (DefaultDatasource<T>) Datasources.getDatasource(getClass());
         return (T) datasource.saveOrUpdate(this);

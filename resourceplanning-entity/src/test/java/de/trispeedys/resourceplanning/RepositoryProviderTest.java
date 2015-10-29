@@ -18,10 +18,10 @@ public class RepositoryProviderTest
         HibernateUtil.clearAll();
         
         // build domain
-        Domain domain = EntityFactory.buildDomain("D1", 1).persist();
+        Domain domain = EntityFactory.buildDomain("D1", 1).saveOrUpdate();
         
         // build position
-        Position pos = EntityFactory.buildPosition("P1", 12, domain, false, 0).persist();
+        Position pos = EntityFactory.buildPosition("P1", 12, domain, false, 0).saveOrUpdate();
         
         assertTrue(RepositoryProvider.getRepository(PositionRepository.class).findPositionByPositionNumber(0) != null);
     }

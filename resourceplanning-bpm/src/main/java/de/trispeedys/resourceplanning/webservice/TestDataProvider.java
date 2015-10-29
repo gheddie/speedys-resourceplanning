@@ -28,6 +28,7 @@ import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.repository.DomainRepository;
 import de.trispeedys.resourceplanning.repository.EventRepository;
+import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
@@ -83,7 +84,7 @@ public class TestDataProvider
 
         // block one of the positions with a new helper
         Helper blockingHelper =
-                EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
+                EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).saveOrUpdate();
         AssignmentService.assignHelper(blockingHelper, event2016,
                 (Position) Datasources.getDatasource(Position.class).findAll().get(0));
 
@@ -114,8 +115,8 @@ public class TestDataProvider
                 ((Helper) Datasources.getDatasource(Helper.class).findAll().get(0)).getId(),
                 event2016.getId());
 
-        EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
-        EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
+        EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).saveOrUpdate();
     }
 
     /**
@@ -131,18 +132,18 @@ public class TestDataProvider
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015",
                         "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
                         "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
-        List<Helper> helpers =
-                Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
+        List<Helper> activeHelpers =
+                RepositoryProvider.getRepository(HelperRepository.class).findActiveHelpers();
         List<Position> positions = Datasources.getDatasource(Position.class).findAll();
         // new helper 1 with assignment
         Helper newHelper1 =
-                EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
+                EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).saveOrUpdate();
         AssignmentService.assignHelper(newHelper1, event2016, positions.get(1));
         // new helper 2 with assignment
         Helper newHelper2 =
-                EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).persist();
+                EntityFactory.buildHelper("New2", "New2", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).saveOrUpdate();
         AssignmentService.assignHelper(newHelper2, event2016, positions.get(3));
-        for (Helper helper : helpers)
+        for (Helper helper : activeHelpers)
         {
             startHelperRequestProcess(helper.getId(), event2016.getId());
         }
@@ -180,29 +181,31 @@ public class TestDataProvider
         TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2016, EventState.FINISHED,
                 EventTemplate.TEMPLATE_TRI);
     }
-    
+
     public void duplicate2015()
     {
         // create new position (no. 7777) for domain [D2]
         Domain dom2 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(2);
-        EntityFactory.buildPosition("7777", 12, dom2, false, 7777).persist();
-        
+        EntityFactory.buildPosition("7777", 12, dom2, false, 7777).saveOrUpdate();
+
         // create new position (no. 8888) for domain [D92]
         Domain dom92 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(92);
-        EntityFactory.buildPosition("8888", 12, dom92, false, 8888).persist();
-        
+        EntityFactory.buildPosition("8888", 12, dom92, false, 8888).saveOrUpdate();
+
         List<Integer> excludes = new ArrayList<Integer>();
         excludes.add(137);
         excludes.add(232);
         excludes.add(39);
         excludes.add(93);
-        
+
         List<PositionInclude> includes = new ArrayList<PositionInclude>();
         includes.add(new PositionInclude(dom2, 7777));
         includes.add(new PositionInclude(dom92, 8888));
-                
+
         // real life event for 2015
-        Event event2015 = RepositoryProvider.getRepository(EventRepository.class).findEventByEventKey("TRI-2015");
-        SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes, includes);        
+        Event event2015 =
+                RepositoryProvider.getRepository(EventRepository.class).findEventByEventKey("TRI-2015");
+        SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, excludes,
+                includes);
     }
 }

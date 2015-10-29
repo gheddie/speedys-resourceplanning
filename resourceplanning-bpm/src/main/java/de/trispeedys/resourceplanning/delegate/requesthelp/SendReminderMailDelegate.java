@@ -35,7 +35,7 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
     private void sendReminderMail(Helper helper, Event event, int attemptCount, DelegateExecution execution)
     {
         EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event, execution),
-                getMessagingType(attemptCount), MessagingFormat.HTML).persist();
+                getMessagingType(attemptCount), MessagingFormat.HTML).saveOrUpdate();
     }
 
     private MessagingType getMessagingType(int attempt)

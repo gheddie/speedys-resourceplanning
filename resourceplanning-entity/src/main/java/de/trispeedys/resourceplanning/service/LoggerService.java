@@ -12,7 +12,7 @@ public class LoggerService
     
     public static void log(String businessKey, String message, DbLogLevel logLevel)
     {
-        EntityFactory.buildLog(businessKey, message, logLevel).persist();
+        EntityFactory.buildLog(businessKey, message, logLevel).saveOrUpdate();
     }
 
     public static void log(String message)
@@ -22,6 +22,6 @@ public class LoggerService
     
     public static void log(String message, DbLogLevel logLevel)
     {
-        EntityFactory.buildLog(null, message, logLevel).persist();
+        EntityFactory.buildLog(null, message, logLevel).saveOrUpdate();
     }
 }

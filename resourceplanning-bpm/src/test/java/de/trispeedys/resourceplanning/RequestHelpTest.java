@@ -39,7 +39,7 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 public class RequestHelpTest
 {
     private static final Helper DEFAULT_HELPER = EntityFactory.buildHelper("Stefan", "Schulz", "",
-            HelperState.ACTIVE, 13, 2, 1976).persist();
+            HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
 
     @Rule
     public ProcessEngineRule rule = new ProcessEngineRule();
@@ -70,10 +70,10 @@ public class RequestHelpTest
         // clear db
         HibernateUtil.clearAll();
 
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         // ...
-        Event event = EntityFactory.buildEvent("", "", 1, 1, 2000, EventState.PLANNED, template).persist();
+        Event event = EntityFactory.buildEvent("", "", 1, 1, 2000, EventState.PLANNED, template).saveOrUpdate();
         RequestHelpTestUtil.startHelperRequestProcess(DEFAULT_HELPER, event, null, rule);
     }
 
@@ -83,22 +83,22 @@ public class RequestHelpTest
     {
         HibernateUtil.clearAll();
 
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         Position position =
                 EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
-                        .persist();
+                        .saveOrUpdate();
         Event event =
-                EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).persist();
+                EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).saveOrUpdate();
         Helper helper =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976)
-                        .persist();
+                        .saveOrUpdate();
 
         // assign position to event
         SpeedyRoutines.relatePositionsToEvent(event, position);
 
         // create preconditions (this must be a follow up assignment)
-        EntityFactory.buildHelperAssignment(helper, event, position).persist();
+        EntityFactory.buildHelperAssignment(helper, event, position).saveOrUpdate();
 
         RequestHelpTestUtil.startHelperRequestProcess(helper, event,
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event.getId()), rule);
@@ -120,15 +120,15 @@ public class RequestHelpTest
         // clear all tables in db
         HibernateUtil.clearAll();
 
-        EventTemplate template = EntityFactory.buildEventTemplate("123").persist();
+        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         // create event
         Event evt2016 =
                 EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED,
-                        template).persist();
+                        template).saveOrUpdate();
         // create helper
         Helper helper =
-                EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
+                EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).saveOrUpdate();
         // start process
         RequestHelpTestUtil.startHelperRequestProcess(helper, evt2016,
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), evt2016.getId()), rule);
@@ -152,25 +152,25 @@ public class RequestHelpTest
         // create position
         Position positionBikeEntry =
                 EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12,
-                        SpeedyTestUtil.buildDefaultDomain(1), false, 0).persist();
+                        SpeedyTestUtil.buildDefaultDomain(1), false, 0).saveOrUpdate();
         // create events
         Event evt2014 =
                 EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, null)
-                        .persist();
+                        .saveOrUpdate();
         Event evt2015 =
                 EntityFactory.buildEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.PLANNED, null)
-                        .persist();
+                        .saveOrUpdate();
         // create helper
         Helper createdHelper =
-                EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).persist();
+                EntityFactory.buildHelper("Stefan", "Schulz", "", HelperState.ACTIVE, 1, 1, 1990).saveOrUpdate();
         Helper blockingHelper =
-                EntityFactory.buildHelper("Blocking", "Helper", "", HelperState.ACTIVE, 1, 1, 1990).persist();
+                EntityFactory.buildHelper("Blocking", "Helper", "", HelperState.ACTIVE, 1, 1, 1990).saveOrUpdate();
         // assign position to event
         SpeedyRoutines.relateEventsToPosition(positionBikeEntry, evt2014, evt2015);
         // assign helper to position in 2014
-        EntityFactory.buildHelperAssignment(createdHelper, evt2014, positionBikeEntry).persist();
+        EntityFactory.buildHelperAssignment(createdHelper, evt2014, positionBikeEntry).saveOrUpdate();
         // assign position to another helper in 2015
-        EntityFactory.buildHelperAssignment(blockingHelper, evt2015, positionBikeEntry).persist();
+        EntityFactory.buildHelperAssignment(blockingHelper, evt2015, positionBikeEntry).saveOrUpdate();
         // start request process for 2015...
         String businessKey =
                 ResourcePlanningUtil.generateRequestHelpBusinessKey(createdHelper.getId(), evt2015.getId());
@@ -252,9 +252,9 @@ public class RequestHelpTest
         // clear all tables in db
         HibernateUtil.clearAll();
         // create 3 new helpers
-        EntityFactory.buildHelper("Helper1", "Helper1", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
-        EntityFactory.buildHelper("Helper2", "Helper2", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
-        EntityFactory.buildHelper("Helper3", "Helper3", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).persist();
+        EntityFactory.buildHelper("Helper1", "Helper1", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Helper2", "Helper2", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Helper3", "Helper3", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
         // create 'little' event for 2015
         Event event2015 =
                 TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,

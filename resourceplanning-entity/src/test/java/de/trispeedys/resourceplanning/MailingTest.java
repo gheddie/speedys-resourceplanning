@@ -17,7 +17,7 @@ public class MailingTest
         HibernateUtil.clearAll();
         
         //create message
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "Hallo", "Knallo", MessagingFormat.PLAIN).persist();
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com", "Hallo", "Knallo", MessagingFormat.PLAIN).saveOrUpdate();
         
         //send
         MessagingService.sendAllUnprocessedMessages();

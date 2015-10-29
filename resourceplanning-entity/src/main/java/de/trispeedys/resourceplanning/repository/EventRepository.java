@@ -71,6 +71,6 @@ public class EventRepository extends AbstractDatabaseRepository<Event> implement
             return;
         }
         event.setEventState(eventState);
-        dataSource().saveOrUpdate(event);
+        event.saveOrUpdate();
     }
 }

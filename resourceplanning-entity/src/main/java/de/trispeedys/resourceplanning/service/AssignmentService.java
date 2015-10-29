@@ -38,7 +38,7 @@ public class AssignmentService
                         dayDiff + " days to young for this position!");
             }
         }
-        EntityFactory.buildHelperAssignment(helper, event, position).persist();
+        EntityFactory.buildHelperAssignment(helper, event, position).saveOrUpdate();
     }
 
     public static boolean isFirstAssignment(Long helperId)

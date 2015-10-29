@@ -8,15 +8,20 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
 import org.camunda.bpm.BpmPlatform;
+import org.camunda.bpm.engine.task.Task;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.dto.EventDTO;
 import de.trispeedys.resourceplanning.dto.HelperAssignmentDTO;
+import de.trispeedys.resourceplanning.dto.HelperDTO;
 import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
+import de.trispeedys.resourceplanning.dto.ManualAssignmentDTO;
 import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
+import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.interaction.EventManager;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.repository.EventRepository;
@@ -121,8 +126,7 @@ public class ResourceInfo
     public HierarchicalEventItemDTO[] getEventNodes(Long eventId, boolean onlyUnassignedPositions)
     {
         Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
-        List<EntityTreeNode> nodes =
-                SpeedyRoutines.flattenedEventNodes(event);
+        List<EntityTreeNode> nodes = SpeedyRoutines.flattenedEventNodes(event);
         List<HierarchicalEventItemDTO> dtos = new ArrayList<HierarchicalEventItemDTO>();
         HierarchicalEventItemDTO dto = null;
         for (EntityTreeNode node : nodes)
@@ -136,5 +140,37 @@ public class ResourceInfo
             dtos.add(dto);
         }
         return dtos.toArray(new HierarchicalEventItemDTO[dtos.size()]);
+    }
+
+    public HelperDTO[] queryHelpers()
+    {
+        List<HelperDTO> dtos = new ArrayList<HelperDTO>();
+        HelperDTO dto = null;
+        for (Helper helper : RepositoryProvider.getRepository(HelperRepository.class).findAll())
+        {
+            dto = new HelperDTO();
+            dto.setLastName(helper.getLastName());
+            dto.setFirstName(helper.getFirstName());
+            dtos.add(dto);
+        }
+        return dtos.toArray(new HelperDTO[dtos.size()]);
+    }
+
+    public ManualAssignmentDTO[] queryManualAssignments()
+    {
+        List<ManualAssignmentDTO> dtos = new ArrayList<ManualAssignmentDTO>();
+        ManualAssignmentDTO dto = null;
+        for (Task manualAssignmentTask : BpmPlatform.getDefaultProcessEngine()
+                .getTaskService()
+                .createTaskQuery()
+                .taskDefinitionKey(
+                        BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT)
+                .list())
+        {
+            dto = new ManualAssignmentDTO();
+            dto.setMoo(manualAssignmentTask.getId());
+            dtos.add(dto);
+        }
+        return dtos.toArray(new ManualAssignmentDTO[dtos.size()]);
     }
 }
