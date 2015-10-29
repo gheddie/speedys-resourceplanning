@@ -1,7 +1,6 @@
 package de.trispeedys.resourceplanning.components.treetable;
 
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
-import de.trispeedys.resourceplanning.util.HierarchicalEventItemType;
 import de.trispeedys.resourceplanning.webservice.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
 

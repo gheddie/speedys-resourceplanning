@@ -1,24 +1,24 @@
 package de.trispeedys.resourceplanning.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-
-import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.EventPosition;
+import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class PositionService
 {
     public static boolean isPositionAvailable(Long eventId, Long positionId)
     {
         Position position = (Position) Datasources.getDatasource(Position.class).findById(positionId);
+        if (position == null)
+        {
+            throw new ResourcePlanningException("position with id '"+positionId+"' could not be found!!");
+        }
         Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);
         return isPositionAvailable(event, position);
     }

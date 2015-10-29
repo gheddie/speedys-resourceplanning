@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning.webservice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.jws.WebService;
@@ -18,10 +19,12 @@ import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.dto.ManualAssignmentDTO;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
+import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.interaction.EventManager;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.repository.EventRepository;
@@ -33,6 +36,7 @@ import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.util.EntityTreeNode;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
+import de.trispeedys.resourceplanning.util.StringUtil;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 @SuppressWarnings("restriction")
@@ -151,6 +155,8 @@ public class ResourceInfo
             dto = new HelperDTO();
             dto.setLastName(helper.getLastName());
             dto.setFirstName(helper.getFirstName());
+            dto.setEmail(helper.getEmail());
+            dto.setCode(helper.getCode());
             dtos.add(dto);
         }
         return dtos.toArray(new HelperDTO[dtos.size()]);
@@ -168,9 +174,25 @@ public class ResourceInfo
                 .list())
         {
             dto = new ManualAssignmentDTO();
-            dto.setMoo(manualAssignmentTask.getId());
+            dto.setMoo(manualAssignmentTask.getId());            
             dtos.add(dto);
         }
         return dtos.toArray(new ManualAssignmentDTO[dtos.size()]);
+    }
+    
+    public void completeManualAssignment(String taskId, Long positionId)
+    {
+        if ((taskId == null) || (StringUtil.isBlank(taskId)))
+        {
+            throw new ResourcePlanningException("task id must be set in order to complete manual assignment!!");
+        }
+        if (positionId == null)
+        {
+            throw new ResourcePlanningException("position id must be set in order to complete manual assignment!!");
+        }        
+        System.out.println("completing manual assignment [taskId:"+taskId+"|positionId:"+positionId+"]");
+        HashMap<String, Object> variables = new HashMap<String, Object>();
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, positionId);
+        BpmPlatform.getDefaultProcessEngine().getTaskService().complete(taskId, variables);
     }
 }

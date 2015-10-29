@@ -10,23 +10,32 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.*;
-import java.util.Date;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
-
 import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import net.coderazzi.filters.gui.TableFilterHeader;
 import de.trispeedys.resourceplanning.ResourcePlanningClientRoutines;
 import de.trispeedys.resourceplanning.components.treetable.TreeTable;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataModel;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataNode;
+import de.trispeedys.resourceplanning.gui.builder.TableModelBuilder;
 import de.trispeedys.resourceplanning.webservice.EventDTO;
 import de.trispeedys.resourceplanning.webservice.HelperDTO;
+import de.trispeedys.resourceplanning.webservice.ManualAssignmentDTO;
 import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
 
 /**
@@ -41,6 +50,10 @@ public class ResourcePlanningMainFrame extends JFrame
     private List<HelperDTO> helpers;
     
     private HelperDTO selectedHelper;
+    
+    private ManualAssignmentDTO selectedManualAssignment;
+
+    private List<ManualAssignmentDTO> manualAssignments;
 
     public ResourcePlanningMainFrame()
     {
@@ -49,6 +62,8 @@ public class ResourcePlanningMainFrame extends JFrame
         putListeners();
         new TableFilterHeader(tbEvents);
         new TableFilterHeader(tbHelpers);
+        new TableFilterHeader(tbManualAssignments);
+        fillPressed(null);
     }
 
     private void putListeners()
@@ -69,43 +84,14 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private void fillPressed(ActionEvent e)
     {
-        tbEvents.setModel(createEventTableModel());
-        tbHelpers.setModel(createHelperTableModel());
-    }
-
-    public TableModel createHelperTableModel()
-    {
-        helpers = new ResourceInfoService().getResourceInfoPort().queryHelpers().getItem();
-        Object[] headers = new Object[]
-        {
-            "Nachname", "Vorname"
-        };
-        Object[][] data = new Object[helpers.size()][2];
-        int index = 0;
-        for (HelperDTO helper : helpers)
-        {
-            data[index][0] = helper.getLastName();
-            data[index][1] = helper.getFirstName();
-            index++;
-        }
-        return new DefaultTableModel(data, headers);
-    }
-
-    public static TableModel createEventTableModel()
-    {
+        // load
         events = new ResourceInfoService().getResourceInfoPort().queryEvents().getItem();
-        Object[] headers = new Object[]
-        {
-            "Beschreibung"
-        };
-        Object[][] data = new Object[events.size()][2];
-        int index = 0;
-        for (EventDTO event : events)
-        {
-            data[index][0] = event.getDescription();
-            index++;
-        }
-        return new DefaultTableModel(data, headers);
+        helpers = new ResourceInfoService().getResourceInfoPort().queryHelpers().getItem();
+        manualAssignments = new ResourceInfoService().getResourceInfoPort().queryManualAssignments().getItem();
+        
+        tbEvents.setModel(TableModelBuilder.createGenericTableModel(events));
+        tbHelpers.setModel(TableModelBuilder.createGenericTableModel(helpers));
+        tbManualAssignments.setModel(TableModelBuilder.createGenericTableModel(manualAssignments));
     }
 
     private void eventSelected(EventDTO event)
@@ -161,18 +147,23 @@ public class ResourcePlanningMainFrame extends JFrame
         scEvents = new JScrollPane();
         tbEvents = new JTable();
         btnPlanEvent = new JButton();
-        brnFill = new JButton();
         pnlHelper = new JPanel();
         scHelpers = new JScrollPane();
         tbHelpers = new JTable();
+        pnlManualAssignments = new JPanel();
+        scManualAssignments = new JScrollPane();
+        tbManualAssignments = new JTable();
+        label1 = new JLabel();
+        textField1 = new JTextField();
+        btnBookManually = new JButton();
 
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
-        ((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {0, 0};
-        ((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-        ((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-        ((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {1.0, 1.0, 0.0, 1.0E-4};
+        ((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {0, 49, 0, 0};
+        ((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {0, 0, 0};
+        ((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0, 1.0E-4};
+        ((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {1.0, 1.0, 1.0E-4};
 
         //======== tabbedPane1 ========
         {
@@ -189,9 +180,9 @@ public class ResourcePlanningMainFrame extends JFrame
 
                 pnlPositions.setLayout(new GridBagLayout());
                 ((GridBagLayout)pnlPositions.getLayout()).columnWidths = new int[] {0, 0, 0};
-                ((GridBagLayout)pnlPositions.getLayout()).rowHeights = new int[] {203, 0, 136, 0, 0};
+                ((GridBagLayout)pnlPositions.getLayout()).rowHeights = new int[] {203, 0, 131, 0};
                 ((GridBagLayout)pnlPositions.getLayout()).columnWeights = new double[] {1.0, 0.0, 1.0E-4};
-                ((GridBagLayout)pnlPositions.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 0.0, 1.0E-4};
+                ((GridBagLayout)pnlPositions.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
 
                 //======== scPositions ========
                 {
@@ -221,7 +212,7 @@ public class ResourcePlanningMainFrame extends JFrame
                 }
                 pnlPositions.add(scEvents, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
+                    new Insets(0, 0, 0, 5), 0, 0));
 
                 //---- btnPlanEvent ----
                 btnPlanEvent.setText("Planen");
@@ -232,17 +223,6 @@ public class ResourcePlanningMainFrame extends JFrame
                 });
                 pnlPositions.add(btnPlanEvent, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 0), 0, 0));
-
-                //---- brnFill ----
-                brnFill.setText("Fill");
-                brnFill.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        fillPressed(e);
-                    }
-                });
-                pnlPositions.add(brnFill, new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets(0, 0, 0, 0), 0, 0));
             }
             tabbedPane1.addTab("Positionen", pnlPositions);
@@ -251,9 +231,9 @@ public class ResourcePlanningMainFrame extends JFrame
             {
                 pnlHelper.setLayout(new GridBagLayout());
                 ((GridBagLayout)pnlHelper.getLayout()).columnWidths = new int[] {0, 0};
-                ((GridBagLayout)pnlHelper.getLayout()).rowHeights = new int[] {0, 0, 0};
+                ((GridBagLayout)pnlHelper.getLayout()).rowHeights = new int[] {0, 0};
                 ((GridBagLayout)pnlHelper.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-                ((GridBagLayout)pnlHelper.getLayout()).rowWeights = new double[] {1.0, 0.0, 1.0E-4};
+                ((GridBagLayout)pnlHelper.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
 
                 //======== scHelpers ========
                 {
@@ -261,11 +241,44 @@ public class ResourcePlanningMainFrame extends JFrame
                 }
                 pnlHelper.add(scHelpers, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 0), 0, 0));
+                    new Insets(0, 0, 0, 0), 0, 0));
             }
             tabbedPane1.addTab("Helfer", pnlHelper);
+
+            //======== pnlManualAssignments ========
+            {
+                pnlManualAssignments.setLayout(new GridBagLayout());
+                ((GridBagLayout)pnlManualAssignments.getLayout()).columnWidths = new int[] {0, 55, 0, 0};
+                ((GridBagLayout)pnlManualAssignments.getLayout()).rowHeights = new int[] {0, 0, 0};
+                ((GridBagLayout)pnlManualAssignments.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0, 1.0E-4};
+                ((GridBagLayout)pnlManualAssignments.getLayout()).rowWeights = new double[] {1.0, 0.0, 1.0E-4};
+
+                //======== scManualAssignments ========
+                {
+                    scManualAssignments.setViewportView(tbManualAssignments);
+                }
+                pnlManualAssignments.add(scManualAssignments, new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 5, 0), 0, 0));
+
+                //---- label1 ----
+                label1.setText("Position:");
+                pnlManualAssignments.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 0, 5), 0, 0));
+                pnlManualAssignments.add(textField1, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 0, 5), 0, 0));
+
+                //---- btnBookManually ----
+                btnBookManually.setText("Buchen");
+                pnlManualAssignments.add(btnBookManually, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 0, 0), 0, 0));
+            }
+            tabbedPane1.addTab("Manuelle Zuweisungen", pnlManualAssignments);
         }
-        contentPane.add(tabbedPane1, new GridBagConstraints(0, 0, 1, 3, 0.0, 0.0,
+        contentPane.add(tabbedPane1, new GridBagConstraints(0, 0, 3, 2, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(0, 0, 0, 0), 0, 0));
         pack();
@@ -283,10 +296,15 @@ public class ResourcePlanningMainFrame extends JFrame
     private JScrollPane scEvents;
     private JTable tbEvents;
     private JButton btnPlanEvent;
-    private JButton brnFill;
     private JPanel pnlHelper;
     private JScrollPane scHelpers;
     private JTable tbHelpers;
+    private JPanel pnlManualAssignments;
+    private JScrollPane scManualAssignments;
+    private JTable tbManualAssignments;
+    private JLabel label1;
+    private JTextField textField1;
+    private JButton btnBookManually;
     // JFormDesigner - End of variables declaration //GEN-END:variables
 
     // ---

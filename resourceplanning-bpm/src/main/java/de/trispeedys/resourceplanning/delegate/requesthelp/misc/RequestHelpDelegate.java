@@ -9,6 +9,7 @@ import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public abstract class RequestHelpDelegate implements JavaDelegate
 {
@@ -16,6 +17,10 @@ public abstract class RequestHelpDelegate implements JavaDelegate
     {
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findById(helperId);
+        if (helper == null)
+        {
+            throw new ResourcePlanningException("event with id '"+helperId+"' could not be found!!");
+        }
         return helper;
     }
 
@@ -23,6 +28,10 @@ public abstract class RequestHelpDelegate implements JavaDelegate
     {
         Long eventId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID);
         Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
+        if (event == null)
+        {
+            throw new ResourcePlanningException("event with id '"+eventId+"' could not be found!!");
+        }
         return event;
     }
 }

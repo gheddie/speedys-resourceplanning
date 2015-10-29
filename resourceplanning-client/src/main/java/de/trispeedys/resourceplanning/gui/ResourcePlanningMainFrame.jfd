@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.GridBagLayout ) {
-			"$columnSpecs": "0:1.0"
-			"$rowSpecs": "0:1.0, 0:1.0, 0"
+			"$columnSpecs": "0, 44, 0:1.0"
+			"$rowSpecs": "0:1.0, 0:1.0"
 			"$hGap": 5
 			"$vGap": 5
 			"$alignLeft": true
@@ -16,7 +16,7 @@ new FormModel {
 				name: "tabbedPane1"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0:1.0, 0"
-					"$rowSpecs": "198:1.0, 0, 131, 0"
+					"$rowSpecs": "198:1.0, 0, 131"
 					"$hGap": 5
 					"$vGap": 5
 					"$alignLeft": true
@@ -55,20 +55,12 @@ new FormModel {
 						"gridx": 1
 						"gridy": 2
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "brnFill"
-						"text": "Fill"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "fillPressed", true ) )
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridy": 3
-						"gridwidth": 2
-					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Positionen"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0:1.0"
-					"$rowSpecs": "0:1.0, 0"
+					"$rowSpecs": "0:1.0"
 					"$hGap": 5
 					"$vGap": 5
 					"$alignLeft": true
@@ -84,8 +76,48 @@ new FormModel {
 				}, new FormLayoutConstraints( null ) {
 					"title": "Helfer"
 				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0, 50, 0:1.0"
+					"$rowSpecs": "0:1.0, 0"
+					"$hGap": 5
+					"$vGap": 5
+					"$alignLeft": true
+					"$alignTop": true
+				} ) {
+					name: "pnlManualAssignments"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scManualAssignments"
+						add( new FormComponent( "javax.swing.JTable" ) {
+							name: "tbManualAssignments"
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridwidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label1"
+						"text": "Position:"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 1
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField1"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridx": 1
+						"gridy": 1
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnBookManually"
+						"text": "Buchen"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 1
+						"gridx": 2
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "Manuelle Zuweisungen"
+				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-				"gridheight": 3
+				"gridheight": 2
+				"gridwidth": 3
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
