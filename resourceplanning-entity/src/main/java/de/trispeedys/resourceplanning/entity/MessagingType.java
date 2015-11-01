@@ -13,10 +13,13 @@ public enum MessagingType
     PROPOSE_POSITIONS,
     
     // confirmation of an assignment sent to the helper
-    CONFIRMATION,
+    BOOKING_CONFIRMATION,
     
     // a helper has cancelled his assignment (someone will be noticed)
     ALERT_BOOKING_CANCELLED,
+    
+    // confirm 'pause me' to helper
+    PAUSE_CONFIRM,
 
     // fallback
     NONE

@@ -9,6 +9,7 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
 import org.camunda.bpm.BpmPlatform;
+import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.runtime.VariableInstanceQuery;
 import org.camunda.bpm.engine.task.Task;
@@ -24,6 +25,8 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.entity.misc.HelperState;
+import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
@@ -61,8 +64,7 @@ public class ResourceInfo
         }
         List<PositionDTO> dtos = new ArrayList<PositionDTO>();
         PositionDTO dto = null;
-        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class)
-                .findUnassignedPositionsInEvent(event))
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event))
         {
             dto = new PositionDTO();
             dto.setDescription(pos.getDescription());
@@ -72,36 +74,20 @@ public class ResourceInfo
         return dtos.toArray(new PositionDTO[dtos.size()]);
     }
 
-    public void assignHelper(Long helperId, Long positionId, Long eventId)
-    {
-        AssignmentService.assignHelper(
-                RepositoryProvider.getRepository(HelperRepository.class).findById(helperId),
-                RepositoryProvider.getRepository(EventRepository.class).findById(helperId),
-                RepositoryProvider.getRepository(PositionRepository.class).findById(helperId));
-    }
-
     public void sendAllMessages()
     {
         MessagingService.sendAllUnprocessedMessages();
     }
 
-    public void processHelperCallback(String businessKey, String callback)
-    {
-        if ((businessKey == null) || (businessKey.length() == 0))
-        {
-            System.out.println("business key must be set --> returning.");
-            return;
-        }
-        HelperCallback callbackValue = HelperCallback.valueOf(callback);
-        if ((callback == null) || (callback.length() == 0) || (callbackValue == null))
-        {
-            System.out.println("string '' can not be interpreted as helper callback --> returning.");
-            return;
-        }
-        LoggerService.log("processed helper callback '" +
-                callbackValue + "' for business key '" + businessKey + "'...", DbLogLevel.INFO);
-        HelperInteraction.processReminderCallback(callbackValue, businessKey);
-    }
+    /*
+     * public void processHelperCallback(String businessKey, String callback) { if ((businessKey == null) ||
+     * (businessKey.length() == 0)) { System.out.println("business key must be set --> returning."); return; }
+     * HelperCallback callbackValue = HelperCallback.valueOf(callback); if ((callback == null) || (callback.length() ==
+     * 0) || (callbackValue == null)) {
+     * System.out.println("string '' can not be interpreted as helper callback --> returning."); return; }
+     * LoggerService.log("processed helper callback '" + callbackValue + "' for business key '" + businessKey + "'...",
+     * DbLogLevel.INFO); HelperInteraction.processReminderCallback(callbackValue, businessKey); }
+     */
 
     public void startProcessesForActiveHelpersByTemplateName(String templateName)
     {
@@ -196,8 +182,7 @@ public class ResourceInfo
         for (Task manualAssignmentTask : BpmPlatform.getDefaultProcessEngine()
                 .getTaskService()
                 .createTaskQuery()
-                .taskDefinitionKey(
-                        BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT)
+                .taskDefinitionKey(BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT)
                 .list())
         {
             dto = new ManualAssignmentDTO();
@@ -235,28 +220,39 @@ public class ResourceInfo
         {
             return;
         }
-        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-        BpmPlatform.getDefaultProcessEngine()
-                .getRuntimeService()
-                .correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED, businessKey);
+        String businessKey = null;
+        try
+        {
+            businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+            BpmPlatform.getDefaultProcessEngine()
+                    .getRuntimeService()
+                    .correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED, businessKey);
+        }
+        catch (MismatchingMessageCorrelationException e)
+        {
+            throw new ResourcePlanningException("can not correlate cancellation message [helper id=" + helperId + "]!!");
+        }
     }
 
     public void completeManualAssignment(String taskId, Long positionId)
     {
         if ((taskId == null) || (StringUtil.isBlank(taskId)))
         {
-            throw new ResourcePlanningException(
-                    "task id must be set in order to complete manual assignment!!");
+            throw new ResourcePlanningException("task id must be set in order to complete manual assignment!!");
         }
         if (positionId == null)
         {
-            throw new ResourcePlanningException(
-                    "position id must be set in order to complete manual assignment!!");
+            throw new ResourcePlanningException("position id must be set in order to complete manual assignment!!");
         }
-        System.out.println("completing manual assignment [taskId:" +
-                taskId + "|positionId:" + positionId + "]");
+        System.out.println("completing manual assignment [taskId:" + taskId + "|positionId:" + positionId + "]");
         HashMap<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, positionId);
         BpmPlatform.getDefaultProcessEngine().getTaskService().complete(taskId, variables);
+    }
+
+    public void createHelper(String lastName, String firstName, String email, int dayOfBirth, int monthOfBirth, int yearOfBirth)
+    {
+        EntityFactory.buildHelper(lastName, firstName, email, HelperState.ACTIVE, dayOfBirth, monthOfBirth, yearOfBirth)
+                .saveOrUpdate();
     }
 }

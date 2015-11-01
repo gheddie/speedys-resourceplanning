@@ -1,7 +1,6 @@
 package de.trispeedys.resourceplanning.delegate.requesthelp;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import de.trispeedys.resourceplanning.CallbackChoiceGenerator;
 import de.trispeedys.resourceplanning.datasource.Datasources;
@@ -9,6 +8,7 @@ import de.trispeedys.resourceplanning.delegate.requesthelp.misc.RequestHelpDeleg
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
+import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
@@ -23,18 +23,20 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
         // find helper and event
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Long eventId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID);
+        Long positionId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION);
         // write mail
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);
-        sendReminderMail(helper, event, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS), execution);
+        Position position = (Position) Datasources.getDatasource(Position.class).findById(positionId);
+        sendReminderMail(helper, event, position, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS), execution);
         // increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue + 1));
     }
 
-    private void sendReminderMail(Helper helper, Event event, int attemptCount, DelegateExecution execution)
+    private void sendReminderMail(Helper helper, Event event, Position position, int attemptCount, DelegateExecution execution)
     {
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event, execution),
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event, position, execution),
                 getMessagingType(attemptCount), MessagingFormat.HTML).saveOrUpdate();
     }
 
@@ -53,11 +55,23 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
         }
     }
 
-    private String generateReminderBody(Helper helper, Event event, DelegateExecution execution)
+    private String generateReminderBody(Helper helper, Event event, Position position, DelegateExecution execution)
     {
         // build message body
         StringBuffer buffer = new StringBuffer();
         buffer.append("Hallo, " + helper.getFirstName() + "!!");
+        buffer.append("<br><br>");
+        buffer.append("Beim letzten Event warst du auf der Position '" + position.getDescription() + "' eingesetzt.");
+        if (!((Boolean) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_PRIOR_POS_AVAILABLE)))
+        {
+            buffer.append("<br><br>");
+            buffer.append("Diese Position ist leider nicht mehr verfügbar.");
+        }
+        else
+        {
+            buffer.append("<br><br>");
+            buffer.append("Diese Position auch dieses Mal wieder zu besetzen.");
+        }
         buffer.append("<br><br>");
         buffer.append("Bitte sag uns, was Du beim anstehenden " + event.getDescription() + " tun möchtest:");
         buffer.append("<br><br>");

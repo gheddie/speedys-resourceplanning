@@ -79,11 +79,12 @@ create sequence helper_assignment_id_seq;
 create table helper_assignment
 (
 	id bigint not null default nextval('helper_assignment_id_seq'),
-	helper_id bigint,
-	position_id bigint,
-	event_id bigint,
+	helper_id bigint not null,
+	position_id bigint not null,
+	event_id bigint not null,
 	primary key (id),
-	helper_assignment_state varchar(64)
+	helper_assignment_state varchar(64),
+	constraint has_unique_hlp_evt unique (helper_id, event_id)
 );
 
 alter table helper_assignment add constraint fk_assignment_helper foreign key (helper_id) references helper (id);

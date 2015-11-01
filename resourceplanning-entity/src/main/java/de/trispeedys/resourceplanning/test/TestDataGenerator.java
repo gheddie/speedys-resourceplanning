@@ -15,7 +15,7 @@ import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 public class TestDataGenerator
 {
     public static final int POS_COUNT_SIMPLE_EVENT = 5;
-    
+
     private static final String DEFAULT_MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
 
     /**
@@ -24,21 +24,17 @@ public class TestDataGenerator
      * 
      * @return
      */
-    public static Event createSimpleUnassignedEvent(String description, String eventKey, int day, int month,
-            int year)
+    public static Event createSimpleUnassignedEvent(String description, String eventKey, int day, int month, int year)
     {
         EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         // build event
         Event myLittleEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
-                        template).saveOrUpdate();
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, template).saveOrUpdate();
 
         // create helpers
-        EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("H3_First", "H3_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 3, 1, 1980)
-                .saveOrUpdate();
+        EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("H3_First", "H3_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 3, 1, 1980).saveOrUpdate();
 
         // build domains
         Domain domain1 = EntityFactory.buildDomain("D1", 1).saveOrUpdate();
@@ -77,24 +73,18 @@ public class TestDataGenerator
 
         // build event
         Event myLittleEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.FINISHED,
-                        template).saveOrUpdate();
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.FINISHED, template).saveOrUpdate();
         // create helpers
         Helper helper1 =
-                EntityFactory.buildHelper("H1_First", "H1_Last", "a1@b.de", HelperState.ACTIVE, 1, 2, 1980)
-                        .saveOrUpdate();
+                EntityFactory.buildHelper("H1_First", "H1_Last", "a1@b.de", HelperState.ACTIVE, 1, 2, 1980).saveOrUpdate();
         Helper helper2 =
-                EntityFactory.buildHelper("H2_First", "H2_Last", "a2@b.de", HelperState.ACTIVE, 2, 2, 1980)
-                        .saveOrUpdate();
+                EntityFactory.buildHelper("H2_First", "H2_Last", "a2@b.de", HelperState.ACTIVE, 2, 2, 1980).saveOrUpdate();
         Helper helper3 =
-                EntityFactory.buildHelper("H3_First", "H3_Last", "a3@b.de", HelperState.ACTIVE, 3, 2, 1980)
-                        .saveOrUpdate();
+                EntityFactory.buildHelper("H3_First", "H3_Last", "a3@b.de", HelperState.ACTIVE, 3, 2, 1980).saveOrUpdate();
         Helper helper4 =
-                EntityFactory.buildHelper("H4_First", "H4_Last", "a4@b.de", HelperState.ACTIVE, 4, 2, 1980)
-                        .saveOrUpdate();
+                EntityFactory.buildHelper("H4_First", "H4_Last", "a4@b.de", HelperState.ACTIVE, 4, 2, 1980).saveOrUpdate();
         Helper helper5 =
-                EntityFactory.buildHelper("H5_First", "H5_Last", "a5@b.de", HelperState.ACTIVE, 5, 2, 1980)
-                        .saveOrUpdate();
+                EntityFactory.buildHelper("H5_First", "H5_Last", "a5@b.de", HelperState.ACTIVE, 5, 2, 1980).saveOrUpdate();
         // build domains
         Domain domain1 = EntityFactory.buildDomain("D1", 1).saveOrUpdate();
         Domain domain2 = EntityFactory.buildDomain("D2", 2).saveOrUpdate();
@@ -135,12 +125,11 @@ public class TestDataGenerator
 
         // build event
         Event myMinimalEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
-                        template).saveOrUpdate();
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, template).saveOrUpdate();
         // create helper
         Helper helper =
-                EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1,
-                        1, 1980).saveOrUpdate();
+                EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
+                        .saveOrUpdate();
         // build domain
         Domain domain = EntityFactory.buildDomain("D1", 787).saveOrUpdate();
         // build position
@@ -152,42 +141,26 @@ public class TestDataGenerator
         return myMinimalEvent;
     }
 
-    public static Event createRealLifeEvent(String description, String eventKey, int day, int month,
-            int year, EventState eventState, String templateName)
+    public static Event createRealLifeEvent(String description, String eventKey, int day, int month, int year,
+            EventState eventState, String templateName)
     {
         // build event template
         EventTemplate template = EntityFactory.buildEventTemplate(templateName).saveOrUpdate();
 
         // build event
-        Event event =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, eventState, template)
-                        .saveOrUpdate();
+        Event event = EntityFactory.buildEvent(description, eventKey, day, month, year, eventState, template).saveOrUpdate();
 
         // ------------------------ create helpers ('old')
-        EntityFactory.buildHelper("Schulz", "Stefan", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Beyer", "Lars", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 4, 4, 1971)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Elsner", "Conny", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 25, 7, 1973)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Deyhle", "Ingo", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 8, 1968)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Meitzner", "Daniela", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 16, 12,
-                1961).saveOrUpdate();
-        EntityFactory.buildHelper("Grabbe", "Jimi", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 7, 5, 1991)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Päge", "Denny", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 29, 5, 1964)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Thierse", "Ulrich", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 16, 5, 1983)
-                .saveOrUpdate();
-
-        // ------------------------ create helpers ('new')
-        EntityFactory.buildHelper("Klemm", "Peter", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 17, 7, 1983)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Walther", "Tina", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 28, 4, 1967)
-                .saveOrUpdate();
-        EntityFactory.buildHelper("Klopp", "Willi", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 13, 11, 1964)
-                .saveOrUpdate();
+        EntityFactory.buildHelper("Schulz", "Stefan", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        EntityFactory.buildHelper("Beyer", "Lars", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 4, 4, 1971).saveOrUpdate();
+        EntityFactory.buildHelper("Elsner", "Conny", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 25, 7, 1973).saveOrUpdate();
+        EntityFactory.buildHelper("Deyhle", "Ingo", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 8, 1968).saveOrUpdate();
+        EntityFactory.buildHelper("Meitzner", "Daniela", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 16, 12, 1961).saveOrUpdate();
+        EntityFactory.buildHelper("Grabbe", "Jimi", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 7, 5, 1991).saveOrUpdate();
+        EntityFactory.buildHelper("Päge", "Denny", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 29, 5, 1964).saveOrUpdate();
+        EntityFactory.buildHelper("Thierse", "Ulrich", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 16, 5, 1983).saveOrUpdate();
+        EntityFactory.buildHelper("Müller", "Werner", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 22, 11, 1984).saveOrUpdate();
+        EntityFactory.buildHelper("Unterberg", "Dorothea", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 23, 3, 1992).saveOrUpdate();
 
         // ------------------------ create event templates
         EntityFactory.buildEventTemplate("TriathlonTemplate").saveOrUpdate();
@@ -197,53 +170,53 @@ public class TestDataGenerator
 
         // Domain 'Laufstrecke'
         Domain domLauf = EntityFactory.buildDomain("Laufstrecke", 1).saveOrUpdate();
-        Position posAnsageZieleinlauf =
-                EntityFactory.buildPosition("Ansage Zieleinlauf", 12, domLauf, false, 0).saveOrUpdate();
-        Position posVerpflegungPark =
-                EntityFactory.buildPosition("Verpflegung Park", 12, domLauf, false, 1).saveOrUpdate();
+        Position posAnsageZieleinlauf = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, domLauf, false, 0).saveOrUpdate();
+        Position posVerpflegungPark = EntityFactory.buildPosition("Verpflegung Park", 12, domLauf, false, 1).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posAnsageZieleinlauf, posVerpflegungPark);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("SCST13021976"), event, posAnsageZieleinlauf);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("BELA04041971"), event, posVerpflegungPark);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("SCST13021976"), event, posAnsageZieleinlauf);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("BELA04041971"), event, posVerpflegungPark);
 
         // Domain 'Radstrecke'
         Domain domRad = EntityFactory.buildDomain("Radstrecke", 2).saveOrUpdate();
-        Position posKontrolleAbstieg =
-                EntityFactory.buildPosition("Kontrolle Abstieg", 12, domRad, false, 2).saveOrUpdate();
+        Position posKontrolleAbstieg = EntityFactory.buildPosition("Kontrolle Abstieg", 12, domRad, false, 2).saveOrUpdate();
         Position posEinweisungNachStartnummerWZ =
-                EntityFactory.buildPosition("Einweisung nach Startnummer WZ", 12, domRad, false, 137)
-                        .saveOrUpdate();
+                EntityFactory.buildPosition("Einweisung nach Startnummer WZ", 12, domRad, false, 137).saveOrUpdate();
         Position posSicherungAbzweigRunde =
-                EntityFactory.buildPosition("Sicherung Abzweig Runde 2/Zieleinfahrt", 12, domRad, false, 398)
-                        .saveOrUpdate();
+                EntityFactory.buildPosition("Sicherung Abzweig Runde 2/Zieleinfahrt", 12, domRad, false, 398).saveOrUpdate();
         Position posMotorrad1 = EntityFactory.buildPosition("Motorrad 1", 12, domRad, false, 232).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posKontrolleAbstieg, posEinweisungNachStartnummerWZ,
                 posSicherungAbzweigRunde, posMotorrad1);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("PADE29051964"), event, posKontrolleAbstieg);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("ELCO25071973"), event,
-                posEinweisungNachStartnummerWZ);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("DEIN01081968"), event,
-                posSicherungAbzweigRunde);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("THUL16051983"), event, posMotorrad1);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("PADE29051964"), event, posKontrolleAbstieg);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("ELCO25071973"), event, posEinweisungNachStartnummerWZ);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("DEIN01081968"), event, posSicherungAbzweigRunde);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("THUL16051983"), event, posMotorrad1);
 
         // Domain 'Zielverpflegung'
         Domain domZiel = EntityFactory.buildDomain("Zielverpflegung", 17).saveOrUpdate();
-        Position posAusgabeGetraenke =
-                EntityFactory.buildPosition("Ausgabe Getränke", 12, domZiel, false, 38).saveOrUpdate();
-        Position posObstschneiden =
-                EntityFactory.buildPosition("Obstschneiden", 12, domZiel, false, 39).saveOrUpdate();
+        Position posAusgabeGetraenke = EntityFactory.buildPosition("Ausgabe Getränke", 12, domZiel, false, 38).saveOrUpdate();
+        Position posObstschneiden = EntityFactory.buildPosition("Obstschneiden", 12, domZiel, false, 39).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posAusgabeGetraenke, posObstschneiden);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("MEDA16121961"), event, posAusgabeGetraenke);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("PADE29051964"), event, posObstschneiden);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("MEDA16121961"), event, posAusgabeGetraenke);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("MUWE22111984"), event, posObstschneiden);
 
         // Domain 'Siegerehrung'
         Domain domSieger = EntityFactory.buildDomain("Siegerehrung", 92).saveOrUpdate();
-        Position posModeration =
-                EntityFactory.buildPosition("Moderation", 12, domSieger, false, 93).saveOrUpdate();
+        Position posModeration = EntityFactory.buildPosition("Moderation", 12, domSieger, false, 93).saveOrUpdate();
         Position posAnreichenUrkunden =
                 EntityFactory.buildPosition("Anreichen Urkunden", 12, domSieger, false, 94).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posModeration, posAnreichenUrkunden);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("THUL16051983"), event, posModeration);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class).findByCode("SCST13021976"), event, posAnreichenUrkunden);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("UNDO23031992"), event, posModeration);
+        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+                .findByCode("GRJI07051991"), event, posAnreichenUrkunden);
 
         return event;
     }

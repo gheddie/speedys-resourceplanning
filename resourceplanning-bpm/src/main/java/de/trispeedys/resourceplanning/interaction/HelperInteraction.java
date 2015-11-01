@@ -19,39 +19,39 @@ public class HelperInteraction
     /**
      * Quittung für korrekt zugestellte Nachricht
      */
-    private static final String RETURN_MESSAGE_PROCESSABLE = "RETURN_MESSAGE_PROCESSABLE";
+    public static final String RETURN_MESSAGE_PROCESSABLE = "RETURN_MESSAGE_PROCESSABLE";
 
     /**
      * Catch-All-Quittung für beide Fälle ({@link BpmMessages.RequestHelpHelper#MSG_HELP_CALLBACK} und
      * {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN}) --> Nachricht nicht zustellbar
      */
-    private static final String RETURN_MESSAGE_UNPROCESSABLE = "RETURN_MESSAGE_UNPROCESSABLE";
+    public static final String RETURN_MESSAGE_UNPROCESSABLE = "RETURN_MESSAGE_UNPROCESSABLE";
 
     /**
      * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Positiv-Fall --> Position verfügbar
      */
-    private static final String RETURN_POS_CHOSEN_NOMINAL = "RETURN_POS_CHOSEN_NOMINAL";
+    public static final String RETURN_POS_CHOSEN_NOMINAL = "RETURN_POS_CHOSEN_NOMINAL";
 
     /**
      * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Negativ-Fall --> Position NICHT verfügbar
      */
-    private static final String RETURN_POS_CHOSEN_POS_TAKEN = "POS_CHOSEN_POS_TAKEN";
+    public static final String RETURN_POS_CHOSEN_POS_TAKEN = "POS_CHOSEN_POS_TAKEN";
+    
+    /**
+     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_ASSIG_CANCELLED}
+     */
+    public static final String RETURN_CANCELLATION_NOMINAL = "RETURN_CANCELLATION_NOMINAL";
 
     /**
-     * called from 'HelperCallbackReceiver.jsp'
      * 
-     * @param eventId
-     * @param helperId
+     * 
      * @param callback
+     * @param businessKey
+     * @return
      */
     public static String processReminderCallback(Long eventId, Long helperId, HelperCallback callback)
     {
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-        return processReminderCallback(callback, businessKey);
-    }
-
-    public static String processReminderCallback(HelperCallback callback, String businessKey)
-    {
         Map<String, Object> variables = new HashMap<String, Object>();
         switch (callback)
         {
@@ -74,11 +74,11 @@ public class HelperInteraction
             BpmPlatform.getDefaultProcessEngine()
                     .getRuntimeService()
                     .correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variables);
-            return RETURN_MESSAGE_PROCESSABLE;
+            return HtmlRenderer.renderCorrelationSuccess(helperId);
         }
         catch (MismatchingMessageCorrelationException e)
         {
-            return RETURN_MESSAGE_UNPROCESSABLE;
+            return HtmlRenderer.renderCorrelationFault(helperId);
         }
     }
 
@@ -101,7 +101,6 @@ public class HelperInteraction
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, chosenPositionId);
         variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, positionAvailable);
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-        // TODO catch message correlation mismtach and generate error code
         try
         {
             BpmPlatform.getDefaultProcessEngine()
@@ -109,17 +108,37 @@ public class HelperInteraction
                     .correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey, variables);
             if (positionAvailable)
             {
-                return RETURN_POS_CHOSEN_NOMINAL;
+                // inform the user about position assignment success
+                return HtmlRenderer.renderChosenPositionAvailableCallback(helperId, chosenPositionId);
             }
             else
             {
-                // inform user about position taken + generation of additional mail ('PROPOSE_POSITIONS')
-                return RETURN_POS_CHOSEN_POS_TAKEN;
+                // inform user about the generation of additional mail ('PROPOSE_POSITIONS')
+                // as the chosen position is already assigned to another helper
+                return HtmlRenderer.renderChosenPositionUnavailableCallback(helperId, chosenPositionId);
             }
         }
         catch (Exception e)
         {
-            return RETURN_MESSAGE_UNPROCESSABLE;
+            // TODO really catch exception here (not MismatchingMessageCorrelationException ?!?)
+            return HtmlRenderer.renderCorrelationFault(helperId);
+        }
+    }
+    
+    public static String processAssignmentCancellation(Long eventId, Long helperId)
+    {
+        // TODO use correct message here !!
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+        try
+        {
+            BpmPlatform.getDefaultProcessEngine()
+            .getRuntimeService()
+            .correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey);
+            return RETURN_CANCELLATION_NOMINAL;
+        }
+        catch (MismatchingMessageCorrelationException e)
+        {
+            return HtmlRenderer.renderCorrelationFault(helperId);
         }
     }
 }

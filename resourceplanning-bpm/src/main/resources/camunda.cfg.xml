@@ -8,15 +8,15 @@
 		<property name="jdbcUrl" value="jdbc:h2:mem:my-own-db;DB_CLOSE_DELAY=1000" />
 		<property name="jdbcDriver" value="org.h2.Driver" />
 		<property name="jdbcUsername" value="sa" />
-		<property name="jdbcPassword" value="" />
+		<property name="jdbcPassword" value="" />	
 		
 		<!-- PostGreSQL -->
-		<!-- 
-		<property name="jdbcUrl" value="jdbc:postgresql://localhost/bpmn_watcher" />
+		<!-- 				
+		<property name="jdbcUrl" value="jdbc:postgresql://localhost/speedys-resource-planning-bpm" />
 		<property name="jdbcDriver" value="org.postgresql.Driver" />
 		<property name="jdbcUsername" value="postgres" />
 		<property name="jdbcPassword" value="pgvedder" />
-		 -->
+		 -->		
 		
 		<property name="databaseSchemaUpdate" value="true" />
 		<property name="jobExecutorActivate" value="true" />

@@ -14,36 +14,63 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import de.trispeedys.resourceplanning.components.*;
 import net.coderazzi.filters.gui.TableFilterHeader;
 import de.trispeedys.resourceplanning.ResourcePlanningClientRoutines;
+import de.trispeedys.resourceplanning.components.ResourcePlanningTable;
 import de.trispeedys.resourceplanning.components.treetable.TreeTable;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataModel;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataNode;
 import de.trispeedys.resourceplanning.gui.builder.TableModelBuilder;
 import de.trispeedys.resourceplanning.util.HierarchicalEventItemType;
-import de.trispeedys.resourceplanning.util.StringUtil;
 import de.trispeedys.resourceplanning.webservice.EventDTO;
 import de.trispeedys.resourceplanning.webservice.HelperDTO;
 import de.trispeedys.resourceplanning.webservice.ManualAssignmentDTO;
 import de.trispeedys.resourceplanning.webservice.PositionDTO;
+import de.trispeedys.resourceplanning.webservice.ResourceInfo;
 import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
 
 /**
- * @author Stefan Schulz
+ * wsimport -keep -verbose http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/ResourceInfoWs?wsdl
+ * 
+ * wsimport -keep -verbose http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/TestDataProviderWs?wsdl
+ * 
+ * @author Stefan.Schulz
+ *
+ *         http://localhost:8080/resourceplanning-bpm-0.0.1-SNAPSHOT/HelperCallbackReceiver.jsp?callbackResult=
+ *         ASSIGNMENT_AS_BEFORE
+ * 
+ *         DEBUG Tomcat:
+ * 
+ *         + start by catalina.bat jpda start
+ * 
+ *         + debug conf + proj --> res....-bpm + socket attach + localhost:8000 + no termination
  */
 public class ResourcePlanningMainFrame extends JFrame
 {
+    private static final long serialVersionUID = 2338002273562986827L;
+
     private static List<EventDTO> events;
 
     private EventDTO selectedEvent;
 
     private List<HelperDTO> helpers;
-
-    private HelperDTO selectedHelper;
 
     private ManualAssignmentDTO selectedManualAssignment;
 
@@ -53,14 +80,18 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private PositionDTO selectedAvailablePosition;
 
+    ResourceInfo resourceInfo = null;
+
     public ResourcePlanningMainFrame()
     {
         initComponents();
+        resourceInfo = new ResourceInfoService().getResourceInfoPort();
         setSize(800, 600);
         putListeners();
         new TableFilterHeader(tbEvents);
         new TableFilterHeader(tbHelpers);
         new TableFilterHeader(tbManualAssignments);
+        new TableFilterHeader(tbAvailablePositions);
         fillPressed(null);
     }
 
@@ -103,26 +134,44 @@ public class ResourcePlanningMainFrame extends JFrame
             }
         });
     }
-    
+
     private void btnFinishProcessesPressed(ActionEvent e)
     {
-        new ResourceInfoService().getResourceInfoPort().finishUp();
+        resourceInfo.finishUp();
     }
-    
+
     private void btnCancelAssignmentPressed(ActionEvent e)
     {
         TreeTableDataNode pathComponent = treeTablePositions.getPathComponent();
         System.out.println(pathComponent);
         if (pathComponent == null)
         {
+            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte eine Helferzuweisung wählen!!");
             return;
         }
         if (pathComponent.getEventItemType().equals(HierarchicalEventItemType.POSITION))
         {
             if ((selectedEvent != null) && (pathComponent.getEntityId() != null))
             {
-                System.out.println("cancel : [helper.id:"+pathComponent.getEntityId()+"|event:"+selectedEvent.getEventId()+"]");
-                new ResourceInfoService().getResourceInfoPort().cancelAssignment(selectedEvent.getEventId(), pathComponent.getEntityId());
+                String message =
+                        "Zuweisung für " +
+                                pathComponent.getDescription() + " (" + pathComponent.getAssignment() + ") wirklich abbrechen?";
+                if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, message, "Bestätigung",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                {
+                    try
+                    {
+                        resourceInfo.cancelAssignment(selectedEvent.getEventId(), pathComponent.getEntityId());
+                    }
+                    catch (Exception e2)
+                    {
+                        JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Zuweisung konnte nicht abgebrochen werden : " + e2.getMessage());
+                    }
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Diese Position ist nicht zugewiesen!!");    
             }
         }
     }
@@ -130,10 +179,9 @@ public class ResourcePlanningMainFrame extends JFrame
     private void fillPressed(ActionEvent e)
     {
         // load
-        events = new ResourceInfoService().getResourceInfoPort().queryEvents().getItem();
-        helpers = new ResourceInfoService().getResourceInfoPort().queryHelpers().getItem();
-        manualAssignments =
-                new ResourceInfoService().getResourceInfoPort().queryManualAssignments().getItem();
+        events = resourceInfo.queryEvents().getItem();
+        helpers = resourceInfo.queryHelpers().getItem();
+        manualAssignments = resourceInfo.queryManualAssignments().getItem();
 
         // fill
         tbEvents.setModel(TableModelBuilder.createGenericTableModel(events));
@@ -161,9 +209,8 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (eventId != null)
         {
-            treeTablePositions.setModel(new TreeTableDataModel(
-                    ResourcePlanningClientRoutines.createDataStructure(eventId,
-                            chkUnassignedOnly.isSelected())));
+            treeTablePositions.setModel(new TreeTableDataModel(ResourcePlanningClientRoutines.createDataStructure(eventId,
+                    chkUnassignedOnly.isSelected(), resourceInfo)));
         }
         else
         {
@@ -171,7 +218,7 @@ public class ResourcePlanningMainFrame extends JFrame
             TreeTableDataNode root = new TreeTableDataNode("root", "root", null, null, null);
             for (EventDTO dto : events)
             {
-                root.addChild(ResourcePlanningClientRoutines.createDataStructure(dto.getEventId(), false));
+                root.addChild(ResourcePlanningClientRoutines.createDataStructure(dto.getEventId(), false, resourceInfo));
             }
             treeTablePositions.setModel(new TreeTableDataModel(root));
         }
@@ -188,8 +235,7 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (selectedEvent != null)
         {
-            new ResourceInfoService().getResourceInfoPort().startProcessesForActiveHelpersByEventId(
-                    selectedEvent.getEventId());
+            resourceInfo.startProcessesForActiveHelpersByEventId(selectedEvent.getEventId());
         }
     }
 
@@ -197,16 +243,22 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (selectedManualAssignment == null)
         {
-            System.out.println("moo");
+            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte einen Helfer wählen!!");
             return;
         }
         if (selectedAvailablePosition == null)
         {
-            System.out.println("maa");
+            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte eine Position wählen!!");
             return;
-        }        
-        new ResourceInfoService().getResourceInfoPort().completeManualAssignment(
-                selectedManualAssignment.getTaskId(), selectedAvailablePosition.getPositionId());
+        }
+        String message =
+                "Dem Helfer " +
+                        selectedManualAssignment.getHelperName() + " die freie Position " +
+                        selectedAvailablePosition.getDescription() + " zuweisen?";
+        if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, message, "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+        {
+            resourceInfo.completeManualAssignment(selectedManualAssignment.getTaskId(), selectedAvailablePosition.getPositionId());
+        }
     }
 
     private void tdbMainStateChanged(ChangeEvent e)
@@ -218,14 +270,11 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (selectedEvent == null)
         {
-            System.out.println("ppp");
+            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte ein Event wählen!!");
             return;
         }
         // TODO ignore canceled asignments !!
-        availablePositions =
-                new ResourceInfoService().getResourceInfoPort()
-                        .queryAvailablePositions(selectedEvent.getEventId())
-                        .getItem();
+        availablePositions = resourceInfo.queryAvailablePositions(selectedEvent.getEventId()).getItem();
         tbAvailablePositions.setModel(TableModelBuilder.createGenericTableModel(availablePositions));
     }
 
@@ -233,223 +282,382 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         // JFormDesigner - Component initialization - DO NOT MODIFY //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Stefan Schulz
-        toolBar1 = new JToolBar();
+        tbMain = new JToolBar();
         btnFinishProcesses = new JButton();
         btnCancelAssignment = new JButton();
         tdbMain = new JTabbedPane();
         pnlPositions = new JPanel();
+        borderPositions = new JPanel();
         scPositions = new JScrollPane();
         treeTablePositions = new TreeTable();
         chkUnassignedOnly = new JCheckBox();
+        borderEvents = new JPanel();
         scEvents = new JScrollPane();
         tbEvents = new ResourcePlanningTable();
         btnPlanEvent = new JButton();
         pnlHelper = new JPanel();
+        borderHelpers = new JPanel();
         scHelpers = new JScrollPane();
         tbHelpers = new ResourcePlanningTable();
         pnlManualAssignments = new JPanel();
         borderManualAssignments = new JPanel();
         scManualAssignments = new JScrollPane();
         tbManualAssignments = new ResourcePlanningTable();
+        btnBookManually = new JButton();
         borderAvailablePositions = new JPanel();
         scAvailablePositions = new JScrollPane();
         tbAvailablePositions = new ResourcePlanningTable();
         btnReloadAvailablePositions = new JButton();
-        btnBookManually = new JButton();
 
-        //======== this ========
+        // ======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
-        ((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {0, 49, 0, 0};
-        ((GridBagLayout)contentPane.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-        ((GridBagLayout)contentPane.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0, 1.0E-4};
-        ((GridBagLayout)contentPane.getLayout()).rowWeights = new double[] {0.0, 1.0, 1.0, 1.0E-4};
-
-        //======== toolBar1 ========
+        ((GridBagLayout) contentPane.getLayout()).columnWidths = new int[]
         {
+                0, 49, 0, 0
+        };
+        ((GridBagLayout) contentPane.getLayout()).rowHeights = new int[]
+        {
+                0, 0, 0, 0
+        };
+        ((GridBagLayout) contentPane.getLayout()).columnWeights = new double[]
+        {
+                0.0, 0.0, 1.0, 1.0E-4
+        };
+        ((GridBagLayout) contentPane.getLayout()).rowWeights = new double[]
+        {
+                0.0, 1.0, 1.0, 1.0E-4
+        };
 
-            //---- btnFinishProcesses ----
+        // ======== tbMain ========
+        {
+            tbMain.setFloatable(false);
+
+            // ---- btnFinishProcesses ----
             btnFinishProcesses.setText("Abschliessen");
-            btnFinishProcesses.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+            btnFinishProcesses.setIcon(new ImageIcon(getClass().getResource("/img/shutdown48px.png")));
+            btnFinishProcesses.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
                     btnFinishProcessesPressed(e);
                 }
             });
-            toolBar1.add(btnFinishProcesses);
+            tbMain.add(btnFinishProcesses);
 
-            //---- btnCancelAssignment ----
+            // ---- btnCancelAssignment ----
             btnCancelAssignment.setText("Absagen");
-            btnCancelAssignment.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+            btnCancelAssignment.setIcon(new ImageIcon(getClass().getResource("/img/cancel48px.png")));
+            btnCancelAssignment.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
                     btnCancelAssignmentPressed(e);
                 }
             });
-            toolBar1.add(btnCancelAssignment);
+            tbMain.add(btnCancelAssignment);
         }
-        contentPane.add(toolBar1, new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(0, 0, 5, 0), 0, 0));
+        contentPane.add(tbMain, new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(0, 0, 5, 0), 0, 0));
 
-        //======== tdbMain ========
+        // ======== tdbMain ========
         {
-            tdbMain.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
+            tdbMain.addChangeListener(new ChangeListener()
+            {
+                public void stateChanged(ChangeEvent e)
+                {
                     tdbMainStateChanged(e);
                 }
             });
 
-            //======== pnlPositions ========
+            // ======== pnlPositions ========
             {
 
                 // JFormDesigner evaluation mark
-                pnlPositions.setBorder(new javax.swing.border.CompoundBorder(
-                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                        "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-                        javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                        java.awt.Color.red), pnlPositions.getBorder())); pnlPositions.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+                pnlPositions.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(
+                        new javax.swing.border.EmptyBorder(0, 0, 0, 0), "JFormDesigner Evaluation",
+                        javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font(
+                                "Dialog", java.awt.Font.BOLD, 12), java.awt.Color.red), pnlPositions.getBorder()));
+                pnlPositions.addPropertyChangeListener(new java.beans.PropertyChangeListener()
+                {
+                    public void propertyChange(java.beans.PropertyChangeEvent e)
+                    {
+                        if ("border".equals(e.getPropertyName())) throw new RuntimeException();
+                    }
+                });
 
                 pnlPositions.setLayout(new GridBagLayout());
-                ((GridBagLayout)pnlPositions.getLayout()).columnWidths = new int[] {0, 0, 0};
-                ((GridBagLayout)pnlPositions.getLayout()).rowHeights = new int[] {203, 0, 131, 0};
-                ((GridBagLayout)pnlPositions.getLayout()).columnWeights = new double[] {1.0, 0.0, 1.0E-4};
-                ((GridBagLayout)pnlPositions.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
-
-                //======== scPositions ========
+                ((GridBagLayout) pnlPositions.getLayout()).columnWidths = new int[]
                 {
-                    scPositions.setViewportView(treeTablePositions);
-                }
-                pnlPositions.add(scPositions, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 0), 0, 0));
+                        0, 0, 0
+                };
+                ((GridBagLayout) pnlPositions.getLayout()).rowHeights = new int[]
+                {
+                        203, 0, 131, 0
+                };
+                ((GridBagLayout) pnlPositions.getLayout()).columnWeights = new double[]
+                {
+                        1.0, 0.0, 1.0E-4
+                };
+                ((GridBagLayout) pnlPositions.getLayout()).rowWeights = new double[]
+                {
+                        1.0, 0.0, 0.0, 1.0E-4
+                };
 
-                //---- chkUnassignedOnly ----
+                // ======== borderPositions ========
+                {
+                    borderPositions.setBorder(new TitledBorder("Zuweisungen"));
+                    borderPositions.setLayout(new GridBagLayout());
+                    ((GridBagLayout) borderPositions.getLayout()).columnWidths = new int[]
+                    {
+                            0, 0, 0
+                    };
+                    ((GridBagLayout) borderPositions.getLayout()).rowHeights = new int[]
+                    {
+                            198, 0
+                    };
+                    ((GridBagLayout) borderPositions.getLayout()).columnWeights = new double[]
+                    {
+                            1.0, 0.0, 1.0E-4
+                    };
+                    ((GridBagLayout) borderPositions.getLayout()).rowWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+
+                    // ======== scPositions ========
+                    {
+                        scPositions.setViewportView(treeTablePositions);
+                    }
+                    borderPositions.add(scPositions, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                            GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+                }
+                pnlPositions.add(borderPositions, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
+
+                // ---- chkUnassignedOnly ----
                 chkUnassignedOnly.setText("Nur unzugewiesene");
-                pnlPositions.add(chkUnassignedOnly, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
+                pnlPositions.add(chkUnassignedOnly, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
 
-                //======== scEvents ========
+                // ======== borderEvents ========
                 {
+                    borderEvents.setBorder(new TitledBorder("Event-Historie"));
+                    borderEvents.setLayout(new GridBagLayout());
+                    ((GridBagLayout) borderEvents.getLayout()).columnWidths = new int[]
+                    {
+                            0, 0
+                    };
+                    ((GridBagLayout) borderEvents.getLayout()).rowHeights = new int[]
+                    {
+                            131, 0
+                    };
+                    ((GridBagLayout) borderEvents.getLayout()).columnWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+                    ((GridBagLayout) borderEvents.getLayout()).rowWeights = new double[]
+                    {
+                            0.0, 1.0E-4
+                    };
 
-                    //---- tbEvents ----
-                    tbEvents.addPropertyChangeListener(new PropertyChangeListener() {
-                        public void propertyChange(PropertyChangeEvent e) {
-                            tbEventsPropertyChange(e);
-                            tbEventsPropertyChange(e);
-                        }
-                    });
-                    scEvents.setViewportView(tbEvents);
+                    // ======== scEvents ========
+                    {
+
+                        // ---- tbEvents ----
+                        tbEvents.addPropertyChangeListener(new PropertyChangeListener()
+                        {
+                            public void propertyChange(PropertyChangeEvent e)
+                            {
+                                tbEventsPropertyChange(e);
+                                tbEventsPropertyChange(e);
+                            }
+                        });
+                        scEvents.setViewportView(tbEvents);
+                    }
+                    borderEvents.add(scEvents, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                            GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
                 }
-                pnlPositions.add(scEvents, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 5), 0, 0));
+                pnlPositions.add(borderEvents, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0, 0, 5), 0, 0));
 
-                //---- btnPlanEvent ----
+                // ---- btnPlanEvent ----
                 btnPlanEvent.setText("Planen");
-                btnPlanEvent.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
+                btnPlanEvent.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
                         btnPlanPressed(e);
                     }
                 });
-                pnlPositions.add(btnPlanEvent, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                pnlPositions.add(btnPlanEvent, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
             }
             tdbMain.addTab("Positionen", pnlPositions);
 
-            //======== pnlHelper ========
+            // ======== pnlHelper ========
             {
                 pnlHelper.setLayout(new GridBagLayout());
-                ((GridBagLayout)pnlHelper.getLayout()).columnWidths = new int[] {0, 0};
-                ((GridBagLayout)pnlHelper.getLayout()).rowHeights = new int[] {0, 0};
-                ((GridBagLayout)pnlHelper.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-                ((GridBagLayout)pnlHelper.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
-
-                //======== scHelpers ========
+                ((GridBagLayout) pnlHelper.getLayout()).columnWidths = new int[]
                 {
-                    scHelpers.setViewportView(tbHelpers);
+                        0, 0
+                };
+                ((GridBagLayout) pnlHelper.getLayout()).rowHeights = new int[]
+                {
+                        0, 0
+                };
+                ((GridBagLayout) pnlHelper.getLayout()).columnWeights = new double[]
+                {
+                        1.0, 1.0E-4
+                };
+                ((GridBagLayout) pnlHelper.getLayout()).rowWeights = new double[]
+                {
+                        1.0, 1.0E-4
+                };
+
+                // ======== borderHelpers ========
+                {
+                    borderHelpers.setBorder(new TitledBorder("Alle Helfer"));
+                    borderHelpers.setLayout(new GridBagLayout());
+                    ((GridBagLayout) borderHelpers.getLayout()).columnWidths = new int[]
+                    {
+                            0, 0
+                    };
+                    ((GridBagLayout) borderHelpers.getLayout()).rowHeights = new int[]
+                    {
+                            0, 0
+                    };
+                    ((GridBagLayout) borderHelpers.getLayout()).columnWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+                    ((GridBagLayout) borderHelpers.getLayout()).rowWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+
+                    // ======== scHelpers ========
+                    {
+                        scHelpers.setViewportView(tbHelpers);
+                    }
+                    borderHelpers.add(scHelpers, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                            GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
                 }
-                pnlHelper.add(scHelpers, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                pnlHelper.add(borderHelpers, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
             }
             tdbMain.addTab("Helfer", pnlHelper);
 
-            //======== pnlManualAssignments ========
+            // ======== pnlManualAssignments ========
             {
                 pnlManualAssignments.setLayout(new GridBagLayout());
-                ((GridBagLayout)pnlManualAssignments.getLayout()).columnWidths = new int[] {0, 0, 0};
-                ((GridBagLayout)pnlManualAssignments.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-                ((GridBagLayout)pnlManualAssignments.getLayout()).columnWeights = new double[] {1.0, 0.0, 1.0E-4};
-                ((GridBagLayout)pnlManualAssignments.getLayout()).rowWeights = new double[] {1.0, 1.0, 0.0, 1.0E-4};
-
-                //======== borderManualAssignments ========
+                ((GridBagLayout) pnlManualAssignments.getLayout()).columnWidths = new int[]
                 {
-                    borderManualAssignments.setLayout(new GridBagLayout());
-                    ((GridBagLayout)borderManualAssignments.getLayout()).columnWidths = new int[] {0, 0};
-                    ((GridBagLayout)borderManualAssignments.getLayout()).rowHeights = new int[] {0, 0};
-                    ((GridBagLayout)borderManualAssignments.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-                    ((GridBagLayout)borderManualAssignments.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
+                        0, 0, 0
+                };
+                ((GridBagLayout) pnlManualAssignments.getLayout()).rowHeights = new int[]
+                {
+                        0, 0, 0, 0, 0
+                };
+                ((GridBagLayout) pnlManualAssignments.getLayout()).columnWeights = new double[]
+                {
+                        1.0, 0.0, 1.0E-4
+                };
+                ((GridBagLayout) pnlManualAssignments.getLayout()).rowWeights = new double[]
+                {
+                        1.0, 0.0, 1.0, 0.0, 1.0E-4
+                };
 
-                    //======== scManualAssignments ========
+                // ======== borderManualAssignments ========
+                {
+                    borderManualAssignments.setBorder(new TitledBorder("Unzugewiesene Helfer"));
+                    borderManualAssignments.setLayout(new GridBagLayout());
+                    ((GridBagLayout) borderManualAssignments.getLayout()).columnWidths = new int[]
+                    {
+                            0, 0
+                    };
+                    ((GridBagLayout) borderManualAssignments.getLayout()).rowHeights = new int[]
+                    {
+                            0, 0
+                    };
+                    ((GridBagLayout) borderManualAssignments.getLayout()).columnWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+                    ((GridBagLayout) borderManualAssignments.getLayout()).rowWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+
+                    // ======== scManualAssignments ========
                     {
                         scManualAssignments.setViewportView(tbManualAssignments);
                     }
                     borderManualAssignments.add(scManualAssignments, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                        new Insets(0, 0, 0, 0), 0, 0));
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
                 }
                 pnlManualAssignments.add(borderManualAssignments, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 0), 0, 0));
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
-                //======== borderAvailablePositions ========
+                // ---- btnBookManually ----
+                btnBookManually.setText("Buchen");
+                btnBookManually.addActionListener(new ActionListener()
                 {
-                    borderAvailablePositions.setLayout(new GridBagLayout());
-                    ((GridBagLayout)borderAvailablePositions.getLayout()).columnWidths = new int[] {0, 0};
-                    ((GridBagLayout)borderAvailablePositions.getLayout()).rowHeights = new int[] {0, 0};
-                    ((GridBagLayout)borderAvailablePositions.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-                    ((GridBagLayout)borderAvailablePositions.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        btnBookManuallyPressed(e);
+                    }
+                });
+                pnlManualAssignments.add(btnBookManually, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
-                    //======== scAvailablePositions ========
+                // ======== borderAvailablePositions ========
+                {
+                    borderAvailablePositions.setBorder(new TitledBorder("Verf\u00fcgbare Positionen"));
+                    borderAvailablePositions.setLayout(new GridBagLayout());
+                    ((GridBagLayout) borderAvailablePositions.getLayout()).columnWidths = new int[]
+                    {
+                            0, 0
+                    };
+                    ((GridBagLayout) borderAvailablePositions.getLayout()).rowHeights = new int[]
+                    {
+                            0, 0
+                    };
+                    ((GridBagLayout) borderAvailablePositions.getLayout()).columnWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+                    ((GridBagLayout) borderAvailablePositions.getLayout()).rowWeights = new double[]
+                    {
+                            1.0, 1.0E-4
+                    };
+
+                    // ======== scAvailablePositions ========
                     {
                         scAvailablePositions.setViewportView(tbAvailablePositions);
                     }
                     borderAvailablePositions.add(scAvailablePositions, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                        new Insets(0, 0, 0, 0), 0, 0));
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
                 }
-                pnlManualAssignments.add(borderAvailablePositions, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
+                pnlManualAssignments.add(borderAvailablePositions, new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
-                //---- btnReloadAvailablePositions ----
+                // ---- btnReloadAvailablePositions ----
                 btnReloadAvailablePositions.setText("Aktualisieren");
-                btnReloadAvailablePositions.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
+                btnReloadAvailablePositions.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
                         btnReloadAvailablePositionsPressed(e);
                     }
                 });
-                pnlManualAssignments.add(btnReloadAvailablePositions, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 0), 0, 0));
-
-                //---- btnBookManually ----
-                btnBookManually.setText("Buchen");
-                btnBookManually.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        btnBookManuallyPressed(e);
-                    }
-                });
-                pnlManualAssignments.add(btnBookManually, new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                pnlManualAssignments.add(btnReloadAvailablePositions, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
             }
             tdbMain.addTab("Manuelle Zuweisungen", pnlManualAssignments);
         }
-        contentPane.add(tdbMain, new GridBagConstraints(0, 1, 3, 2, 0.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(0, 0, 0, 0), 0, 0));
+        contentPane.add(tdbMain, new GridBagConstraints(0, 1, 3, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(0, 0, 0, 0), 0, 0));
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization //GEN-END:initComponents
@@ -457,29 +665,58 @@ public class ResourcePlanningMainFrame extends JFrame
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Stefan Schulz
-    private JToolBar toolBar1;
+    private JToolBar tbMain;
+
     private JButton btnFinishProcesses;
+
     private JButton btnCancelAssignment;
+
     private JTabbedPane tdbMain;
+
     private JPanel pnlPositions;
+
+    private JPanel borderPositions;
+
     private JScrollPane scPositions;
+
     private TreeTable treeTablePositions;
+
     private JCheckBox chkUnassignedOnly;
+
+    private JPanel borderEvents;
+
     private JScrollPane scEvents;
+
     private ResourcePlanningTable tbEvents;
+
     private JButton btnPlanEvent;
+
     private JPanel pnlHelper;
+
+    private JPanel borderHelpers;
+
     private JScrollPane scHelpers;
+
     private ResourcePlanningTable tbHelpers;
+
     private JPanel pnlManualAssignments;
+
     private JPanel borderManualAssignments;
+
     private JScrollPane scManualAssignments;
+
     private ResourcePlanningTable tbManualAssignments;
-    private JPanel borderAvailablePositions;
-    private JScrollPane scAvailablePositions;
-    private ResourcePlanningTable tbAvailablePositions;
-    private JButton btnReloadAvailablePositions;
+
     private JButton btnBookManually;
+
+    private JPanel borderAvailablePositions;
+
+    private JScrollPane scAvailablePositions;
+
+    private ResourcePlanningTable tbAvailablePositions;
+
+    private JButton btnReloadAvailablePositions;
+
     // JFormDesigner - End of variables declaration //GEN-END:variables
 
     // ---

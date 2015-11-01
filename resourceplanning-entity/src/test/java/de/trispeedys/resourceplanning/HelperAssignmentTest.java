@@ -39,7 +39,7 @@ public class HelperAssignmentTest
      * 
      * @throws ResourcePlanningException
      */
-    @Test
+    // @Test
     public void testDuplicateAssignment() throws ResourcePlanningException
     {
         HibernateUtil.clearAll();
