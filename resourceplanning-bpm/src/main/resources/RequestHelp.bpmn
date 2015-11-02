@@ -42,7 +42,7 @@
       <bpmn:text>SendReminderMailDelegate</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:textAnnotation id="TextAnnotation_8">
-      <bpmn:text>CheckAvailabiliyDelegate -> auch hier muss bereits geprüft werden, ob die zuvor besetzte Stelle noch frei ist. Wenn nicht, wird an der anschliessend zu verschickenden Mail die Option 'ASSIGNMENT_AS_BEFORE' nicht angeboten.</bpmn:text>
+      <bpmn:text>CheckAvailabiliyInitialDelegate -> auch hier muss bereits geprüft werden, ob die zuvor besetzte Stelle noch frei ist. Wenn nicht, wird an der anschliessend zu verschickenden Mail die Option 'ASSIGNMENT_AS_BEFORE' nicht angeboten.</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_8" sourceRef="TextAnnotation_8" targetRef="ServiceTask_6"/>
   </bpmn:process>
@@ -152,7 +152,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ServiceTask_4" targetRef="IntermediateCatchEvent_3"/>
     <bpmn:sequenceFlow id="SequenceFlow_14" name="" sourceRef="UserTaskManualAssignment" targetRef="ServiceTask_0fqzt38"/>
     <bpmn:sequenceFlow id="flowPosStillAvailable" name="verfügbar" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_16f9cl7"/>
-    <bpmn:serviceTask id="ServiceTask_6" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.availability.CheckAvailabilityDelegate" name="Verfügbarkeit prüfen">
+    <bpmn:serviceTask id="ServiceTask_6" camunda:class="de.trispeedys.resourceplanning.delegate.requesthelp.availability.CheckAvailabilityInitialDelegate" name="Verfügbarkeit prüfen">
       <bpmn:incoming>flowMailAttemptsOk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
     </bpmn:serviceTask>

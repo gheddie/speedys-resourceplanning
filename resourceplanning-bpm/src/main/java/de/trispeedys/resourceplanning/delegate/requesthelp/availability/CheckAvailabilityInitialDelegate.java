@@ -11,7 +11,7 @@ import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.PositionService;
 
-public class CheckAvailabilityDelegate extends RequestHelpDelegate
+public class CheckAvailabilityInitialDelegate extends RequestHelpDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
@@ -22,8 +22,9 @@ public class CheckAvailabilityDelegate extends RequestHelpDelegate
         LoggerService.log(execution.getBusinessKey(), "ckecking availability for helper '" +
                 helper + "' and position '" + position + "' in event '" + event + "', position available : " +
                 positionAvailable);
+        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_PRIOR_POS_AVAILABLE, positionAvailable);
         
         // set id of the position
-        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, position.getId());
+        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_PRIOR_POSITION, position.getId());
     }
 }

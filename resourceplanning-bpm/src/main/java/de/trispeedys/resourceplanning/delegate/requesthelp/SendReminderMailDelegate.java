@@ -23,7 +23,7 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
         // find helper and event
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Long eventId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_EVENT_ID);
-        Long positionId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION);
+        Long positionId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_PRIOR_POSITION);
         // write mail
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);

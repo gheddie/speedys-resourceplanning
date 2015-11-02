@@ -23,5 +23,8 @@ public class BpmVariables
         public static final String VAR_MAIL_ATTEMPTS = "mailAttempts";
         
         public static final String VAR_CHOSEN_POSITION = "chosenPosition";
+
+        // The position which the helper was assigned to the last time
+        public static final String VAR_PRIOR_POSITION = "priorPosition";
     }
 }
