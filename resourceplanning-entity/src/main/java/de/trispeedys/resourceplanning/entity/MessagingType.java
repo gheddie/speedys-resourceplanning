@@ -20,6 +20,9 @@ public enum MessagingType
     
     // confirm 'pause me' to helper
     PAUSE_CONFIRM,
+    
+    // confirm cancellation to helper
+    CANCELLATION_CONFIRM,
 
     // fallback
     NONE

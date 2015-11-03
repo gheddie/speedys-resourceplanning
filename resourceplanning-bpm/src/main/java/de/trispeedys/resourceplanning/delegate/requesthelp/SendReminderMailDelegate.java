@@ -13,6 +13,7 @@ import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
 import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 
@@ -87,8 +88,7 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
     private String renderCallbackOption(Helper helper, Event event, HelperCallback helperCallback)
     {
         return "<a href=\"" +
-                AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.HOST) + "/resourceplanning-bpm-" +
-                AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.VERSION) + "/HelperCallbackReceiver.jsp?callbackResult=" + helperCallback + "&helperId=" + helper.getId() +
+                HelperInteraction.getBaseLink() + "/HelperCallbackReceiver.jsp?callbackResult=" + helperCallback + "&helperId=" + helper.getId() +
                 "&eventId=" + event.getId() + "\">" + helperCallback.getDescription() + "</a>";
     }
 }

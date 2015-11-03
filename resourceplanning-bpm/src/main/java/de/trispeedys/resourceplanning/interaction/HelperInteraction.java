@@ -13,6 +13,8 @@ import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
+import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
+import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 
 public class HelperInteraction
 {
@@ -28,15 +30,17 @@ public class HelperInteraction
     public static final String RETURN_MESSAGE_UNPROCESSABLE = "RETURN_MESSAGE_UNPROCESSABLE";
 
     /**
-     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Positiv-Fall --> Position verfügbar
+     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Positiv-Fall
+     * --> Position verfügbar
      */
     public static final String RETURN_POS_CHOSEN_NOMINAL = "RETURN_POS_CHOSEN_NOMINAL";
 
     /**
-     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Negativ-Fall --> Position NICHT verfügbar
+     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Negativ-Fall
+     * --> Position NICHT verfügbar
      */
     public static final String RETURN_POS_CHOSEN_POS_TAKEN = "POS_CHOSEN_POS_TAKEN";
-    
+
     /**
      * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_ASSIG_CANCELLED}
      */
@@ -57,8 +61,7 @@ public class HelperInteraction
         {
             case ASSIGNMENT_AS_BEFORE:
                 LoggerService.log("the helper wants to be assigned as before...", DbLogLevel.INFO);
-                variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK,
-                        HelperCallback.ASSIGNMENT_AS_BEFORE);
+                variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
                 break;
             case CHANGE_POS:
                 LoggerService.log("the helper wants to change positions...", DbLogLevel.INFO);
@@ -124,7 +127,7 @@ public class HelperInteraction
             return HtmlRenderer.renderCorrelationFault(helperId);
         }
     }
-    
+
     public static String processAssignmentCancellation(Long eventId, Long helperId)
     {
         // TODO use correct message here !!
@@ -132,13 +135,21 @@ public class HelperInteraction
         try
         {
             BpmPlatform.getDefaultProcessEngine()
-            .getRuntimeService()
-            .correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKey);
-            return RETURN_CANCELLATION_NOMINAL;
+                    .getRuntimeService()
+                    .correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED, businessKey);
+            return HtmlRenderer.renderCancellationCallback(helperId);
         }
         catch (MismatchingMessageCorrelationException e)
         {
             return HtmlRenderer.renderCorrelationFault(helperId);
         }
+    }
+
+    // ---
+
+    public static String getBaseLink()
+    {
+        return AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.HOST) +
+                "/resourceplanning-bpm-" + AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.VERSION);
     }
 }

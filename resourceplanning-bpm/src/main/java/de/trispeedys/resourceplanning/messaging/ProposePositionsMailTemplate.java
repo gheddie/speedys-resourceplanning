@@ -6,10 +6,11 @@ import java.util.List;
 
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
-import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
-import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
+import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
+import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 
 public class ProposePositionsMailTemplate extends AbstractMailTemplate
 {
@@ -24,8 +25,8 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
 
     private Position priorAssignment;
 
-    public ProposePositionsMailTemplate(Helper aHelper, Event aEvent, List<Position> aPositions,
-            HelperCallback aTrigger, Position aPriorAssignment)
+    public ProposePositionsMailTemplate(Helper aHelper, Event aEvent, List<Position> aPositions, HelperCallback aTrigger,
+            Position aPriorAssignment)
     {
         super();
         this.helper = aHelper;
@@ -54,8 +55,10 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
         buffer.append("<br><br>");
         if (trigger.equals(HelperCallback.ASSIGNMENT_AS_BEFORE))
         {
-            buffer.append("Deine vormalige Position ("+priorAssignment.getDescription()+" im Bereich "+priorAssignment.getDomain().getName()+") ist leider bereits besetzt.");
-            buffer.append("<br><br>"); 
+            buffer.append("Deine vormalige Position (" +
+                    priorAssignment.getDescription() + " im Bereich " + priorAssignment.getDomain().getName() +
+                    ") ist leider bereits besetzt.");
+            buffer.append("<br><br>");
         }
         buffer.append("Bitte sag uns, welche Position du beim " + event.getDescription() + " besetzen möchtest:");
         buffer.append("<br><br>");
@@ -66,8 +69,9 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
             for (Position pos : grouping.get(key))
             {
                 entry =
-                        AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.HOST)+"/resourceplanning-bpm-"+AppConfiguration.getInstance().getConfigurationValue(AppConfigurationValues.VERSION)+"/ChosenPositionReceiver.jsp?chosenPosition=" +
-                                pos.getId() + "&helperId=" + helper.getId() + "&eventId=" + event.getId();
+                        HelperInteraction.getBaseLink() +
+                                "/ChosenPositionReceiver.jsp?chosenPosition=" + pos.getId() + "&helperId=" + helper.getId() +
+                                "&eventId=" + event.getId();
                 buffer.append("<ul><a href=\"" + entry + "\">" + pos.getDescription() + "</a></ul>");
             }
         }
@@ -79,5 +83,15 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
     public String getSubject()
     {
         return "Positions-Auswahl für den Wettkampf " + event.getDescription();
+    }
+
+    public MessagingFormat getMessagingFormat()
+    {
+        return MessagingFormat.HTML;
+    }
+
+    public MessagingType getMessagingType()
+    {
+        return MessagingType.PROPOSE_POSITIONS;
     }
 }

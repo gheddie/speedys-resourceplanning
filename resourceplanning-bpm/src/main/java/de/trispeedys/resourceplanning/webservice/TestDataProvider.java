@@ -171,23 +171,18 @@ public class TestDataProvider
 
     public void duplicate2015()
     {
-        // create new position (no. 7777) for domain [D2]
-        Domain dom2 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(2);
-        EntityFactory.buildPosition("7777", 12, dom2, false, 7777).saveOrUpdate();
+        Domain domRadstrecke = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(2);
+        EntityFactory.buildPosition("Helmkontrolle", 12, domRadstrecke, false, 777).saveOrUpdate();
 
-        // create new position (no. 8888) for domain [D92]
-        Domain dom92 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(92);
-        EntityFactory.buildPosition("8888", 12, dom92, false, 8888).saveOrUpdate();
+        Domain domLaufstrecke = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(1);
+        EntityFactory.buildPosition("Übergang Herrenfeldtstrasse", 12, domLaufstrecke, false, 888).saveOrUpdate();
 
         List<Integer> excludes = new ArrayList<Integer>();
-        excludes.add(137);
-        excludes.add(232);
-        excludes.add(39);
-        excludes.add(93);
+        excludes.add(398);
 
         List<PositionInclude> includes = new ArrayList<PositionInclude>();
-        includes.add(new PositionInclude(dom2, 7777));
-        includes.add(new PositionInclude(dom92, 8888));
+        includes.add(new PositionInclude(domRadstrecke, 777));
+        includes.add(new PositionInclude(domLaufstrecke, 888));
 
         // real life event for 2015
         Event event2015 = RepositoryProvider.getRepository(EventRepository.class).findEventByEventKey("TRI-2015");

@@ -15,7 +15,7 @@ public class HtmlRenderer
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
                 .withLinebreak()
-                .withParagraph("Danke, wir haben deine erhalten.")
+                .withParagraph("Danke, wir haben deine Nachricht erhalten.")
                 .withLinebreak()
                 .withParagraph("Deine Tri-Speedys.")
                 .render();
@@ -82,7 +82,20 @@ public class HtmlRenderer
                 .withParagraph(
                         "Die von dir gewählte Position (" +
                                 chosenPosition.getDescription() + ") ist verfügbar und wurde Dir zugewiesen. " +
-                                "Du wirst hierzu in Kürze eine Bestätigungs-Mail erhalten.")
+                                "Du wirst hierzu in Kürze eine Bestätigungs-Mail hierzu erhalten.")
+                .withLinebreak(2)
+                .withParagraph("Deine Tri-Speedys.")
+                .render();
+    }
+
+    public static String renderCancellationCallback(Long helperId)
+    {
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findById(helperId);
+        return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
+                .withLinebreak(2)
+                .withParagraph("Deine Nachricht ist angekommen.")
+                .withLinebreak()
+                .withParagraph("Du wirst hierzu in Kürze eine Bestätigungs-Mail hierzu erhalten.")
                 .withLinebreak(2)
                 .withParagraph("Deine Tri-Speedys.")
                 .render();

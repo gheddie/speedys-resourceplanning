@@ -440,8 +440,8 @@ public class RequestHelpExecutionTest
                         .find(HelperAssignment.ATTR_EVENT, event2016, HelperAssignment.ATTR_HELPER, helper)
                         .get(0)).getHelperAssignmentState());
 
-        // admin mail must have been sent
-        assertTrue(RequestHelpTestUtil.checkMails(2, MessagingType.BOOKING_CONFIRMATION, MessagingType.ALERT_BOOKING_CANCELLED));
+        // admin mail and confirmation to user must have been sent
+        assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.BOOKING_CONFIRMATION, MessagingType.ALERT_BOOKING_CANCELLED, MessagingType.CANCELLATION_CONFIRM));
     }
 
     /**
