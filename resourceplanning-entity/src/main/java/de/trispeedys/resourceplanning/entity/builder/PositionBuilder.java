@@ -14,6 +14,8 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
     private boolean authorityOverride;
 
     private int positionNumber;
+
+    private boolean choosable;
     
     public PositionBuilder withDomain(Domain aDomain)
     {
@@ -45,6 +47,12 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
         return this;
     }
     
+    public PositionBuilder withChoosable(boolean aChoosable)
+    {
+        choosable = aChoosable;
+        return this;
+    }
+    
     public Position build()
     {
         Position position = new Position();
@@ -53,6 +61,7 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
         position.setDomain(domain);
         position.setAuthorityOverride(authorityOverride);
         position.setPositionNumber(positionNumber);
+        position.setChoosable(choosable);
         return position;
     }
 }

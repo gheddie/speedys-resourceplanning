@@ -102,7 +102,7 @@ public class RequestHelpExecutionTest
 
         // (7) --> mails with types 'MessagingType.REMINDER_STEP_0' and 'MessagingType.PROPOSE_POSITIONS' must be
 // there...
-        List<Position> unassignedPositionsIn2016 = positionRepository.findUnassignedPositionsInEvent(event2016);
+        List<Position> unassignedPositionsIn2016 = positionRepository.findUnassignedPositionsInEvent(event2016, false);
         assertEquals(4, unassignedPositionsIn2016.size());
         assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.REMINDER_STEP_0, MessagingType.REMINDER_STEP_1,
                 MessagingType.PROPOSE_POSITIONS));
@@ -302,8 +302,8 @@ public class RequestHelpExecutionTest
         assertTrue(RequestHelpTestUtil.checkMails(2, MessagingType.REMINDER_STEP_0, MessagingType.PROPOSE_POSITIONS));
 
         // (B) we assign one of the proposed prosition to another helper and let 'helperA' choose it...
-        Position blockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016).get(0);
-        Position notBlockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016).get(1);
+        Position blockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016, false).get(0);
+        Position notBlockedPosition = positionRepository.findUnassignedPositionsInEvent(event2016, false).get(1);
         AssignmentService.assignHelper(helperB, event2016, blockedPosition);
         RequestHelpTestUtil.choosePosition(businessKey, blockedPosition, processEngine, event2016.getId());
 
@@ -348,7 +348,7 @@ public class RequestHelpExecutionTest
         RequestHelpTestUtil.startHelperRequestProcess(helperB, event2016, businessKeyB, processEngine);
         RequestHelpTestUtil.doCallback(HelperCallback.CHANGE_POS, businessKeyB, processEngine);
 
-        List<Position> allUnassignedPositions = positionRepository.findUnassignedPositionsInEvent(event2016);
+        List<Position> allUnassignedPositions = positionRepository.findUnassignedPositionsInEvent(event2016, false);
         Position desiredPosition = allUnassignedPositions.get(2);
 
         // 'B' is faster...
@@ -391,7 +391,7 @@ public class RequestHelpExecutionTest
 
         // there must be 5 unassigned positions
         assertEquals(TestDataGenerator.POS_COUNT_SIMPLE_EVENT, RepositoryProvider.getRepository(PositionRepository.class)
-                .findUnassignedPositionsInEvent(event2016)
+                .findUnassignedPositionsInEvent(event2016, false)
                 .size());
 
         // new helper
@@ -419,7 +419,7 @@ public class RequestHelpExecutionTest
 
         // there must be 4 unassigned positions
         assertEquals(TestDataGenerator.POS_COUNT_SIMPLE_EVENT - 1, RepositoryProvider.getRepository(PositionRepository.class)
-                .findUnassignedPositionsInEvent(event2016)
+                .findUnassignedPositionsInEvent(event2016, false)
                 .size());
 
         // Send cancellation message
@@ -427,7 +427,7 @@ public class RequestHelpExecutionTest
 
         // there must be 5 unassigned positions
         assertEquals(TestDataGenerator.POS_COUNT_SIMPLE_EVENT, RepositoryProvider.getRepository(PositionRepository.class)
-                .findUnassignedPositionsInEvent(event2016)
+                .findUnassignedPositionsInEvent(event2016, false)
                 .size());
 
         // process must be gone

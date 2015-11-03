@@ -39,6 +39,7 @@ create table position
 	position_number int not null,
 	domain_id bigint,
 	authority_override boolean,
+	choosable boolean,
 	primary key (id),
 	constraint pos_unique_desc unique (description),
 	constraint pos_unique_number unique (position_number)

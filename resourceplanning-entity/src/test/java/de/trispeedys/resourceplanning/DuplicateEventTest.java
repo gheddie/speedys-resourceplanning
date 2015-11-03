@@ -58,7 +58,7 @@ public class DuplicateEventTest
 
         // add a position (with number 666) to a domain [D17] in that event
         Domain domain = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(17);
-        Position pos = EntityFactory.buildPosition("", 99, domain, false, 666).saveOrUpdate();
+        Position pos = EntityFactory.buildPosition("", 99, domain, false, 666, true).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, pos);
 
         Event loadedEvent = (Event) Datasources.getDatasource(Event.class).findAll().get(0);
@@ -83,11 +83,11 @@ public class DuplicateEventTest
         
         // create new position (no. 7777) for domain [D2]
         Domain dom2 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(2);
-        EntityFactory.buildPosition("7777", 12, dom2, false, 7777).saveOrUpdate();
+        EntityFactory.buildPosition("7777", 12, dom2, false, 7777, true).saveOrUpdate();
         
         // create new position (no. 8888) for domain [D92]
         Domain dom92 = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(92);
-        EntityFactory.buildPosition("8888", 12, dom92, false, 8888).saveOrUpdate();
+        EntityFactory.buildPosition("8888", 12, dom92, false, 8888, true).saveOrUpdate();
         
         List<Integer> excludes = new ArrayList<Integer>();
         excludes.add(137);

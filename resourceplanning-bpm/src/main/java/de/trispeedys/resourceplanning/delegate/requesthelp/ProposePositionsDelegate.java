@@ -24,7 +24,7 @@ public class ProposePositionsDelegate extends RequestHelpNotificationDelegate
         PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
         // send a mail with all unassigned positions in the current event
         Event event = getEvent(execution);
-        List<Position> unassignedPositions = positionRepository.findUnassignedPositionsInEvent(event);
+        List<Position> unassignedPositions = positionRepository.findUnassignedPositionsInEvent(event, true);
         if ((unassignedPositions == null) || (unassignedPositions.size() == 0))
         {
             throw new ResourcePlanningException(

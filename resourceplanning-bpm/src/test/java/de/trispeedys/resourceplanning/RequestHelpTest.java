@@ -86,7 +86,7 @@ public class RequestHelpTest
         EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         Position position =
-                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
+                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0, true)
                         .saveOrUpdate();
         Event event =
                 EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).saveOrUpdate();
@@ -152,7 +152,7 @@ public class RequestHelpTest
         // create position
         Position positionBikeEntry =
                 EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12,
-                        SpeedyTestUtil.buildDefaultDomain(1), false, 0).saveOrUpdate();
+                        SpeedyTestUtil.buildDefaultDomain(1), false, 0, true).saveOrUpdate();
         // create events
         Event evt2014 =
                 EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, null)

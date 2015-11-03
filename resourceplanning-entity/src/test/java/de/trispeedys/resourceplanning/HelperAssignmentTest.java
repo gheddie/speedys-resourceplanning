@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
@@ -49,8 +48,8 @@ public class HelperAssignmentTest
         Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED, template).saveOrUpdate();
 
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
-        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false, 1).saveOrUpdate();
-        Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain, false, 2).saveOrUpdate();
+        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false, 1, true).saveOrUpdate();
+        Position position2 = EntityFactory.buildPosition("Laufverpflegung", 16, defaultDomain, false, 2, true).saveOrUpdate();
 
         // relate positions to event
         SpeedyRoutines.relatePositionsToEvent(event, position1, position2);
@@ -84,7 +83,7 @@ public class HelperAssignmentTest
 
         // Position erfordert Mindest-Alter 16 Jahre
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), true, 0).saveOrUpdate();
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), true, 0, true).saveOrUpdate();
 
         // Muss zu Ausnahme führen
         AssignmentService.assignHelper(helper, event, position);
@@ -111,7 +110,7 @@ public class HelperAssignmentTest
 
         // Position erfordert Mindest-Alter 16 Jahre
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 1)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 1, true)
                         .saveOrUpdate();
 
         // Muss zu Ausnahme führen
@@ -134,7 +133,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
                         .saveOrUpdate();
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0, true)
                         .saveOrUpdate();
 
         // relate position to both events
@@ -166,7 +165,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Stefan", "Schulz", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 2000)
                         .saveOrUpdate();
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0, true)
                         .saveOrUpdate();
 
         // assign position to event
@@ -190,7 +189,7 @@ public class HelperAssignmentTest
 
         // create a position
         Position position =
-                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0)
+                EntityFactory.buildPosition("Laufverpflegung", 16, SpeedyTestUtil.buildDefaultDomain(1), false, 0, true)
                         .saveOrUpdate();
 
         // helper was assigned pos 'Laufverpflegung' in 2015...
@@ -241,7 +240,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .saveOrUpdate();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0).saveOrUpdate();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0, true).saveOrUpdate();
         // assign position to event
         EntityFactory.buildEventPosition(event, position).saveOrUpdate();
         // commit helper
@@ -266,7 +265,7 @@ public class HelperAssignmentTest
                 EntityFactory.buildHelper("Klaus", "Müller", TEST_MAIL_ADDRESS, HelperState.ACTIVE, 23, 6, 1980)
                         .saveOrUpdate();
         // position
-        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0).saveOrUpdate();
+        Position position = EntityFactory.buildPosition("A", 10, SpeedyTestUtil.buildDefaultDomain(1), false, 0, true).saveOrUpdate();
         
         // commit helper (position is not present in the event) --> must throw exception
         EntityFactory.buildHelperAssignment(helper, event, position);
@@ -302,6 +301,6 @@ public class HelperAssignmentTest
         EntityFactory.buildHelperAssignment(helper2, event, positions.get(1)).saveOrUpdate();
 
         // ..and we expect 3 of them to be unassigned!!
-        assertEquals(3, positionRepository.findUnassignedPositionsInEvent(event).size());
+        assertEquals(3, positionRepository.findUnassignedPositionsInEvent(event, false).size());
     }
 }

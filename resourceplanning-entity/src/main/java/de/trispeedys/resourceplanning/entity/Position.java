@@ -35,6 +35,8 @@ public class Position extends AbstractDbObject implements EnumeratedEventItem
     @Column(name = "position_number")
     private int positionNumber;
 
+    private boolean choosable;
+
     public String getDescription()
     {
         return description;
@@ -83,6 +85,16 @@ public class Position extends AbstractDbObject implements EnumeratedEventItem
     public void setPositionNumber(int positionNumber)
     {
         this.positionNumber = positionNumber;
+    }
+    
+    public boolean isChoosable()
+    {
+        return choosable;
+    }
+
+    public void setChoosable(boolean choosable)
+    {
+        this.choosable = choosable;
     }
     
     public String toString()

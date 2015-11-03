@@ -35,9 +35,9 @@ public class PositionTest
 
         // some positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
-        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false, 0).saveOrUpdate();
-        Position position3 = EntityFactory.buildPosition("Irgendwas kontrollieren", 12, defaultDomain, false, 1).saveOrUpdate();
-        Position position4 = EntityFactory.buildPosition("Gut aussehen", 12, defaultDomain, false, 2).saveOrUpdate();
+        Position position1 = EntityFactory.buildPosition("Radverpflegung", 12, defaultDomain, false, 0, true).saveOrUpdate();
+        Position position3 = EntityFactory.buildPosition("Irgendwas kontrollieren", 12, defaultDomain, false, 1, true).saveOrUpdate();
+        Position position4 = EntityFactory.buildPosition("Gut aussehen", 12, defaultDomain, false, 2, true).saveOrUpdate();
 
         // some links between event 1 and positions
         EntityFactory.buildEventPosition(event1, position1).saveOrUpdate();
@@ -70,9 +70,9 @@ public class PositionTest
         Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).saveOrUpdate();
         // create positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
-        Position posA = EntityFactory.buildPosition("A", 12, defaultDomain, false, 0).saveOrUpdate();
-        Position posB = EntityFactory.buildPosition("B", 13, defaultDomain, false, 1).saveOrUpdate();
-        Position posC = EntityFactory.buildPosition("C", 14, defaultDomain, false, 2).saveOrUpdate();
+        Position posA = EntityFactory.buildPosition("A", 12, defaultDomain, false, 0, true).saveOrUpdate();
+        Position posB = EntityFactory.buildPosition("B", 13, defaultDomain, false, 1, true).saveOrUpdate();
+        Position posC = EntityFactory.buildPosition("C", 14, defaultDomain, false, 2, true).saveOrUpdate();
         // event 2013 has positions (A,B,C)
         EntityFactory.buildEventPosition(evt2013, posA).saveOrUpdate();
         EntityFactory.buildEventPosition(evt2013, posB).saveOrUpdate();

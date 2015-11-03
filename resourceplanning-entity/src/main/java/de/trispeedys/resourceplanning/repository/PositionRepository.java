@@ -15,31 +15,42 @@ import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
 import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
 
-public class PositionRepository extends AbstractDatabaseRepository<Position> implements
-        DatabaseRepository<PositionRepository>
+public class PositionRepository extends AbstractDatabaseRepository<Position> implements DatabaseRepository<PositionRepository>
 {
     public Position findPositionByPositionNumber(int positionNumber)
     {
         return (Position) dataSource().findSingle(Position.ATTR_POS_NUMBER, positionNumber);
     }
 
-    public List<Position> findUnassignedPositionsInEvent(Event event)
+    public List<Position> findUnassignedPositionsInEvent(Event event, boolean onlyChooseable)
     {
         String qryString =
                 "FROM " +
                         EventPosition.class.getSimpleName() + " ep WHERE ep." + EventPosition.ATTR_EVENT +
                         " = :event AND ep.position.id NOT IN (SELECT ec.position.id FROM " +
-                        HelperAssignment.class.getSimpleName() +
-                        " ec WHERE ec.event = :event AND ec.helperAssignmentState = '" +
+                        HelperAssignment.class.getSimpleName() + " ec WHERE ec.event = :event AND ec.helperAssignmentState = '" +
                         HelperAssignmentState.CONFIRMED + "')";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("event", event);
-        List<EventPosition> eventPositions =
-                Datasources.getDatasource(EventPosition.class).find(qryString, parameters);
+        List<EventPosition> eventPositions = Datasources.getDatasource(EventPosition.class).find(qryString, parameters);
         List<Position> result = new ArrayList<Position>();
+        Position position = null;
         for (EventPosition ep : eventPositions)
         {
-            result.add(ep.getPosition());
+            position = ep.getPosition();
+            if (onlyChooseable)
+            {
+                // add position only if it is choosable
+                if (position.isChoosable())
+                {
+                    result.add(position); 
+                }
+            }
+            else
+            {
+                // add unconditionally
+                result.add(position);   
+            }
         }
         return result;
     }
@@ -48,9 +59,8 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
     {
         List<EventPosition> list =
                 Datasources.getDatasource(EventPosition.class).find(
-                        "FROM " +
-                                EventPosition.class.getSimpleName() +
-                                " ep INNER JOIN ep.position pos WHERE ep.event = :event", "event", event);
+                        "FROM " + EventPosition.class.getSimpleName() + " ep INNER JOIN ep.position pos WHERE ep.event = :event",
+                        "event", event);
         List<Position> result = new ArrayList<Position>();
         Object[] tuple = null;
         for (Object obj : list)

@@ -1,13 +1,9 @@
 package de.trispeedys.resourceplanning.dto;
 
-import de.trispeedys.resourceplanning.entity.misc.annotation.Display;
-
 public class HelperDTO
 {
-    @Display
     private String firstName;
     
-    @Display
     private String lastName;
     
     private String email;

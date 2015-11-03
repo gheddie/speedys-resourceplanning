@@ -6,7 +6,6 @@ import java.util.List;
 import org.joda.time.Days;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
-import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;

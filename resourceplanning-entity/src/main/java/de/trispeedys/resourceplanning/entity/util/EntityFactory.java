@@ -74,13 +74,14 @@ public class EntityFactory
     }
 
     public static Position buildPosition(String description, int minimalAge, Domain domain,
-            boolean authorityOverride, int positionNumber)
+            boolean authorityOverride, int positionNumber, boolean choosable)
     {
         return new PositionBuilder().withDescription(description)
                 .withMinimalAge(minimalAge)
                 .withDomain(domain)
                 .withAuthorityOverride(authorityOverride)
                 .withPositionNumber(positionNumber)
+                .withChoosable(choosable)
                 .build();
     }
 

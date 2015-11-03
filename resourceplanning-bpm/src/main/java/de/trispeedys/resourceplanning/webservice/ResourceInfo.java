@@ -64,7 +64,7 @@ public class ResourceInfo
         }
         List<PositionDTO> dtos = new ArrayList<PositionDTO>();
         PositionDTO dto = null;
-        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event))
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event, false))
         {
             dto = new PositionDTO();
             dto.setDescription(pos.getDescription());

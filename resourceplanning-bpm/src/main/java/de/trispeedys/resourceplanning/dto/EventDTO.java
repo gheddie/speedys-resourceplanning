@@ -2,11 +2,8 @@ package de.trispeedys.resourceplanning.dto;
 
 import java.util.Date;
 
-import de.trispeedys.resourceplanning.entity.misc.annotation.Display;
-
 public class EventDTO
 {
-    @Display
     private String description;
     
     private Long eventId;
