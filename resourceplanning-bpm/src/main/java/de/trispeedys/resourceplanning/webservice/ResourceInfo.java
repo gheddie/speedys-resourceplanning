@@ -23,8 +23,6 @@ import de.trispeedys.resourceplanning.dto.PositionDTO;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
-import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
-import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
@@ -32,13 +30,10 @@ import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.interaction.EventManager;
-import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
-import de.trispeedys.resourceplanning.service.AssignmentService;
-import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.util.EntityTreeNode;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
@@ -68,6 +63,7 @@ public class ResourceInfo
         {
             dto = new PositionDTO();
             dto.setDescription(pos.getDescription());
+            dto.setDomain(pos.getDomain().getName());
             dto.setPositionId(pos.getId());
             dtos.add(dto);
         }

@@ -6,6 +6,8 @@ public class PositionDTO
     
     private Long positionId;
 
+    private String domain;
+
     public String getDescription()
     {
         return description;
@@ -24,5 +26,15 @@ public class PositionDTO
     public void setPositionId(Long positionId)
     {
         this.positionId = positionId;
+    }
+    
+    public String getDomain()
+    {
+        return domain;
+    }
+
+    public void setDomain(String domain)
+    {
+        this.domain = domain;        
     }
 }

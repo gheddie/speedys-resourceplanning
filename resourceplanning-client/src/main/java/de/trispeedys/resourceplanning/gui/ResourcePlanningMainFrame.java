@@ -277,8 +277,16 @@ public class ResourcePlanningMainFrame extends JFrame
                         selectedAvailablePosition.getDescription() + " zuweisen?";
         if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, message, "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
         {
-            resourceInfo.completeManualAssignment(selectedManualAssignment.getTaskId(), selectedAvailablePosition.getPositionId());
+            try
+            {
+                resourceInfo.completeManualAssignment(selectedManualAssignment.getTaskId(), selectedAvailablePosition.getPositionId());   
+            }
+            catch (Exception e2)
+            {
+                JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, e2.getMessage());
+            }            
         }
+        refreshManualAssignments();        
     }
 
     private void tdbMainStateChanged(ChangeEvent e)

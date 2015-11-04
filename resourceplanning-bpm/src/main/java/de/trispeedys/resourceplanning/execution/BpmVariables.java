@@ -26,5 +26,8 @@ public class BpmVariables
 
         // The position which the helper was assigned to the last time
         public static final String VAR_PRIOR_POSITION = "priorPosition";
+        
+        // Sind dem Helfer momentan Positionen vorschlagbar (ja/nein)
+        public static final String VAR_POSITIONS_PROPOSABLE = "positionsProposable";
     }
 }

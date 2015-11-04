@@ -261,7 +261,7 @@ public class RequestHelpExecutionTest
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
         assertEquals(HelperState.ACTIVE,
                 ((Helper) Datasources.getDatasource(Helper.class).findById(helperA.getId())).getHelperState());
-        
+
         // there must be a 'sorry to see you go' mail...
         assertTrue(RequestHelpTestUtil.checkMails(2, MessagingType.REMINDER_STEP_0, MessagingType.PAUSE_CONFIRM));
     }
@@ -441,7 +441,8 @@ public class RequestHelpExecutionTest
                         .get(0)).getHelperAssignmentState());
 
         // admin mail and confirmation to user must have been sent
-        assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.BOOKING_CONFIRMATION, MessagingType.ALERT_BOOKING_CANCELLED, MessagingType.CANCELLATION_CONFIRM));
+        assertTrue(RequestHelpTestUtil.checkMails(3, MessagingType.BOOKING_CONFIRMATION, MessagingType.ALERT_BOOKING_CANCELLED,
+                MessagingType.CANCELLATION_CONFIRM));
     }
 
     /**
@@ -453,5 +454,53 @@ public class RequestHelpExecutionTest
     public void testCallbackOptionsWithMultiplePriorAssignments()
     {
         assertTrue(1 == 2);
+    }
+
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testNoPositionsProposableManualAssignment()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+
+        // one of the helpers...
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findAll().get(0);
+
+        // start the process
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, processEngine);
+
+        // there must be 5 unassigned positions
+        List<Position> unassignedPositions =
+                RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016, false);
+        assertEquals(TestDataGenerator.POS_COUNT_SIMPLE_EVENT, unassignedPositions.size());
+
+        // block all of them with fresh helpers...
+        Helper new1 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        AssignmentService.assignHelper(new1, event2016, unassignedPositions.get(0));
+        Helper new2 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        AssignmentService.assignHelper(new2, event2016, unassignedPositions.get(1));
+        Helper new3 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        AssignmentService.assignHelper(new3, event2016, unassignedPositions.get(2));
+        Helper new4 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        AssignmentService.assignHelper(new4, event2016, unassignedPositions.get(3));
+        Helper new5 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        AssignmentService.assignHelper(new5, event2016, unassignedPositions.get(4));
+
+        // there must be 0 unassigned positions
+        assertEquals(0,
+                RepositoryProvider.getRepository(PositionRepository.class)
+                        .findUnassignedPositionsInEvent(event2016, false)
+                        .size());
+        
+        // choose 'CHANGE_POS'
+        RequestHelpTestUtil.doCallback(HelperCallback.CHANGE_POS, businessKey, processEngine);
+        
+        // manual assignment task must be there...
+        assertTrue(RequestHelpTestUtil.wasTaskGenerated(
+                BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, processEngine));
     }
 }

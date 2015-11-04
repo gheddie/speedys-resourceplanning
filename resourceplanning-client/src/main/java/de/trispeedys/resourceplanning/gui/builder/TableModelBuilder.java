@@ -9,9 +9,11 @@ import javax.swing.table.TableModel;
 
 import de.trispeedys.resourceplanning.gui.builder.column.EventDTOColumnDefinition;
 import de.trispeedys.resourceplanning.gui.builder.column.HelperDTOColumnDefinition;
+import de.trispeedys.resourceplanning.gui.builder.column.PositionDTOColumnDefinition;
 import de.trispeedys.resourceplanning.gui.builder.column.TableColumnDefinition;
 import de.trispeedys.resourceplanning.webservice.EventDTO;
 import de.trispeedys.resourceplanning.webservice.HelperDTO;
+import de.trispeedys.resourceplanning.webservice.PositionDTO;
 
 public class TableModelBuilder
 {
@@ -20,6 +22,7 @@ public class TableModelBuilder
     {
         columnDefinitions.put(EventDTO.class, new EventDTOColumnDefinition());
         columnDefinitions.put(HelperDTO.class, new HelperDTOColumnDefinition());
+        columnDefinitions.put(PositionDTO.class, new PositionDTOColumnDefinition());
     }
 
     public static TableModel createGenericTableModel(List<?> objects)
