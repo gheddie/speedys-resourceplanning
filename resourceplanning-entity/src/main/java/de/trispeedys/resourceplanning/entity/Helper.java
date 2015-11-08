@@ -1,5 +1,6 @@
 package de.trispeedys.resourceplanning.entity;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -37,7 +39,7 @@ public class Helper extends AbstractDbObject
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
     
-    @NotNull
+    // @NotNull
     private String email;
     
     @Enumerated(EnumType.STRING)
@@ -116,5 +118,14 @@ public class Helper extends AbstractDbObject
     public boolean isActive()
     {
         return (helperState.equals(HelperState.ACTIVE));
+    }
+
+    public boolean isAssignableTo(Position pos, Date date)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateOfBirth);
+        cal.add(Calendar.YEAR, pos.getMinimalAge());
+        Date added = cal.getTime();
+        return (date.after(added));
     }
 }

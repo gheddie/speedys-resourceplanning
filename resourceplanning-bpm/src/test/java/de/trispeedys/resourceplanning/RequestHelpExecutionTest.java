@@ -31,6 +31,7 @@ import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.interaction.EventManager;
 import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
@@ -481,13 +482,13 @@ public class RequestHelpExecutionTest
         // block all of them with fresh helpers...
         Helper new1 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
         AssignmentService.assignHelper(new1, event2016, unassignedPositions.get(0));
-        Helper new2 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        Helper new2 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 3, 1976).saveOrUpdate();
         AssignmentService.assignHelper(new2, event2016, unassignedPositions.get(1));
-        Helper new3 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        Helper new3 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 4, 1976).saveOrUpdate();
         AssignmentService.assignHelper(new3, event2016, unassignedPositions.get(2));
-        Helper new4 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        Helper new4 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 5, 1976).saveOrUpdate();
         AssignmentService.assignHelper(new4, event2016, unassignedPositions.get(3));
-        Helper new5 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
+        Helper new5 = EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 13, 6, 1976).saveOrUpdate();
         AssignmentService.assignHelper(new5, event2016, unassignedPositions.get(4));
 
         // there must be 0 unassigned positions
@@ -502,5 +503,60 @@ public class RequestHelpExecutionTest
         // manual assignment task must be there...
         assertTrue(RequestHelpTestUtil.wasTaskGenerated(
                 BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, processEngine));
+    }
+    
+    /**
+     * A helper (who has already been assigned before) without an email address must be manually assigned...
+     */
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testNoMailRequiresManualAssignment()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+
+        // one of the helpers...
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findAll().get(0);
+        
+        // set email address to null...
+        helper.setEmail(null);
+        RepositoryProvider.getRepository(HelperRepository.class).saveOrUpdate(helper);
+        
+        // reload helper without mail
+        Helper reloadedHelper = RepositoryProvider.getRepository(HelperRepository.class).findById(helper.getId());
+
+        // start the process
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(reloadedHelper, event2016, businessKey, processEngine);
+        
+        // manual assignment task must be there...
+        assertTrue(RequestHelpTestUtil.wasTaskGenerated(
+                BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, processEngine));
+    }
+    
+    // @Test TODO
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testPendingProcessInstances()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+        
+        // start all the process
+        String businessKey = null;
+        List<Helper> activeHelpers = RepositoryProvider.getRepository(HelperRepository.class).findActiveHelpers();
+        for (Helper helper : activeHelpers)
+        {
+            businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+            RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, processEngine);   
+        }
+        
+        // 5 executions
+        assertEquals(5, processEngine.getRuntimeService().createExecutionQuery().processDefinitionKey("RequestHelpHelperProcess").list().size());
     }
 }

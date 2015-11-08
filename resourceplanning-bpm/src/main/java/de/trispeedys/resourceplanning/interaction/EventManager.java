@@ -77,7 +77,7 @@ public class EventManager
         RepositoryProvider.getRepository(EventRepository.class).updateEventState(event, EventState.INITIATED);
     }
 
-    private static void startHelperRequestProcess(Helper helper, Event event)
+    public static void startHelperRequestProcess(Helper helper, Event event)
     {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_ID, new Long(helper.getId()));

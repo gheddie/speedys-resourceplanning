@@ -86,7 +86,7 @@ public class RequestHelpTest
         EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         Position position =
-                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), false, 0, true)
+                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), 0, true)
                         .saveOrUpdate();
         Event event =
                 EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template).saveOrUpdate();
@@ -152,7 +152,7 @@ public class RequestHelpTest
         // create position
         Position positionBikeEntry =
                 EntityFactory.buildPosition("Radeinfahrt Helmkontrolle", 12,
-                        SpeedyTestUtil.buildDefaultDomain(1), false, 0, true).saveOrUpdate();
+                        SpeedyTestUtil.buildDefaultDomain(1), 0, true).saveOrUpdate();
         // create events
         Event evt2014 =
                 EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, null)
@@ -253,8 +253,8 @@ public class RequestHelpTest
         HibernateUtil.clearAll();
         // create 3 new helpers
         EntityFactory.buildHelper("Helper1", "Helper1", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
-        EntityFactory.buildHelper("Helper2", "Helper2", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
-        EntityFactory.buildHelper("Helper3", "Helper3", "a@b.de", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Helper2", "Helper2", "a@b.de", HelperState.ACTIVE, 1, 2, 1980).saveOrUpdate();
+        EntityFactory.buildHelper("Helper3", "Helper3", "a@b.de", HelperState.ACTIVE, 1, 3, 1980).saveOrUpdate();
         // create 'little' event for 2015
         Event event2015 =
                 TestDataGenerator.createSimpleEvent("TRI-2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED,

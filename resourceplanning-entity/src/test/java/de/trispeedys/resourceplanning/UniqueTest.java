@@ -37,7 +37,7 @@ public class UniqueTest
         // create domain
         Domain domain1 = EntityFactory.buildDomain("dom1", 1).saveOrUpdate();
 
-        Position position = EntityFactory.buildPosition("Some position", 12, domain1, false, 0, true).saveOrUpdate();
+        Position position = EntityFactory.buildPosition("Some position", 12, domain1, 0, true).saveOrUpdate();
         Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).saveOrUpdate();
         Helper helper1 =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
@@ -58,8 +58,8 @@ public class UniqueTest
         HibernateUtil.clearAll();
         
         Domain dom = EntityFactory.buildDomain("123", 123).saveOrUpdate();
-        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom , false, 173, true).saveOrUpdate();
-        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom, false, 173, true).saveOrUpdate();
+        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom , 173, true).saveOrUpdate();
+        EntityFactory.buildPosition("Ansage Zieleinlauf", 12, dom, 173, true).saveOrUpdate();
     }
     
     @Test(expected = org.hibernate.exception.ConstraintViolationException.class)

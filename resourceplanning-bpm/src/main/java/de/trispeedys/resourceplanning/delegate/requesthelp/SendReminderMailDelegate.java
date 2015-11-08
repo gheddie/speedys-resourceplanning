@@ -29,7 +29,8 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         Event event = (Event) Datasources.getDatasource(Event.class).findById(eventId);
         Position position = (Position) Datasources.getDatasource(Position.class).findById(positionId);
-        sendReminderMail(helper, event, position, (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS), execution);
+        sendReminderMail(helper, event, position,
+                (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS), execution);
         // increase attempts
         int oldValue = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (oldValue + 1));
@@ -37,8 +38,19 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
 
     private void sendReminderMail(Helper helper, Event event, Position position, int attemptCount, DelegateExecution execution)
     {
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), "Helfermeldung zum " + event.getDescription(), generateReminderBody(helper, event, position, execution),
-                getMessagingType(attemptCount), MessagingFormat.HTML).saveOrUpdate();
+        String subject = null;
+        switch (attemptCount)
+        {
+            case 0:
+                subject = "Helfermeldung zum " + event.getDescription();
+                break;
+            default:
+                subject = "Helfermeldung zum " + event.getDescription() + " ("+attemptCount+". Erinnerung)";
+                break;
+        }
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), subject,
+                generateReminderBody(helper, event, position, execution), getMessagingType(attemptCount), MessagingFormat.HTML)
+                .saveOrUpdate();
     }
 
     private MessagingType getMessagingType(int attempt)
@@ -88,7 +100,7 @@ public class SendReminderMailDelegate extends RequestHelpDelegate
     private String renderCallbackOption(Helper helper, Event event, HelperCallback helperCallback)
     {
         return "<a href=\"" +
-                HelperInteraction.getBaseLink() + "/HelperCallbackReceiver.jsp?callbackResult=" + helperCallback + "&helperId=" + helper.getId() +
-                "&eventId=" + event.getId() + "\">" + helperCallback.getDescription() + "</a>";
+                HelperInteraction.getBaseLink() + "/HelperCallbackReceiver.jsp?callbackResult=" + helperCallback + "&helperId=" +
+                helper.getId() + "&eventId=" + event.getId() + "\">" + helperCallback.getDescription() + "</a>";
     }
 }

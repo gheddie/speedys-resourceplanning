@@ -100,4 +100,17 @@ public class HtmlRenderer
                 .withParagraph("Deine Tri-Speedys.")
                 .render();
     }
+
+    public static String renderDeactivationRecoveryCallback(Long helperId)
+    {
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findById(helperId);
+        return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
+                .withLinebreak(2)
+                .withParagraph("Deine Nachricht ist angekommen.")
+                .withLinebreak()
+                .withParagraph("Du wirst bei der Helferplanung für die nächsten Events weiterhin berücksichtigt.")
+                .withLinebreak(2)
+                .withParagraph("Deine Tri-Speedys.")
+                .render();
+    }
 }

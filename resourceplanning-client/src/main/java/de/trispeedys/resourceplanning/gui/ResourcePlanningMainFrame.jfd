@@ -27,6 +27,12 @@ new FormModel {
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/cancel48px.png" )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnCancelAssignmentPressed", true ) )
 				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnFireTimer"
+					"text": "Timer"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/timer48px.png" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnFireTimerPressed", true ) )
+				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 				"gridwidth": 3
 			} )

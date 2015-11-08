@@ -144,6 +144,22 @@ public class HelperInteraction
             return HtmlRenderer.renderCorrelationFault(helperId);
         }
     }
+    
+    public static String processDeactivationRecovery(Long eventId, Long helperId)
+    {
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+        try
+        {
+            BpmPlatform.getDefaultProcessEngine()
+                    .getRuntimeService()
+                    .correlateMessage(BpmMessages.RequestHelpHelper.MSG_DEACT_RESP, businessKey);
+            return HtmlRenderer.renderDeactivationRecoveryCallback(helperId);
+        }
+        catch (MismatchingMessageCorrelationException e)
+        {
+            return HtmlRenderer.renderCorrelationFault(helperId);
+        }
+    }
 
     // ---
 

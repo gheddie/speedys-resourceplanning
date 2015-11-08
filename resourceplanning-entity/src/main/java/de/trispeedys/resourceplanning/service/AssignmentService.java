@@ -3,8 +3,6 @@ package de.trispeedys.resourceplanning.service;
 import java.util.HashMap;
 import java.util.List;
 
-import org.joda.time.Days;
-
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
@@ -15,7 +13,6 @@ import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
-import de.trispeedys.resourceplanning.util.DateHelper;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class AssignmentService
@@ -23,19 +20,9 @@ public class AssignmentService
     public static void assignHelper(Helper helper, Event event, Position position)
             throws ResourcePlanningException
     {
-        if (!(position.isAuthorityOverride()))
+        if (!(helper.isAssignableTo(position, event.getEventDate())))
         {
-            // no authority override -> check age
-            int dayDiff =
-                    Days.daysBetween(
-                            DateHelper.toDateTime(event.getEventDate()),
-                            DateHelper.toDateTime(helper.getDateOfBirth())
-                                    .plusYears(position.getMinimalAge())).getDays();
-            if (dayDiff > 0)
-            {
-                throw new ResourcePlanningException("helper is " +
-                        dayDiff + " days to young for this position!");
-            }
+            throw new ResourcePlanningException("helper is to young for this position!");
         }
         EntityFactory.buildHelperAssignment(helper, event, position).saveOrUpdate();
     }

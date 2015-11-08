@@ -15,8 +15,10 @@ public class RepositoryProvider
 {
     private static RepositoryProvider instance;
     
+    @SuppressWarnings("rawtypes")
     private HashMap<Class<? extends DatabaseRepository>, DatabaseRepository> repositoryCache;
     
+    @SuppressWarnings("rawtypes")
     private RepositoryProvider()
     {
         repositoryCache = new HashMap<Class<? extends DatabaseRepository>, DatabaseRepository>();
@@ -34,6 +36,7 @@ public class RepositoryProvider
         registerRepository(HelperRepository.class);
     }
 
+    @SuppressWarnings("rawtypes")
     private void registerRepository(Class<? extends DatabaseRepository> clazz)
     {
         try
@@ -57,6 +60,7 @@ public class RepositoryProvider
         return RepositoryProvider.instance;
     }
     
+    @SuppressWarnings("unchecked")
     private <T extends DatabaseRepository<T>> T getRepositoryForClass(Class<? extends AbstractDbObject> entityClass)
     {
         if (entityClass == null)
@@ -66,6 +70,7 @@ public class RepositoryProvider
         return (T) repositoryCache.get(entityClass);        
     }
     
+    @SuppressWarnings("unchecked")
     public static <T extends DatabaseRepository<T>> T getRepository(Class<T> repositoryClass)
     {
         T repositoryForClass = (T) getInstance().getRepositoryForClass((Class<? extends AbstractDbObject>) repositoryClass);        

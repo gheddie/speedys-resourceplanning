@@ -11,6 +11,8 @@ public class HelperDTO
     private String code;
     
     private String helperState;
+    
+    private Long helperId;
 
     public String getFirstName()
     {
@@ -60,5 +62,15 @@ public class HelperDTO
     public void setHelperState(String helperState)
     {
         this.helperState = helperState;
+    }
+    
+    public Long getHelperId()
+    {
+        return helperId;
+    }
+    
+    public void setHelperId(Long helperId)
+    {
+        this.helperId = helperId;
     }
 }

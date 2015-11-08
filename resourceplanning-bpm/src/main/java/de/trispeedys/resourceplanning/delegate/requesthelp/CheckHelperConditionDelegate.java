@@ -8,9 +8,10 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.LoggerService;
+import de.trispeedys.resourceplanning.util.StringUtil;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
 
-public class CheckPriorAssignmentsDelegate implements JavaDelegate
+public class CheckHelperConditionDelegate implements JavaDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
@@ -18,18 +19,19 @@ public class CheckPriorAssignmentsDelegate implements JavaDelegate
         
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
-        boolean firstAssignment = AssignmentService.isFirstAssignment(helperId);
-        if (firstAssignment)
+        boolean firstAssignment = AssignmentService.isFirstAssignment(helperId);   
+        if ((firstAssignment) || (StringUtil.isBlank(helper.getEmail())))
         {
-            LoggerService.log(execution.getBusinessKey(), "this is the first assignments for helper '"+helper+"'.");
+            execution.setVariable(
+                    BpmVariables.RequestHelpHelper.VAR_SUPERVISION_REQUIRED,
+                    true);
         }
         else
         {
-            LoggerService.log(execution.getBusinessKey(), "this is NOT the first assignments for helper '"+helper+"'.");   
-        }        
-        execution.setVariable(
-                BpmVariables.RequestHelpHelper.VAR_FIRST_ASSIGNMENT,
-                firstAssignment);
+            execution.setVariable(
+                    BpmVariables.RequestHelpHelper.VAR_SUPERVISION_REQUIRED,
+                    false);
+        }
         //set mails attempts to 0
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, 0);
     }

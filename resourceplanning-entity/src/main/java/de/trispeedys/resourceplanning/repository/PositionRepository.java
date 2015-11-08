@@ -9,6 +9,7 @@ import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.datasource.PositionDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
+import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
@@ -22,14 +23,39 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
         return (Position) dataSource().findSingle(Position.ATTR_POS_NUMBER, positionNumber);
     }
 
+    /**
+     * finds all unassigned positions in an event. for every position the aptness concerning the given helpers age is
+     * checked.
+     * 
+     * @param event
+     * @param onlyChooseable
+     * @param helper
+     * @return
+     */
+    public List<Position> findUnassignedPositionsInEvent(Event event, boolean onlyChooseable, Helper helper)
+    {
+        List<Position> result = new ArrayList<Position>();
+        // get all unassigned positions
+        for (Position pos : findUnassignedPositionsInEvent(event, onlyChooseable))
+        {
+            if (helper.isAssignableTo(pos, event.getEventDate()))
+            {
+                result.add(pos);
+            }
+        }
+        return result;
+    }
+
     public List<Position> findUnassignedPositionsInEvent(Event event, boolean onlyChooseable)
     {
+        // all event positions not referenced by an assigment which is 'PLANNED' or 'CONFIRMED'
         String qryString =
                 "FROM " +
                         EventPosition.class.getSimpleName() + " ep WHERE ep." + EventPosition.ATTR_EVENT +
                         " = :event AND ep.position.id NOT IN (SELECT ec.position.id FROM " +
                         HelperAssignment.class.getSimpleName() + " ec WHERE ec.event = :event AND ec.helperAssignmentState = '" +
-                        HelperAssignmentState.CONFIRMED + "')";
+                        HelperAssignmentState.PLANNED + "' OR ec.helperAssignmentState = '" + HelperAssignmentState.CONFIRMED +
+                        "')";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("event", event);
         List<EventPosition> eventPositions = Datasources.getDatasource(EventPosition.class).find(qryString, parameters);
@@ -43,13 +69,13 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
                 // add position only if it is choosable
                 if (position.isChoosable())
                 {
-                    result.add(position); 
+                    result.add(position);
                 }
             }
             else
             {
                 // add unconditionally
-                result.add(position);   
+                result.add(position);
             }
         }
         return result;

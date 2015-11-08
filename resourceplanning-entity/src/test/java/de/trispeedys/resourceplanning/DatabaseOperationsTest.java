@@ -114,7 +114,7 @@ public class DatabaseOperationsTest
         // create positions
         for (int i = 1; i <= 10; i++)
         {
-            EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), false, i, true)
+            EntityFactory.buildPosition("Pos" + i, i, SpeedyTestUtil.buildDefaultDomain(i), i, true)
                     .saveOrUpdate();
         }
         // fetch w/o parameters (all entries)

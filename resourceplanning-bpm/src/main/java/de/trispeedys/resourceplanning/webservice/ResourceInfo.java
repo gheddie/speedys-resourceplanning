@@ -59,7 +59,8 @@ public class ResourceInfo
         }
         List<PositionDTO> dtos = new ArrayList<PositionDTO>();
         PositionDTO dto = null;
-        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event, false))
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event,
+                false))
         {
             dto = new PositionDTO();
             dto.setDescription(pos.getDescription());
@@ -74,16 +75,6 @@ public class ResourceInfo
     {
         MessagingService.sendAllUnprocessedMessages();
     }
-
-    /*
-     * public void processHelperCallback(String businessKey, String callback) { if ((businessKey == null) ||
-     * (businessKey.length() == 0)) { System.out.println("business key must be set --> returning."); return; }
-     * HelperCallback callbackValue = HelperCallback.valueOf(callback); if ((callback == null) || (callback.length() ==
-     * 0) || (callbackValue == null)) {
-     * System.out.println("string '' can not be interpreted as helper callback --> returning."); return; }
-     * LoggerService.log("processed helper callback '" + callbackValue + "' for business key '" + businessKey + "'...",
-     * DbLogLevel.INFO); HelperInteraction.processReminderCallback(callbackValue, businessKey); }
-     */
 
     public void startProcessesForActiveHelpersByTemplateName(String templateName)
     {
@@ -165,6 +156,7 @@ public class ResourceInfo
             dto.setEmail(helper.getEmail());
             dto.setCode(helper.getCode());
             dto.setHelperState(helper.getHelperState().toString());
+            dto.setHelperId(helper.getId());
             dtos.add(dto);
         }
         return dtos.toArray(new HelperDTO[dtos.size()]);
@@ -248,7 +240,13 @@ public class ResourceInfo
 
     public void createHelper(String lastName, String firstName, String email, int dayOfBirth, int monthOfBirth, int yearOfBirth)
     {
-        EntityFactory.buildHelper(lastName, firstName, email, HelperState.ACTIVE, dayOfBirth, monthOfBirth, yearOfBirth)
-                .saveOrUpdate();
+        Helper helper =
+                EntityFactory.buildHelper(lastName, firstName, email, HelperState.ACTIVE, dayOfBirth, monthOfBirth, yearOfBirth)
+                        .saveOrUpdate();
+        // start a request help process for every event which is initiated in this moment...
+        for (Event event : RepositoryProvider.getRepository(EventRepository.class).findInitiatedEvents())
+        {
+            EventManager.startHelperRequestProcess(helper, event);
+        }
     }
 }

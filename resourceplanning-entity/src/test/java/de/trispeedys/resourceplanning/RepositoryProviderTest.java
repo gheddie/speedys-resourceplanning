@@ -21,7 +21,7 @@ public class RepositoryProviderTest
         Domain domain = EntityFactory.buildDomain("D1", 1).saveOrUpdate();
         
         // build position
-        Position pos = EntityFactory.buildPosition("P1", 12, domain, false, 0, true).saveOrUpdate();
+        Position pos = EntityFactory.buildPosition("P1", 12, domain, 0, true).saveOrUpdate();
         
         assertTrue(RepositoryProvider.getRepository(PositionRepository.class).findPositionByPositionNumber(0) != null);
     }

@@ -11,6 +11,9 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.impl.pvm.runtime.ExecutionImpl;
+import org.camunda.bpm.engine.runtime.Execution;
+import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 
 import de.trispeedys.resourceplanning.HibernateUtil;
@@ -171,10 +174,10 @@ public class TestDataProvider
     public void duplicate2015()
     {
         Domain domRadstrecke = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(2);
-        EntityFactory.buildPosition("Helmkontrolle", 12, domRadstrecke, false, 777, true).saveOrUpdate();
+        EntityFactory.buildPosition("Helmkontrolle", 12, domRadstrecke, 777, true).saveOrUpdate();
 
         Domain domLaufstrecke = RepositoryProvider.getRepository(DomainRepository.class).findDomainByNumber(1);
-        EntityFactory.buildPosition("Übergang Herrenfeldtstrasse", 12, domLaufstrecke, false, 888, true).saveOrUpdate();
+        EntityFactory.buildPosition("Übergang Herrenfeldtstrasse", 12, domLaufstrecke, 888, true).saveOrUpdate();
 
         List<Integer> excludes = new ArrayList<Integer>();
         excludes.add(398);
@@ -194,6 +197,18 @@ public class TestDataProvider
         for (ProcessInstance instance : processEngine.getRuntimeService().createProcessInstanceQuery().list())
         {
             processEngine.getRuntimeService().deleteProcessInstance(instance.getId(), "moo");
+        }
+    }
+
+    public void fireTimer(Long helperId, Long eventId)
+    {
+        ProcessEngine processEngine = BpmPlatform.getDefaultProcessEngine();
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+        Execution execution =
+                processEngine.getRuntimeService().createExecutionQuery().processInstanceBusinessKey(businessKey).list().get(0);
+        for (Job job : processEngine.getManagementService().createJobQuery().processInstanceId(execution.getId()).list())
+        {
+            processEngine.getManagementService().executeJob(job.getId());
         }
     }
 }

@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="code" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="firstName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="helperId" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="helperState" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="lastName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
@@ -34,6 +35,7 @@ import javax.xml.bind.annotation.XmlType;
     "code",
     "email",
     "firstName",
+    "helperId",
     "helperState",
     "lastName"
 })
@@ -42,6 +44,7 @@ public class HelperDTO {
     protected String code;
     protected String email;
     protected String firstName;
+    protected Long helperId;
     protected String helperState;
     protected String lastName;
 
@@ -115,6 +118,30 @@ public class HelperDTO {
      */
     public void setFirstName(String value) {
         this.firstName = value;
+    }
+
+    /**
+     * Gets the value of the helperId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getHelperId() {
+        return helperId;
+    }
+
+    /**
+     * Sets the value of the helperId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
+     */
+    public void setHelperId(Long value) {
+        this.helperId = value;
     }
 
     /**

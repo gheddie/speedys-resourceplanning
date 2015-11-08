@@ -1,6 +1,11 @@
 package de.trispeedys.resourceplanning;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -12,6 +17,8 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.HelperRepository;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.HelperService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
@@ -44,8 +51,8 @@ public class HelperTest
         // create domain
         Domain domain = EntityFactory.buildDomain("someDomain", 1).saveOrUpdate();
         // create positions
-        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, false, 0, true).saveOrUpdate();
-        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, false, 1, true).saveOrUpdate();
+        Position pos1 = EntityFactory.buildPosition("Nudelparty", 12, domain, 0, true).saveOrUpdate();
+        Position pos2 = EntityFactory.buildPosition("Laufstrecke", 12, domain, 1, true).saveOrUpdate();
 
         EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
@@ -80,5 +87,34 @@ public class HelperTest
                 HelperState.ACTIVE, 4, 4, 1971)));
         assertEquals("LOLE04041971", SpeedyRoutines.createHelperCode(EntityFactory.buildHelper("Löge", "Lennart", "a@b.de",
                 HelperState.ACTIVE, 4, 4, 1971)));
+    }
+    
+    @Test
+    public void testHelperFitsPosition()
+    {
+        HibernateUtil.clearAll();
+        
+        // helper turns 16 on 15.06.2016
+        EntityFactory.buildHelper("Schulz", "Stefan", "a@b.de", HelperState.ACTIVE, 15, 6, 2000).saveOrUpdate();
+        
+        Domain domain = EntityFactory.buildDomain("D1", 787).saveOrUpdate();
+        Position pos = EntityFactory.buildPosition("P1", 16, domain, 53, true).saveOrUpdate();
+        
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findAll().get(0);
+        
+        assertFalse(helper.isAssignableTo(pos, makeDate(14, 6, 2014)));
+        assertFalse(helper.isAssignableTo(pos, makeDate(14, 6, 2016)));
+        assertTrue(helper.isAssignableTo(pos, makeDate(15, 6, 2016)));
+        assertTrue(helper.isAssignableTo(pos, makeDate(15, 6, 2018)));
+    }
+
+    private Date makeDate(int day, int month, int year)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.MONTH, (month-1));
+        cal.set(Calendar.YEAR, year);
+        Date result = cal.getTime();
+        return result;
     }
 }

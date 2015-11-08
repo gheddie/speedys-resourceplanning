@@ -12,7 +12,8 @@ create table helper
 	email varchar(255),
 	helper_state varchar(64),
 	code varchar(16),
-	primary key (id)
+	primary key (id),
+	constraint hlp_unique_code unique (code)
 );
 
 ------------------------------------------------ Domain
