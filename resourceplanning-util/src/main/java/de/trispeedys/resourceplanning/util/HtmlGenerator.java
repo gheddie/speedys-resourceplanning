@@ -8,10 +8,18 @@ public class HtmlGenerator
     
     private StringBuffer buffer;
 
-    public HtmlGenerator()
+    private boolean renderNoReply;
+
+    public HtmlGenerator(boolean aRenderNoReply)
     {
         super();
+        this.renderNoReply = aRenderNoReply;
         this.buffer = new StringBuffer();
+    }
+
+    public HtmlGenerator()
+    {
+        this(false);
     }
 
     /**
@@ -84,7 +92,6 @@ public class HtmlGenerator
     
     private void withMachineMessage()
     {
-        // TODO message taucht auch in jps callbacks auf (konfigurierbar machen) !!
         withParagraph(MACHINE_MESSAGE);
     }
 
@@ -94,8 +101,11 @@ public class HtmlGenerator
     }
 
     public String render()
-    {
-        withMachineMessage();
+    {   
+        if (renderNoReply)
+        {
+            withMachineMessage();   
+        }        
         return buffer.toString();
     }
 }

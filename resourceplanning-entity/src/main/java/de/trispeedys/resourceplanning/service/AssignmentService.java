@@ -39,7 +39,7 @@ public class AssignmentService
     public static void cancelHelperAssignment(Helper helper, Event event)
     {
         HelperAssignmentRepository repository = RepositoryProvider.getRepository(HelperAssignmentRepository.class);
-        HelperAssignment assignment = repository.findByHelperAndEvent(helper, event).get(0);
+        HelperAssignment assignment = repository.findByHelperAndEvent(helper, event);
         assignment.setHelperAssignmentState(HelperAssignmentState.CANCELLED);
         repository.saveOrUpdate(assignment);
     }

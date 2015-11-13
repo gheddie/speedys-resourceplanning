@@ -16,7 +16,7 @@ public class AlertDeactivationMailTemplate extends AbstractMailTemplate
 
     public String constructBody()
     {
-        return new HtmlGenerator().withParagraph("Hallo, Admin!!")
+        return new HtmlGenerator(true).withParagraph("Hallo, Admin!!")
                 .withParagraph(
                         "Helfer " +
                                 getHelper().getLastName() + ", " + getHelper().getFirstName() + " wurde soeben deaktiviert!!")

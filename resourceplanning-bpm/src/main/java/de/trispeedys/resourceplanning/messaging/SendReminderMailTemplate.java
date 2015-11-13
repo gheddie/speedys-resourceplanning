@@ -16,8 +16,7 @@ public class SendReminderMailTemplate extends AbstractMailTemplate
 
     private int attemptCount;
 
-    public SendReminderMailTemplate(Helper helper, Event event, Position position, boolean aPriorPositionAvailable,
-            int anAttemptCount)
+    public SendReminderMailTemplate(Helper helper, Event event, Position position, boolean aPriorPositionAvailable, int anAttemptCount)
     {
         super(helper, event, position);
         this.priorPositionAvailable = aPriorPositionAvailable;
@@ -27,8 +26,9 @@ public class SendReminderMailTemplate extends AbstractMailTemplate
     public String constructBody()
     {
         HtmlGenerator generator =
-                new HtmlGenerator().withParagraph("Hallo " + getHelper().getFirstName() + "!").withParagraph(
-                        "Beim letzten Event warst du auf der Position '" + getPosition().getDescription() + "' eingesetzt.");
+                new HtmlGenerator(true).withParagraph("Hallo " + getHelper().getFirstName() + "!").withParagraph(
+                        "Beim letzten Event warst du auf der Position '" +
+                                getPosition().getDescription() + "' im Bereich '" + getPosition().getDomain().getName() + "' eingesetzt.");
         if (!(priorPositionAvailable))
         {
             generator = generator.withParagraph("Diese Position ist leider nicht mehr verfügbar.");
@@ -37,15 +37,14 @@ public class SendReminderMailTemplate extends AbstractMailTemplate
         {
             generator = generator.withParagraph("Diese Position auch dieses Mal wieder zu besetzen.");
         }
-        generator =
-                generator.withParagraph("Bitte sag uns, was Du beim anstehenden " +
-                        getEvent().getDescription() + " tun möchtest:");
+        generator = generator.withParagraph("Bitte sag uns, was Du beim anstehenden " + getEvent().getDescription() + " tun möchtest:");
         for (HelperCallback callback : new CallbackChoiceGenerator().generateChoices(getHelper(), getEvent()))
         {
             generator =
-                    generator.withLink(HelperInteraction.getBaseLink() +
-                            "/HelperCallbackReceiver.jsp?callbackResult=" + callback + "&helperId=" + getHelper().getId() +
-                            "&eventId=" + getEvent().getId(), callback.getDescription()).withLinebreak(2);
+                    generator.withLink(
+                            HelperInteraction.getBaseLink() +
+                                    "/HelperCallbackReceiver.jsp?callbackResult=" + callback + "&helperId=" + getHelper().getId() + "&eventId=" +
+                                    getEvent().getId(), callback.getDescription()).withLinebreak(2);
         }
         generator = generator.withParagraph("Deine Tri-Speedys.");
         return generator.render();

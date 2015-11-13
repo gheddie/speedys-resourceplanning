@@ -20,7 +20,7 @@ public class BookingConfirmationMailTemplate extends AbstractMailTemplate
         String link =
                 HelperInteraction.getBaseLink() +
                         "/AssignmentCancellationReceiver.jsp?helperId=" + getHelper().getId() + "&eventId=" + getEvent().getId();
-        return new HtmlGenerator().withParagraph("Hallo " + getHelper().getFirstName() + "!")
+        return new HtmlGenerator(true).withParagraph("Hallo " + getHelper().getFirstName() + "!")
                 .withParagraph(
                         "Du wurdest erfolgreich der Position '" +
                                 getPosition().getDescription() + "' zugeordnet. Falls Dir etwas dazwischenkommen sollte, kannst du diese Buchung " +

@@ -19,7 +19,7 @@ public class DeactivationRecoveryMailTemplate extends AbstractMailTemplate
         String link =
                 HelperInteraction.getBaseLink() +
                         "/DeactivationRecoveryReceiver.jsp?helperId=" + getHelper().getId() + "&eventId=" + getEvent().getId();
-        return new HtmlGenerator().withParagraph("Hallo " + getHelper().getFirstName() + "!")
+        return new HtmlGenerator(true).withParagraph("Hallo " + getHelper().getFirstName() + "!")
                 .withParagraph(
                         "Leider hast du auf keine unserer Nachfragen reagiert, ob du uns beim Event '"+getEvent().getDescription()+"' helfen kannst."
                                 + " Nach Ablauf von 4 Wochen wird dein Helfer-Account deshalb deaktiviert. Mit dem Klicken auf den unten stehenden"
