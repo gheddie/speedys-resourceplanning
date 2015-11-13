@@ -8,8 +8,11 @@ import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.entity.misc.HistoryType;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.repository.HelperHistoryRepository;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
@@ -19,35 +22,7 @@ import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 public class HelperInteraction
 {
     /**
-     * Quittung für korrekt zugestellte Nachricht
-     */
-    public static final String RETURN_MESSAGE_PROCESSABLE = "RETURN_MESSAGE_PROCESSABLE";
-
-    /**
-     * Catch-All-Quittung für beide Fälle ({@link BpmMessages.RequestHelpHelper#MSG_HELP_CALLBACK} und
-     * {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN}) --> Nachricht nicht zustellbar
-     */
-    public static final String RETURN_MESSAGE_UNPROCESSABLE = "RETURN_MESSAGE_UNPROCESSABLE";
-
-    /**
-     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Positiv-Fall
-     * --> Position verfügbar
-     */
-    public static final String RETURN_POS_CHOSEN_NOMINAL = "RETURN_POS_CHOSEN_NOMINAL";
-
-    /**
-     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_POS_CHOSEN} --> Negativ-Fall
-     * --> Position NICHT verfügbar
-     */
-    public static final String RETURN_POS_CHOSEN_POS_TAKEN = "POS_CHOSEN_POS_TAKEN";
-
-    /**
-     * Quittung für korrekt zugestellte Nachricht {@link BpmMessages.RequestHelpHelper#MSG_ASSIG_CANCELLED}
-     */
-    public static final String RETURN_CANCELLATION_NOMINAL = "RETURN_CANCELLATION_NOMINAL";
-
-    /**
-     * 
+     * called from 'HelperCallbackReceiver.jsp'
      * 
      * @param callback
      * @param businessKey
@@ -62,6 +37,8 @@ public class HelperInteraction
             case ASSIGNMENT_AS_BEFORE:
                 LoggerService.log("the helper wants to be assigned as before...", DbLogLevel.INFO);
                 variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
+                // write history
+                RepositoryProvider.getRepository(HelperHistoryRepository.class).createEntry(helperId, eventId, HistoryType.CALLBACK_ASSIGNMENT_AS_BEFORE);
                 break;
             case CHANGE_POS:
                 LoggerService.log("the helper wants to change positions...", DbLogLevel.INFO);
@@ -71,13 +48,17 @@ public class HelperInteraction
                 LoggerService.log("the helper wants to be paused...", DbLogLevel.INFO);
                 variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.PAUSE_ME);
                 break;
+            case ASSIGN_ME_MANUALLY:
+                LoggerService.log("the helper wants to manually assigned...", DbLogLevel.INFO);
+                variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGN_ME_MANUALLY);
+                break;
         }
         try
         {
             BpmPlatform.getDefaultProcessEngine()
                     .getRuntimeService()
-                    .correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variables);
-            return HtmlRenderer.renderCorrelationSuccess(helperId);
+                    .correlateMessage(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, businessKey, variables);                        
+            return HtmlRenderer.renderCallbackSuccess(helperId, callback);
         }
         catch (MismatchingMessageCorrelationException e)
         {

@@ -5,34 +5,30 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
+import de.trispeedys.resourceplanning.util.HtmlGenerator;
 
 public class AlertCancellationMailTemplate extends AbstractMailTemplate
 {
-    private Helper helper;
-
-    private Event event;
-
-    private Position position;
-
     public AlertCancellationMailTemplate(Helper aHelper, Event aEvent, Position aPosition)
     {
-        super();
-        this.helper = aHelper;
-        this.event = aEvent;
-        this.position = aPosition;
+        super(aHelper, aEvent, aPosition);
     }
 
-    public String getBody()
+    public String constructBody()
     {
-        // TODO use proper mail body !!
-        return "Helfer "+helper.getLastName()+", "+helper.getFirstName()+" (Position: "+position.getDescription()+") hat abgesagt!!";
+        return new HtmlGenerator().withParagraph("Hallo, Admin!!")
+                .withParagraph(
+                        "Helfer " +
+                                getHelper().getLastName() + ", " + getHelper().getFirstName() + " (Position: " +
+                                getPosition().getDescription() + ") hat leider abgesagt!!")
+                .render();
     }
 
-    public String getSubject()
+    public String constructSubject()
     {
-        return "Helper-Absage für den Wettkampf " + event.getDescription();
+        return "Helfer-Absage für den Wettkampf " + getEvent().getDescription();
     }
-    
+
     public MessagingFormat getMessagingFormat()
     {
         return MessagingFormat.HTML;

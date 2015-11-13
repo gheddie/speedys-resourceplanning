@@ -29,7 +29,7 @@ public class AssignmentService
 
     public static boolean isFirstAssignment(Long helperId)
     {
-        List<HelperAssignment> helperAssignments = RepositoryProvider.getRepository(HelperAssignmentRepository.class).getAllHelperAssignments(helperId);
+        List<HelperAssignment> helperAssignments = RepositoryProvider.getRepository(HelperAssignmentRepository.class).findAllHelperAssignments(helperId);
         return ((helperAssignments == null) || (helperAssignments.size() == 0));
     }
 

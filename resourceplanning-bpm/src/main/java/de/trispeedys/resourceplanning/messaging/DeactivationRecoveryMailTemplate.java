@@ -9,36 +9,28 @@ import de.trispeedys.resourceplanning.util.HtmlGenerator;
 
 public class DeactivationRecoveryMailTemplate extends AbstractMailTemplate
 {
-    private Helper helper;
-
-    private Event event;
-
     public DeactivationRecoveryMailTemplate(Helper aHelper, Event aEvent)
     {
-        super();
-        this.helper = aHelper;
-        this.event = aEvent;
+        super(aHelper, aEvent, null);
     }
 
-    public String getBody()
+    public String constructBody()
     {
         String link =
                 HelperInteraction.getBaseLink() +
-                        "/DeactivationRecoveryReceiver.jsp?helperId=" + helper.getId() + "&eventId=" + event.getId();
-        return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
-                .withLinebreak()
+                        "/DeactivationRecoveryReceiver.jsp?helperId=" + getHelper().getId() + "&eventId=" + getEvent().getId();
+        return new HtmlGenerator().withParagraph("Hallo " + getHelper().getFirstName() + "!")
                 .withParagraph(
-                        "Leider hast du auf keine unserer Nachfragen reagiert, ob du uns beim Event helfen kannst."
+                        "Leider hast du auf keine unserer Nachfragen reagiert, ob du uns beim Event '"+getEvent().getDescription()+"' helfen kannst."
                                 + " Nach Ablauf von 4 Wochen wird dein Helfer-Account deshalb deaktiviert. Mit dem Klicken auf den unten stehenden"
                                 + " Link kannst du die Deaktivierung verhindern und wirst weiterhin als aktiver Helfer geführt:")
-                .withLinebreak()
                 .withLink(link, "Deaktivierung verhindern")
                 .withLinebreak()
                 .withParagraph("Deine Tri-Speedys.")
                 .render();
     }
 
-    public String getSubject()
+    public String constructSubject()
     {
         return "Nachfrage vor Deaktivierung";
     }

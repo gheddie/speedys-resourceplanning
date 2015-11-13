@@ -3,6 +3,8 @@ package de.trispeedys.resourceplanning.interaction;
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
@@ -10,12 +12,19 @@ import de.trispeedys.resourceplanning.util.HtmlGenerator;
 
 public class HtmlRenderer
 {
-    public static String renderCorrelationSuccess(Long helperId)
+    /**
+     * renders success message for {@link HelperCallback} via {@link BpmMessages.RequestHelpHelper#MSG_HELP_CALLBACK}.
+     * 
+     * @param helperId
+     * @param callback 
+     * @return
+     */
+    public static String renderCallbackSuccess(Long helperId, HelperCallback callback)
     {
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
                 .withLinebreak()
-                .withParagraph("Danke, wir haben deine Nachricht erhalten.")
+                .withParagraph("Danke, wir haben deine Nachricht erhalten ("+callback.getSummary()+").")
                 .withLinebreak()
                 .withParagraph("Deine Tri-Speedys.")
                 .render();

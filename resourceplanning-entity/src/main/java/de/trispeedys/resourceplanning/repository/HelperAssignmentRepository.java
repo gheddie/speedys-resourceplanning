@@ -2,7 +2,6 @@ package de.trispeedys.resourceplanning.repository;
 
 import java.util.List;
 
-import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.datasource.DefaultDatasource;
 import de.trispeedys.resourceplanning.datasource.HelperAssignmentDatasource;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -18,13 +17,20 @@ public class HelperAssignmentRepository extends AbstractDatabaseRepository<Helpe
     {
         return dataSource().find(HelperAssignment.ATTR_EVENT, event);
     }
-
+    
     protected DefaultDatasource<HelperAssignment> createDataSource()
     {
         return new HelperAssignmentDatasource();
     }
+    
+    public List<HelperAssignment> findAllHelperAssignmentsByEvent(Event event)
+    {
+        return dataSource().find(
+                "From " + HelperAssignment.class.getSimpleName() + " ec WHERE ec.event = :event",
+                "event", event);
+    }
 
-    public List<HelperAssignment> getAllHelperAssignments(Long helperId)
+    public List<HelperAssignment> findAllHelperAssignments(Long helperId)
     {
         return dataSource().find(
                 "From " + HelperAssignment.class.getSimpleName() + " ec WHERE ec.helperId = :helperId",

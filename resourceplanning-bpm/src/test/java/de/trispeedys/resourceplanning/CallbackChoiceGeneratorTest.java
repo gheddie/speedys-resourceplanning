@@ -70,7 +70,7 @@ public class CallbackChoiceGeneratorTest
 
         assertTrue(checkChoices(new HelperCallback[]
         {
-                HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME
+                HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME, HelperCallback.ASSIGN_ME_MANUALLY
         }, new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
     }
 
@@ -102,13 +102,13 @@ public class CallbackChoiceGeneratorTest
         
         assertTrue(checkChoices(new HelperCallback[]
         {
-                HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME
+                HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME, HelperCallback.ASSIGN_ME_MANUALLY
         }, new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
     }
 
     // ---
 
-    private boolean checkChoices(HelperCallback[] expected, List<HelperCallback> generatedChoices)
+    public static boolean checkChoices(HelperCallback[] expected, List<HelperCallback> generatedChoices)
     {
         if ((expected == null) && (generatedChoices == null))
         {

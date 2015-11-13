@@ -18,6 +18,8 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
 
     private EventTemplate eventTemplate;
 
+    private Event parentEvent;
+
     public EventBuilder withDescription(String aDescription)
     {
         description = aDescription;
@@ -48,6 +50,12 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
         return this;
     }
     
+    public EventBuilder withParentEvent(Event aParentEvent)
+    {
+        parentEvent = aParentEvent;
+        return this;
+    }
+    
     public Event build()
     {
         Event event = new Event();
@@ -56,6 +64,7 @@ public class EventBuilder extends AbstractEntityBuilder<Event>
         event.setEventDate(eventDate);
         event.setEventState(eventState);
         event.setEventTemplate(eventTemplate);
+        event.setParentEvent(parentEvent);
         return event;
     }
 }

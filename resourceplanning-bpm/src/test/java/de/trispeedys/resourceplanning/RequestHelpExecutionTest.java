@@ -3,10 +3,14 @@ package de.trispeedys.resourceplanning;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.runtime.VariableInstance;
+import org.camunda.bpm.engine.runtime.VariableInstanceQuery;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -31,12 +35,12 @@ import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
-import de.trispeedys.resourceplanning.interaction.EventManager;
 import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.AssignmentService;
+import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.RequestHelpTestUtil;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
@@ -221,6 +225,9 @@ public class RequestHelpExecutionTest
 
         // fire the 'last chance' timer
         RequestHelpTestUtil.fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_LAST_CHANCE_TIMER, processEngine);
+
+        assertTrue(RequestHelpTestUtil.checkMails(5, MessagingType.REMINDER_STEP_0, MessagingType.REMINDER_STEP_1,
+                MessagingType.REMINDER_STEP_2, MessagingType.DEACTIVATION_REQUEST, MessagingType.ALERT_HELPER_DEACTIVATED));
 
         // process must be gone
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
@@ -496,15 +503,15 @@ public class RequestHelpExecutionTest
                 RepositoryProvider.getRepository(PositionRepository.class)
                         .findUnassignedPositionsInEvent(event2016, false)
                         .size());
-        
+
         // choose 'CHANGE_POS'
         RequestHelpTestUtil.doCallback(HelperCallback.CHANGE_POS, businessKey, processEngine);
-        
+
         // manual assignment task must be there...
         assertTrue(RequestHelpTestUtil.wasTaskGenerated(
                 BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, processEngine));
     }
-    
+
     /**
      * A helper (who has already been assigned before) without an email address must be manually assigned...
      */
@@ -520,23 +527,97 @@ public class RequestHelpExecutionTest
 
         // one of the helpers...
         Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findAll().get(0);
-        
+
         // set email address to null...
         helper.setEmail(null);
         RepositoryProvider.getRepository(HelperRepository.class).saveOrUpdate(helper);
-        
+
         // reload helper without mail
         Helper reloadedHelper = RepositoryProvider.getRepository(HelperRepository.class).findById(helper.getId());
 
         // start the process
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
         RequestHelpTestUtil.startHelperRequestProcess(reloadedHelper, event2016, businessKey, processEngine);
-        
+
         // manual assignment task must be there...
         assertTrue(RequestHelpTestUtil.wasTaskGenerated(
                 BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, processEngine));
     }
-    
+
+    /**
+     * Helper chooses {@link HelperCallback#ASSIGN_ME_MANUALLY}...
+     */
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testFollowingAssignmentWithManualAssignmentChosen()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+
+        // one of the helpers...
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findAll().get(0);
+
+        // start the process
+        String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, processEngine);
+
+        // choose manual assignment
+        RequestHelpTestUtil.doCallback(HelperCallback.ASSIGN_ME_MANUALLY, businessKey, processEngine);
+
+        // manual assignment task must be there...
+        assertTrue(RequestHelpTestUtil.wasTaskGenerated(
+                BpmTaskDefinitionKeys.RequestHelpHelper.TASK_DEFINITION_KEY_MANUAL_ASSIGNMENT, processEngine));
+    }
+
+    /**
+     * Helper 'A' gets callback mail (reminder step 0) with all options and does not respond for a week. In the
+     * meantime, has former assignment is given away to 'B'. Then, his second mail (reminder step 1) must only have 3
+     * options ('ASSIGNMENT_AS_BEFORE' is gone).
+     */
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testReducedOptionsAfterReminderStepOne()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+
+        // the helpers...
+        List<Helper> allHelpers = RepositoryProvider.getRepository(HelperRepository.class).findAll();
+        Helper helperA = allHelpers.get(0);
+        Helper helperB = allHelpers.get(1);
+
+        String businessKeyA = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperA.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helperA, event2016, businessKeyA, processEngine);
+
+        String businessKeyB = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperB.getId(), event2016.getId());
+        RequestHelpTestUtil.startHelperRequestProcess(helperB, event2016, businessKeyB, processEngine);
+
+        // 'B' gets prior assignment of 'A'
+        HelperAssignment priorAssignmentA = AssignmentService.getPriorAssignment(helperA, event2016.getEventTemplate());
+        RequestHelpTestUtil.doCallback(HelperCallback.CHANGE_POS, businessKeyB, processEngine);
+        Long chosenPositionId = priorAssignmentA.getPosition().getId();
+        boolean positionAvailable = PositionService.isPositionAvailable(event2016.getId(), chosenPositionId);
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, chosenPositionId);
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE, positionAvailable);
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, businessKeyB, variables);
+
+        // here comes reminder step 1 for 'A'
+        RequestHelpTestUtil.fireTimer(BpmJobDefinitions.RequestHelpHelper.JOB_DEF_HELPER_REMINDER_TIMER, processEngine);
+
+        // check choices
+        assertTrue(CallbackChoiceGeneratorTest.checkChoices(new HelperCallback[]
+        {
+                HelperCallback.ASSIGN_ME_MANUALLY, HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME
+        }, new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
+    }
+
     // @Test TODO
     @Deployment(resources = "RequestHelp.bpmn")
     public void testPendingProcessInstances()
@@ -546,17 +627,79 @@ public class RequestHelpExecutionTest
         Event event2016 =
                 SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
                         EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
-        
+
         // start all the process
         String businessKey = null;
         List<Helper> activeHelpers = RepositoryProvider.getRepository(HelperRepository.class).findActiveHelpers();
         for (Helper helper : activeHelpers)
         {
             businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
-            RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, processEngine);   
+            RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, processEngine);
         }
-        
+
         // 5 executions
-        assertEquals(5, processEngine.getRuntimeService().createExecutionQuery().processDefinitionKey("RequestHelpHelperProcess").list().size());
+        assertEquals(5, processEngine.getRuntimeService()
+                .createExecutionQuery()
+                .processDefinitionKey("RequestHelpHelperProcess")
+                .list()
+                .size());
+    }
+
+    /**
+     * If a helper chooses a position which is already blocked then
+     * {@link BpmVariables.RequestHelpHelper#VAR_POS_CHOOSING_REENTRANT} must be set so that he gets a hint in the
+     * following proposal mail which tells him why he got it.
+     */
+    @Test
+    @Deployment(resources = "RequestHelp.bpmn")
+    public void testChoosePositionsReentrancy()
+    {
+        HibernateUtil.clearAll();
+
+        Event event2016 =
+                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
+                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+
+        // start all the process
+        String businessKey = null;
+        List<Helper> activeHelpers = RepositoryProvider.getRepository(HelperRepository.class).findActiveHelpers();
+        List<ProcessInstance> executions = new ArrayList<ProcessInstance>();
+        for (Helper helper : activeHelpers)
+        {
+            businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event2016.getId());
+            executions.add(RequestHelpTestUtil.startHelperRequestProcess(helper, event2016, businessKey, processEngine));
+        }
+
+        ProcessInstance executionA = executions.get(0);
+        ProcessInstance executionB = executions.get(1);
+
+        RequestHelpTestUtil.doCallback(HelperCallback.CHANGE_POS, executionA.getBusinessKey(), processEngine);
+        RequestHelpTestUtil.doCallback(HelperCallback.ASSIGNMENT_AS_BEFORE, executionB.getBusinessKey(), processEngine);
+
+        // find out assigned position (should be one)
+        List<HelperAssignment> assignments =
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).findAllHelperAssignmentsByEvent(event2016);
+        assertEquals(1, assignments.size());
+        Position pos = assignments.get(0).getPosition();
+
+        // let execution 'A' choose the position...
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, pos.getId());
+        variables.put(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POS_AVAILABLE,
+                PositionService.isPositionAvailable(event2016.getId(), pos.getId()));
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN,
+                executionA.getBusinessKey(), variables);
+
+        // now, reentrancy flag should be set in execution 'A'...
+        List<VariableInstance> fetchedVariables =
+                processEngine.getRuntimeService()
+                        .createVariableInstanceQuery()
+                        .variableName(BpmVariables.RequestHelpHelper.VAR_POS_CHOOSING_REENTRANT)
+                        .executionIdIn(executionA.getId())
+                        .list();
+        assertEquals(1, fetchedVariables.size());
+
+        // it should be 'true'...
+        assertTrue((Boolean) fetchedVariables.get(0).getValue());
     }
 }

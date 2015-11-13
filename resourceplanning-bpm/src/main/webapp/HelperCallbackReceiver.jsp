@@ -5,7 +5,7 @@
 <head>
   <link rel="stylesheet" href="resources/css/main.css" type="text/css"/>
   <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-  <title>Rueckmeldung</title>
+  <title>R&uumlckmeldung erhalten</title>
 </head>
 <%@ page import="de.trispeedys.resourceplanning.entity.misc.HelperCallback"%>
 <%@ page import="de.trispeedys.resourceplanning.interaction.HelperInteraction"%>

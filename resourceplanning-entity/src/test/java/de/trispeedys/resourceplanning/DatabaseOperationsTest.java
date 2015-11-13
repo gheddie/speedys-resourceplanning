@@ -100,9 +100,9 @@ public class DatabaseOperationsTest
 
         EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
-        EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template)
+        EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template, null)
                 .saveOrUpdate();
-        EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template)
+        EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, template, null)
                 .saveOrUpdate();
     }
 

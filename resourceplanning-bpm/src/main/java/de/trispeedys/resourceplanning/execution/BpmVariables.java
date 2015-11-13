@@ -29,5 +29,7 @@ public class BpmVariables
         
         // Sind dem Helfer momentan Positionen vorschlagbar (ja/nein)
         public static final String VAR_POSITIONS_PROPOSABLE = "positionsProposable";
+
+        public static final String VAR_POS_CHOOSING_REENTRANT = "posChoosingReentrant";
     }
 }

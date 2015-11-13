@@ -17,6 +17,9 @@ public enum MessagingType
     
     // a helper has cancelled his assignment (someone will be noticed)
     ALERT_BOOKING_CANCELLED,
+
+    // a helper was set to inactive (someone will be noticed)
+    ALERT_HELPER_DEACTIVATED,
     
     // confirm 'pause me' to helper
     PAUSE_CONFIRM,

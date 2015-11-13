@@ -10,5 +10,5 @@ import de.trispeedys.resourceplanning.messaging.AbstractMailTemplate;
  */
 public abstract class RequestHelpNotificationDelegate extends RequestHelpDelegate
 {
-    // ...
+    // protected abstract <T> T buildTemplate(DelegateExecution execution);
 }

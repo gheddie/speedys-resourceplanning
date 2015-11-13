@@ -59,7 +59,7 @@ public class HelperTest
         // create event
         Event tri2014 =
                 EntityFactory.buildEvent("Triathlon 2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED,
-                        template).saveOrUpdate();
+                        template, null).saveOrUpdate();
         // assign positions to that event
         SpeedyRoutines.relatePositionsToEvent(tri2014, pos1, pos2);
         // assign helper to both positions

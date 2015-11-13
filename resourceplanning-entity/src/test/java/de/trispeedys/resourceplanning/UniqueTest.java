@@ -38,7 +38,7 @@ public class UniqueTest
         Domain domain1 = EntityFactory.buildDomain("dom1", 1).saveOrUpdate();
 
         Position position = EntityFactory.buildPosition("Some position", 12, domain1, 0, true).saveOrUpdate();
-        Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template).saveOrUpdate();
+        Event event = EntityFactory.buildEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.PLANNED, template, null).saveOrUpdate();
         Helper helper1 =
                 EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();
         Helper helper2 =

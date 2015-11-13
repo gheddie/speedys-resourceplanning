@@ -7,6 +7,7 @@ import de.trispeedys.resourceplanning.repository.DomainRepository;
 import de.trispeedys.resourceplanning.repository.EventPositionRepository;
 import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.HelperAssignmentRepository;
+import de.trispeedys.resourceplanning.repository.HelperHistoryRepository;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.MessageQueueRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
@@ -34,6 +35,7 @@ public class RepositoryProvider
         registerRepository(MessageQueueRepository.class);
         registerRepository(HelperAssignmentRepository.class);
         registerRepository(HelperRepository.class);
+        registerRepository(HelperHistoryRepository.class);
     }
 
     @SuppressWarnings("rawtypes")

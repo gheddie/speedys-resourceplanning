@@ -30,8 +30,8 @@ public class PositionTest
         EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
 
         // some events
-        Event event1 = EntityFactory.buildEvent("DM AK 2014", "DM-AK-2014", 21, 6, 2014, EventState.FINISHED, template).saveOrUpdate();
-        Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED, template).saveOrUpdate();
+        Event event1 = EntityFactory.buildEvent("DM AK 2014", "DM-AK-2014", 21, 6, 2014, EventState.FINISHED, template, null).saveOrUpdate();
+        Event event2 = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2015, EventState.PLANNED, template, null).saveOrUpdate();
 
         // some positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
@@ -66,8 +66,8 @@ public class PositionTest
         // create helper
         Helper helper = EntityFactory.buildHelper("La", "Li", "", HelperState.ACTIVE, 1, 1, 1980);
         // create events
-        Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013, EventState.FINISHED, template).saveOrUpdate();
-        Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template).saveOrUpdate();
+        Event evt2013 = EntityFactory.buildEvent("TRI-2013", "TRI-2013", 21, 6, 2013, EventState.FINISHED, template, null).saveOrUpdate();
+        Event evt2014 = EntityFactory.buildEvent("TRI-2014", "TRI-2014", 21, 6, 2014, EventState.PLANNED, template, null).saveOrUpdate();
         // create positions
         Domain defaultDomain = SpeedyTestUtil.buildDefaultDomain(1);
         Position posA = EntityFactory.buildPosition("A", 12, defaultDomain, 0, true).saveOrUpdate();

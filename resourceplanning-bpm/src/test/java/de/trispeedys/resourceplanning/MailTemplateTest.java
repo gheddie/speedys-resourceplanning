@@ -42,13 +42,13 @@ public class MailTemplateTest
         
         EventTemplate evTemplate = EntityFactory.buildEventTemplate("123").saveOrUpdate();
         
-        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, evTemplate).saveOrUpdate();
+        Event event = EntityFactory.buildEvent("DM AK 2015", "DM-AK-2015", 21, 6, 2016, EventState.PLANNED, evTemplate, null).saveOrUpdate();
         // send mail
         List<Position> positions = Datasources.getDatasource(Position.class).findAll();
         ProposePositionsMailTemplate template =
-                new ProposePositionsMailTemplate(helper, event, positions, HelperCallback.ASSIGNMENT_AS_BEFORE, pos3);
+                new ProposePositionsMailTemplate(helper, event, positions, HelperCallback.ASSIGNMENT_AS_BEFORE, pos3, false);
         MessagingService.createMessage("noreply@tri-speedys.de", "testhelper1.trispeedys@gmail.com",
-                template.getSubject(), template.getBody(), MessagingType.NONE, MessagingFormat.HTML);
+                template.constructSubject(), template.constructBody(), MessagingType.NONE, MessagingFormat.HTML);
         MessagingService.sendAllUnprocessedMessages();
     }
 }

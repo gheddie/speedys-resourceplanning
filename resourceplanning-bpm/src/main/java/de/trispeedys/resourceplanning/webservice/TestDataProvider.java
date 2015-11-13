@@ -11,7 +11,6 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.impl.pvm.runtime.ExecutionImpl;
 import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -38,6 +37,7 @@ import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.PositionInclude;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
+import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 @SuppressWarnings("restriction")
 @WebService
@@ -202,11 +202,29 @@ public class TestDataProvider
 
     public void fireTimer(Long helperId, Long eventId)
     {
+        if (helperId == null)
+        {
+            throw new ResourcePlanningException("fire timer --> no helper id provided!!");
+        }
+        if (eventId == null)
+        {
+            throw new ResourcePlanningException("fire timer --> no event id provided!!");
+        }
         ProcessEngine processEngine = BpmPlatform.getDefaultProcessEngine();
         String businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
+        List<ProcessInstance> executions = processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceBusinessKey(businessKey).list();
+        if ((executions == null) || (executions.size() != 1))
+        {
+            throw new ResourcePlanningException("none or more than one executions found for business key '"+businessKey+"'!!");
+        }        
         Execution execution =
-                processEngine.getRuntimeService().createExecutionQuery().processInstanceBusinessKey(businessKey).list().get(0);
-        for (Job job : processEngine.getManagementService().createJobQuery().processInstanceId(execution.getId()).list())
+                executions.get(0);
+        List<Job> jobs = processEngine.getManagementService().createJobQuery().processInstanceId(execution.getId()).list();
+        if ((jobs == null) || (jobs.size() == 0))
+        {
+            throw new ResourcePlanningException("no jobs found for execution with business key '"+businessKey+"'!!");
+        }
+        for (Job job : jobs)
         {
             processEngine.getManagementService().executeJob(job.getId());
         }

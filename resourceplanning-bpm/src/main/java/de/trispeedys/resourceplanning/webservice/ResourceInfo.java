@@ -127,7 +127,7 @@ public class ResourceInfo
     public HierarchicalEventItemDTO[] getEventNodes(Long eventId, boolean onlyUnassignedPositions)
     {
         Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
-        List<EntityTreeNode> nodes = SpeedyRoutines.flattenedEventNodes(event);
+        List<EntityTreeNode> nodes = SpeedyRoutines.flattenedEventNodes(event, onlyUnassignedPositions);
         List<HierarchicalEventItemDTO> dtos = new ArrayList<HierarchicalEventItemDTO>();
         HierarchicalEventItemDTO dto = null;
         for (EntityTreeNode node : nodes)

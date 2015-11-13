@@ -32,14 +32,23 @@ public class ProposePositionsDelegate extends RequestHelpNotificationDelegate
         }
         // send mail
         Helper helper = getHelper(execution);
+        boolean isReentrant = false;
+        Object varReentrant = execution.getVariable(BpmVariables.RequestHelpHelper.VAR_POS_CHOOSING_REENTRANT);
+        if (varReentrant != null)
+        {
+            if ((Boolean) varReentrant)
+            {
+                isReentrant = true;
+            }
+        }
         ProposePositionsMailTemplate template =
                 new ProposePositionsMailTemplate(
                         helper,
                         event,
                         unassignedPositions,
                         (HelperCallback) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK),
-                        AssignmentService.getPriorAssignment(helper, event.getEventTemplate()).getPosition());
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.getSubject(),
-                template.getBody(), template.getMessagingType(), template.getMessagingFormat()).saveOrUpdate();
+                        AssignmentService.getPriorAssignment(helper, event.getEventTemplate()).getPosition(), isReentrant);
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(),
+                template.constructBody(), template.getMessagingType(), template.getMessagingFormat()).saveOrUpdate();
     }
 }

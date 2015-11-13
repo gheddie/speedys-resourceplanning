@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,6 +43,10 @@ public class Event extends AbstractDbObject implements HierarchicalEventItem
     @NotNull
     @JoinColumn(name = "event_template_id")
     private EventTemplate eventTemplate;
+    
+    @OneToOne
+    @JoinColumn(name = "parent_event_id")
+    private Event parentEvent;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
@@ -110,6 +115,16 @@ public class Event extends AbstractDbObject implements HierarchicalEventItem
     public void setEventTemplate(EventTemplate eventTemplate)
     {
         this.eventTemplate = eventTemplate;
+    }
+    
+    public Event getParentEvent()
+    {
+        return parentEvent;
+    }
+    
+    public void setParentEvent(Event parentEvent)
+    {
+        this.parentEvent = parentEvent;
     }
     
     public String toString()

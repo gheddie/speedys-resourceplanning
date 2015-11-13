@@ -31,7 +31,7 @@ public class TestDataGenerator
 
         // build event
         Event myLittleEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, template).saveOrUpdate();
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, template, null).saveOrUpdate();
 
         // create helpers
         EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
@@ -74,7 +74,7 @@ public class TestDataGenerator
 
         // build event
         Event myLittleEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.FINISHED, template).saveOrUpdate();
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.FINISHED, template, null).saveOrUpdate();
         // create helpers
         Helper helper1 =
                 EntityFactory.buildHelper("H1_First", "H1_Last", "a1@b.de", HelperState.ACTIVE, 1, 2, 1980).saveOrUpdate();
@@ -126,7 +126,7 @@ public class TestDataGenerator
 
         // build event
         Event myMinimalEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, template).saveOrUpdate();
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, template, null).saveOrUpdate();
         // create helper
         Helper helper =
                 EntityFactory.buildHelper("H1_First", "H1_Last", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 1, 1, 1980)
@@ -149,7 +149,7 @@ public class TestDataGenerator
         EventTemplate template = EntityFactory.buildEventTemplate(templateName).saveOrUpdate();
 
         // build event
-        Event event = EntityFactory.buildEvent(description, eventKey, day, month, year, eventState, template).saveOrUpdate();
+        Event event = EntityFactory.buildEvent(description, eventKey, day, month, year, eventState, template, null).saveOrUpdate();
 
         // ------------------------ create helpers ('old')
         EntityFactory.buildHelper("Schulz", "Stefan", DEFAULT_MAIL_ADDRESS, HelperState.ACTIVE, 13, 2, 1976).saveOrUpdate();

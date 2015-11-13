@@ -6,11 +6,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
+import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -23,12 +31,13 @@ import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.util.comparator.EnumeratedEventItemComparator;
 import de.trispeedys.resourceplanning.util.comparator.TreeNodeComparator;
+import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class SpeedyRoutines
 {
-    public static Event duplicateEvent(Event event, String description, String eventKey, int day, int month,
-            int year, List<Integer> positionExcludes, List<PositionInclude> includes)
+    public static Event duplicateEvent(Event event, String description, String eventKey, int day, int month, int year,
+            List<Integer> positionExcludes, List<PositionInclude> includes)
     {
         if (event == null)
         {
@@ -40,10 +49,9 @@ public class SpeedyRoutines
         }
         checkExcludes(event, positionExcludes);
         Event newEvent =
-                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED,
-                        event.getEventTemplate()).saveOrUpdate();
-        List<EventPosition> posRelations =
-                Datasources.getDatasource(EventPosition.class).find("event", event);
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.PLANNED, event.getEventTemplate(),
+                        null).saveOrUpdate();
+        List<EventPosition> posRelations = Datasources.getDatasource(EventPosition.class).find("event", event);
         Position pos = null;
         for (EventPosition evtpos : posRelations)
         {
@@ -60,15 +68,15 @@ public class SpeedyRoutines
             Position additionalPosition = null;
             for (PositionInclude include : includes)
             {
-                additionalPosition = RepositoryProvider.getRepository(PositionRepository.class)
-                        .findPositionByPositionNumber(include.getPositionNumber());
+                additionalPosition =
+                        RepositoryProvider.getRepository(PositionRepository.class).findPositionByPositionNumber(
+                                include.getPositionNumber());
                 if (additionalPosition == null)
                 {
-                    throw new ResourcePlanningException("unable to find position by position number '"+include.getPositionNumber()+"'!!");
+                    throw new ResourcePlanningException("unable to find position by position number '" +
+                            include.getPositionNumber() + "'!!");
                 }
-                EntityFactory.buildEventPosition(
-                        newEvent,
-                        additionalPosition).saveOrUpdate();
+                EntityFactory.buildEventPosition(newEvent, additionalPosition).saveOrUpdate();
             }
         }
         return newEvent;
@@ -82,8 +90,7 @@ public class SpeedyRoutines
         }
         // list with all pos numbers in the given event...
         List<Integer> posNumbersInEvent = new ArrayList<Integer>();
-        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findPositionsInEvent(
-                event))
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findPositionsInEvent(event))
         {
             posNumbersInEvent.add(pos.getPositionNumber());
         }
@@ -155,12 +162,12 @@ public class SpeedyRoutines
         }
     }
 
-    public static EntityTreeNode eventAsTree(Long eventId)
+    public static EntityTreeNode eventAsTree(Long eventId, boolean onlyUnassigned)
     {
-        return eventAsTree(RepositoryProvider.getRepository(EventRepository.class).findById(eventId));
+        return eventAsTree(RepositoryProvider.getRepository(EventRepository.class).findById(eventId), onlyUnassigned);
     }
 
-    public static EntityTreeNode eventAsTree(Event event)
+    public static EntityTreeNode eventAsTree(Event event, boolean onlyUnassigned)
     {
         if (event == null)
         {
@@ -174,7 +181,7 @@ public class SpeedyRoutines
             if (!(assignment.isCancelled()))
             {
                 // ignore cancelled asignments here...
-                assignmentMap.put(assignment.getPosition().getId(), assignment);   
+                assignmentMap.put(assignment.getPosition().getId(), assignment);
             }
         }
         HashMap<Domain, List<Position>> positionsPerDomain = new HashMap<Domain, List<Position>>();
@@ -231,14 +238,13 @@ public class SpeedyRoutines
                 : null);
     }
 
-    public static List<EntityTreeNode> flattenedEventNodes(Event event)
+    public static List<EntityTreeNode> flattenedEventNodes(Event event, boolean onlyUnassigned)
     {
-        EntityTreeNode<Event> root = eventAsTree(event);
+        EntityTreeNode<Event> root = eventAsTree(event, onlyUnassigned);
         return flattenedEventNodesRecursive(root, new ArrayList<EntityTreeNode>());
     }
 
-    private static List<EntityTreeNode> flattenedEventNodesRecursive(EntityTreeNode root,
-            List<EntityTreeNode> nodes)
+    private static List<EntityTreeNode> flattenedEventNodesRecursive(EntityTreeNode root, List<EntityTreeNode> nodes)
     {
         nodes.add(root);
         if ((root.getChildren() != null) && (root.getChildren().size() > 0))
@@ -251,14 +257,13 @@ public class SpeedyRoutines
         return nodes;
     }
 
-    public static List<AbstractDbObject> flattenedEventTree(Event event)
+    public static List<AbstractDbObject> flattenedEventTree(Event event, boolean onlyUnassigned)
     {
-        EntityTreeNode<Event> root = eventAsTree(event);
+        EntityTreeNode<Event> root = eventAsTree(event, onlyUnassigned);
         return flattenedEventTreeRecursive(root, new ArrayList<AbstractDbObject>());
     }
 
-    private static List<AbstractDbObject> flattenedEventTreeRecursive(EntityTreeNode root,
-            List<AbstractDbObject> values)
+    private static List<AbstractDbObject> flattenedEventTreeRecursive(EntityTreeNode root, List<AbstractDbObject> values)
     {
         values.add((AbstractDbObject) root.getHierarchicalItem());
         if ((root.getChildren() != null) && (root.getChildren().size() > 0))
@@ -275,7 +280,7 @@ public class SpeedyRoutines
     {
         System.out.println(" ---------- EVENT --------------------------------- ");
         EntityTreeNode node = null;
-        for (EntityTreeNode object : flattenedEventNodes(event))
+        for (EntityTreeNode object : flattenedEventNodes(event, false))
         {
             node = (EntityTreeNode) object;
             switch (node.getHierarchyLevel())
@@ -297,10 +302,64 @@ public class SpeedyRoutines
     public static String eventOutline(Event event)
     {
         String result = "";
-        for (AbstractDbObject obj : flattenedEventTree(event))
+        for (AbstractDbObject obj : flattenedEventTree(event, false))
         {
             result += ((HierarchicalEventItem) obj).getDifferentiator();
         }
         return result;
+    }
+
+    public static void parseEvent(Document document)
+    {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        try
+        {
+            tx = session.beginTransaction();            
+            EventPosition evtpos = null;
+            PositionRepository repository = RepositoryProvider.getRepository(PositionRepository.class);
+            Event event =
+                    EntityFactory.buildEvent(
+                            "1",
+                            "2",
+                            1,
+                            1,
+                            1980,
+                            EventState.PLANNED,
+                            (EventTemplate) Datasources.getDatasource(EventTemplate.class).findSingle(
+                                    EventTemplate.ATTR_DESCRIPTION, "TRI"), null);
+            // positions
+            NodeList positionNodeList = document.getElementsByTagName("eventposition");
+            Node positionNode = null;
+            for (int positionIndex = 0; positionIndex < positionNodeList.getLength(); positionIndex++)
+            {
+                positionNode = positionNodeList.item(positionIndex);
+                int positionNumber = Integer.parseInt(positionNode.getAttributes().getNamedItem("pos").getTextContent());
+                System.out.println(positionNumber);
+                session.save(event);
+                evtpos = EntityFactory.buildEventPosition(event, repository.findPositionByPositionNumber(positionNumber));
+                session.save(evtpos);
+            }
+            // positions
+            NodeList assignmentNodeList = document.getElementsByTagName("assignment");
+            Node assignmentNode = null;
+            for (int assignmentIndex = 0; assignmentIndex < assignmentNodeList.getLength(); assignmentIndex++)
+            {
+                assignmentNode = assignmentNodeList.item(assignmentIndex);
+                System.out.println("@@@" + assignmentNode.getAttributes().getNamedItem("pos"));
+                System.out.println(assignmentNode.getAttributes().getNamedItem("helper"));
+                // evtpos = EntityFactory.buildHelperAssignment(helper, event, position, helperAssignmentState);
+            }            
+            tx.commit();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            tx.rollback();
+        }
+        finally
+        {
+            session.close();
+        }
     }
 }

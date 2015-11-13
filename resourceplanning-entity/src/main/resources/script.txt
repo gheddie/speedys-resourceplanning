@@ -70,10 +70,13 @@ create table event
 	event_date date,
 	event_state varchar(64),	
 	event_template_id bigint,
+	parent_event_id bigint,
 	primary key (id)
 );
 
 alter table event add constraint fk_evt_template foreign key (event_template_id) references event_template (id);
+
+alter table event add constraint fk_evt_parent foreign key (parent_event_id) references event (id);
 
 ------------------------------------------------ HelperAssignment
 create sequence helper_assignment_id_seq;
@@ -154,3 +157,20 @@ create table database_logger
 	log_level varchar(64),
 	primary key (id)
 );
+
+------------------------------------------------ HelperHistory 
+create sequence helper_history_id_seq;
+
+create table helper_history
+(
+	id bigint not null default nextval('helper_history_id_seq'),
+	creation_time timestamp not null,
+	history_type varchar(64) not null,
+	helper_id bigint not null,
+	event_id bigint not null,
+	primary key (id)
+);
+
+alter table helper_history add constraint fk_hist_helper foreign key (helper_id) references helper (id);
+
+alter table helper_history add constraint fk_hist_event foreign key (event_id) references event (id);

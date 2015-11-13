@@ -58,14 +58,14 @@ public class EventManager
             throw new ResourcePlanningException("event id must not be null!!");
         }
         Event event = Datasources.getDatasource(Event.class).findById(eventId);
-        if (!(event.getEventState().equals(EventState.PLANNED)))
-        {
-            throw new ResourcePlanningException("event must have state '"+EventState.PLANNED+"'!!");
-        }        
         if (event == null)
         {
             throw new ResourcePlanningException("event with id '" + eventId + "' could not be found!!");
         }
+        if (!(event.getEventState().equals(EventState.PLANNED)))
+        {
+            throw new ResourcePlanningException("event must have state '"+EventState.PLANNED+"'!!");
+        }        
         // start request process for every active helper...
         List<Helper> activeHelpers =
                 Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);

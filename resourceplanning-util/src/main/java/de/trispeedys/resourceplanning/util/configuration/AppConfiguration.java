@@ -13,6 +13,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import de.trispeedys.resourceplanning.util.XmlReader;
+
 public class AppConfiguration
 {       
     private HashMap<String, String> configurationValues;    
@@ -28,7 +30,7 @@ public class AppConfiguration
     {
         try
         {
-            Document doc = readXml(getClass().getClassLoader().getResourceAsStream(AppConfigurationValues.CONFIG_FILE_NAME));
+            Document doc = XmlReader.readXml(getClass().getClassLoader().getResourceAsStream(AppConfigurationValues.CONFIG_FILE_NAME));
             configurationValues = new HashMap<String, String>();
             NodeList nodeList = doc.getElementsByTagName(AppConfigurationValues.PROPERTY_NODE_NAME);
             Node node = null;
@@ -60,20 +62,6 @@ public class AppConfiguration
             AppConfiguration.instance = new AppConfiguration();
         }
         return AppConfiguration.instance;
-    }
-
-    public static Document readXml(InputStream is) throws SAXException, IOException, ParserConfigurationException
-    {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-        dbf.setValidating(false);
-        dbf.setIgnoringComments(false);
-        dbf.setIgnoringElementContentWhitespace(true);
-        dbf.setNamespaceAware(true);
-        DocumentBuilder db = null;
-        db = dbf.newDocumentBuilder();
-        db.setEntityResolver(new NullResolver());
-        return db.parse(is);
     }
 
     public String getConfigurationValue(String key)

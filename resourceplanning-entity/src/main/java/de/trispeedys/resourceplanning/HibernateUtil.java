@@ -35,6 +35,7 @@ public class HibernateUtil
 
     public static void clearAll()
     {
+        clearTable("helper_history");
         clearTable("event_position");
         clearTable("helper_assignment");
         clearTable("position");
@@ -43,7 +44,7 @@ public class HibernateUtil
         clearTable("event");
         clearTable("event_template");
         clearTable("message_queue");
-        clearTable("database_logger");
+        clearTable("database_logger");        
     }
 
     private static void clearTable(String tableName)
@@ -51,7 +52,6 @@ public class HibernateUtil
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         String queryString = "delete from " + tableName;
-
         session.createSQLQuery(queryString).executeUpdate();
         tx.commit();
         session.close();

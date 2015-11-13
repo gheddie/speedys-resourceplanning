@@ -10,6 +10,7 @@ import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
+import de.trispeedys.resourceplanning.entity.HelperHistory;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -21,12 +22,14 @@ import de.trispeedys.resourceplanning.entity.builder.EventPositionBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventTemplateBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperAssignmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
+import de.trispeedys.resourceplanning.entity.builder.HelperHistoryBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
+import de.trispeedys.resourceplanning.entity.misc.HistoryType;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
@@ -49,6 +52,13 @@ public class EntityFactory
                         .withHelperState(helperState)
                         .build();
         result.setCode(SpeedyRoutines.createHelperCode(result));
+        return result;
+    }
+
+    public static HelperHistory buildHelperHistory(Helper helper, Event event, HistoryType historyType)
+    {
+        HelperHistory result =
+                new HelperHistoryBuilder().withHelper(helper).withEvent(event).withHistoryType(historyType).build();
         return result;
     }
 
@@ -89,7 +99,7 @@ public class EntityFactory
     }
 
     public static Event buildEvent(String description, String eventKey, int day, int month, int year, EventState eventState,
-            EventTemplate eventTemplate)
+            EventTemplate eventTemplate, Event parentEvent)
     {
         Calendar eventDate = Calendar.getInstance();
         eventDate.set(Calendar.DAY_OF_MONTH, day);
@@ -100,6 +110,7 @@ public class EntityFactory
                 .withEventKey(eventKey)
                 .withEventState(eventState)
                 .withEventTemplate(eventTemplate)
+                .withParentEvent(parentEvent)
                 .build();
     }
 

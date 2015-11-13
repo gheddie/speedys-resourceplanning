@@ -10,39 +10,28 @@ import de.trispeedys.resourceplanning.util.HtmlGenerator;
 
 public class BookingConfirmationMailTemplate extends AbstractMailTemplate
 {
-    private Helper helper;
-
-    private Event event;
-
-    private Position position;
-
     public BookingConfirmationMailTemplate(Helper aHelper, Event aEvent, Position aPosition)
     {
-        super();
-        this.helper = aHelper;
-        this.event = aEvent;
-        this.position = aPosition;
+        super(aHelper, aEvent, aPosition);
     }
 
-    public String getBody()
+    public String constructBody()
     {
         String link =
                 HelperInteraction.getBaseLink() +
-                        "/AssignmentCancellationReceiver.jsp?helperId=" + helper.getId() + "&eventId=" + event.getId();
-        return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
-                .withLinebreak()
+                        "/AssignmentCancellationReceiver.jsp?helperId=" + getHelper().getId() + "&eventId=" + getEvent().getId();
+        return new HtmlGenerator().withParagraph("Hallo " + getHelper().getFirstName() + "!")
                 .withParagraph(
                         "Du wurdest erfolgreich der Position '" +
-                                position.getDescription() + "' zugeordnet. Falls Dir etwas dazwischenkommen sollte, kannst du diese Buchung " +
-                                "mit dem untenstehenden Link stornieren :")
-                .withLinebreak()
+                                getPosition().getDescription() + "' zugeordnet. Falls Dir etwas dazwischenkommen sollte, kannst du diese Buchung " +
+                                "mit dem untenstehenden Link stornieren:")
                 .withLink(link, "Kündigen")
                 .withLinebreak()
                 .withParagraph("Deine Tri-Speedys.")
                 .render();
     }
 
-    public String getSubject()
+    public String constructSubject()
     {
         return "Buchungsbestätigung";
     }

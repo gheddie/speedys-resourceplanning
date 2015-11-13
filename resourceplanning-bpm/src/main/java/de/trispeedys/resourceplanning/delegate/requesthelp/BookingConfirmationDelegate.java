@@ -19,7 +19,7 @@ public class BookingConfirmationDelegate extends RequestHelpNotificationDelegate
                 new BookingConfirmationMailTemplate(getHelper(execution), getEvent(execution), RepositoryProvider.getRepository(
                         PositionRepository.class).findById(
                         (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION)));
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.getSubject(), template.getBody(),
+        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(), template.constructBody(),
                 template.getMessagingType(), template.getMessagingFormat()).saveOrUpdate();
     }
 }

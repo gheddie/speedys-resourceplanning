@@ -18,12 +18,14 @@ public class CallbackChoiceGenerator
         {
             return null;
         }
-        Position priorPosition =
-                AssignmentService.getPriorAssignment(helper, event.getEventTemplate()).getPosition();
+        Position priorPosition = AssignmentService.getPriorAssignment(helper, event.getEventTemplate()).getPosition();
         if (!(PositionService.isPositionAvailable(event, priorPosition)))
         {
             // prior position is not available, so...
-            return Arrays.asList(new HelperCallback[] {HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME});
+            return Arrays.asList(new HelperCallback[]
+            {
+                    HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME, HelperCallback.ASSIGN_ME_MANUALLY
+            });
         }
         return Arrays.asList(HelperCallback.values());
     }

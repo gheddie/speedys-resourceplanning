@@ -7,26 +7,27 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.util.HtmlGenerator;
 
-public class CancelConfirmationMailTemplate extends AbstractMailTemplate
+public class AlertDeactivationMailTemplate extends AbstractMailTemplate
 {
-    public CancelConfirmationMailTemplate(Helper aHelper, Event aEvent, Position aPosition)
+    public AlertDeactivationMailTemplate(Helper helper, Event event, Position position)
     {
-        super(aHelper, aEvent, aPosition);
+        super(helper, event, position);
     }
 
     public String constructBody()
     {
-        return new HtmlGenerator().withParagraph("Hallo " + getHelper().getFirstName() + "!")
-                .withParagraph("Du hast Deinen Einsatz auf der Position '" + getPosition().getDescription() + "' erfolgreich gekündigt.")
-                .withParagraph("Deine Tri-Speedys.")
+        return new HtmlGenerator().withParagraph("Hallo, Admin!!")
+                .withParagraph(
+                        "Helfer " +
+                                getHelper().getLastName() + ", " + getHelper().getFirstName() + " wurde soeben deaktiviert!!")
                 .render();
     }
 
     public String constructSubject()
     {
-        return "Bestätigung Deiner Absage";
+        return "Helfer-Deaktivierung";
     }
-    
+
     public MessagingFormat getMessagingFormat()
     {
         return MessagingFormat.HTML;
@@ -34,6 +35,6 @@ public class CancelConfirmationMailTemplate extends AbstractMailTemplate
 
     public MessagingType getMessagingType()
     {
-        return MessagingType.CANCELLATION_CONFIRM;
+        return MessagingType.ALERT_HELPER_DEACTIVATED;
     }
 }

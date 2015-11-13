@@ -41,7 +41,6 @@ public abstract class EntityTreeNode<T>
     @Override
     public String toString()
     {
-        //return getClass().getSimpleName() + "[payLoad : "+payLoad+", "+children.size()+" children]";
         return getClass().getSimpleName();
     }
 

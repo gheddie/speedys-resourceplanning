@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 
 public class HtmlGenerator
 {
+    public static final String MACHINE_MESSAGE = "Bitte antworte nicht auf diese Mail, da sie von einer herzlosen Maschine erstellt wurde.";
+    
     private StringBuffer buffer;
 
     public HtmlGenerator()
@@ -79,6 +81,12 @@ public class HtmlGenerator
         newLine();
         return this;
     }
+    
+    private void withMachineMessage()
+    {
+        // TODO message taucht auch in jps callbacks auf (konfigurierbar machen) !!
+        withParagraph(MACHINE_MESSAGE);
+    }
 
     private void newLine()
     {
@@ -87,6 +95,7 @@ public class HtmlGenerator
 
     public String render()
     {
+        withMachineMessage();
         return buffer.toString();
     }
 }

@@ -7,18 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.HelperHistory;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.entity.misc.HistoryType;
 import de.trispeedys.resourceplanning.execution.BpmJobDefinitions;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
+import de.trispeedys.resourceplanning.repository.HelperHistoryRepository;
 import de.trispeedys.resourceplanning.repository.MessageQueueRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.PositionService;
@@ -35,13 +39,14 @@ public class RequestHelpTestUtil
      * @param helper
      * @param businessKey
      * @param rule
+     * @return 
      */
-    public static void startHelperRequestProcess(Helper helper, Event event, String businessKey, ProcessEngineRule rule)
+    public static ProcessInstance startHelperRequestProcess(Helper helper, Event event, String businessKey, ProcessEngineRule rule)
     {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_ID, new Long(helper.getId()));
         variables.put(BpmVariables.RequestHelpHelper.VAR_EVENT_ID, new Long(event.getId()));
-        rule.getRuntimeService().startProcessInstanceByMessage(BpmMessages.RequestHelpHelper.MSG_HELP_TRIG,
+        return rule.getRuntimeService().startProcessInstanceByMessage(BpmMessages.RequestHelpHelper.MSG_HELP_TRIG,
                 businessKey, variables);
     }
 
@@ -139,5 +144,25 @@ public class RequestHelpTestUtil
     {
         List<Task> list = rule.getTaskService().createTaskQuery().taskDefinitionKey(taskId).list();
         return ((list != null) && (list.size() > 0));
+    }
+
+    public static boolean checkHistory(HistoryType[] historyTypes, Helper helper, Event event)
+    {
+        List<HelperHistory> actualEntries = RepositoryProvider.getRepository(HelperHistoryRepository.class).findOrdered(helper, event);
+        // length must be equal...
+        if (historyTypes.length != actualEntries.size())
+        {
+            return false;
+        }
+        // every entry must be equal !!
+        for (int index=0;index<historyTypes.length;index++)
+        {
+            if (!(historyTypes[index].equals(actualEntries.get(index).getHistoryType())))
+            {
+                return false;
+            }
+        }
+        // OK
+        return true;
     }
 }

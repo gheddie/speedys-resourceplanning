@@ -7,17 +7,14 @@ import de.trispeedys.resourceplanning.util.HtmlGenerator;
 
 public class ConfirmPauseMailTemplate extends AbstractMailTemplate
 {
-    private Helper helper;
-
     public ConfirmPauseMailTemplate(Helper aHelper)
     {
-        super();
-        this.helper = aHelper;
+        super(aHelper, null, null);
     }
 
-    public String getBody()
+    public String constructBody()
     {
-        return new HtmlGenerator().withParagraph("Hallo " + helper.getFirstName() + "!")
+        return new HtmlGenerator().withParagraph("Hallo " + getHelper().getFirstName() + "!")
                 .withLinebreak()
                 .withParagraph("Schade, dass Du uns dieses Mal nicht helfen kannst. Bis zum nächsten Mal (?)!")
                 .withLinebreak()
@@ -25,7 +22,7 @@ public class ConfirmPauseMailTemplate extends AbstractMailTemplate
                 .render();
     }
 
-    public String getSubject()
+    public String constructSubject()
     {
         return "Bestätigung Deiner Absage";
     }
