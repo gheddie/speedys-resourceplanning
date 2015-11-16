@@ -84,24 +84,16 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private ResourceInfo resourceInfo = null;
 
-    private TableFilterHeader manualAssignmentsFilter;
-
-    private TableFilterHeader availablePositionsFilter;
-
-    private TableFilterHeader helpersFilter;
-
-    private TableFilterHeader eventsFilter;
-
     public ResourcePlanningMainFrame()
     {
         initComponents();
         resourceInfo = new ResourceInfoService().getResourceInfoPort();
         setSize(800, 600);
         putListeners();
-        eventsFilter = new TableFilterHeader(tbEvents);
-        helpersFilter = new TableFilterHeader(tbHelpers);
-        manualAssignmentsFilter = new TableFilterHeader(tbManualAssignments);
-        availablePositionsFilter = new TableFilterHeader(tbAvailablePositions);
+        new TableFilterHeader(tbEvents);
+        new TableFilterHeader(tbHelpers);
+        new TableFilterHeader(tbManualAssignments);
+        new TableFilterHeader(tbAvailablePositions);
         fillAll();
     }
 
@@ -115,7 +107,8 @@ public class ResourcePlanningMainFrame extends JFrame
                 int selectedRow = tbEvents.getSelectedRow();
                 if (selectedRow >= 0)
                 {
-                    eventSelected(events.get(selectedRow));
+                    int convertedRowIndex = tbEvents.convertRowIndexToModel(selectedRow);
+                    eventSelected(events.get(convertedRowIndex));
                 }
             }
         });
@@ -127,7 +120,8 @@ public class ResourcePlanningMainFrame extends JFrame
                 int selectedRow = tbManualAssignments.getSelectedRow();
                 if (selectedRow >= 0)
                 {
-                    manualAssignmentSelected(manualAssignments.get(selectedRow));
+                    int convertedRowIndex = tbManualAssignments.convertRowIndexToModel(selectedRow);
+                    manualAssignmentSelected(manualAssignments.get(convertedRowIndex));
                 }
             }
         });
@@ -139,10 +133,11 @@ public class ResourcePlanningMainFrame extends JFrame
                 int selectedRow = tbAvailablePositions.getSelectedRow();
                 if (selectedRow >= 0)
                 {
-                    availablePositionSelected(availablePositions.get(selectedRow));                    
+                    int convertedRowIndex = tbAvailablePositions.convertRowIndexToModel(selectedRow);
+                    availablePositionSelected(availablePositions.get(convertedRowIndex));
                 }
             }
-        });        
+        });
         // helpers
         tbHelpers.getSelectionModel().addListSelectionListener(new ListSelectionListener()
         {
@@ -151,7 +146,8 @@ public class ResourcePlanningMainFrame extends JFrame
                 int selectedRow = tbHelpers.getSelectedRow();
                 if (selectedRow >= 0)
                 {
-                    helperSelected(helpers.get(selectedRow));
+                    int convertedRowIndex = tbHelpers.convertRowIndexToModel(selectedRow);
+                    helperSelected(helpers.get(convertedRowIndex));
                 }
             }
         });
@@ -159,43 +155,9 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private void btnFinishProcessesPressed(ActionEvent e)
     {
-        resourceInfo.finishUp();
-    }
-
-    private void btnCancelAssignmentPressed(ActionEvent e)
-    {
-        TreeTableDataNode pathComponent = treeTablePositions.getPathComponent();
-        System.out.println(pathComponent);
-        if (pathComponent == null)
+        if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, "Planungen abschliessen?", "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
         {
-            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte eine Helferzuweisung wählen!!");
-            return;
-        }
-        if (pathComponent.getEventItemType().equals(HierarchicalEventItemType.POSITION))
-        {
-            if ((selectedEvent != null) && (pathComponent.getEntityId() != null))
-            {
-                String message =
-                        "Zuweisung für " +
-                                pathComponent.getDescription() + " (" + pathComponent.getAssignment() + ") wirklich abbrechen?";
-                if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, message, "Bestätigung",
-                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-                {
-                    try
-                    {
-                        resourceInfo.cancelAssignment(selectedEvent.getEventId(), pathComponent.getEntityId());
-                    }
-                    catch (Exception e2)
-                    {
-                        JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this,
-                                "Zuweisung konnte nicht abgebrochen werden : " + e2.getMessage());
-                    }
-                }
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Diese Position ist nicht zugewiesen!!");
-            }
+            resourceInfo.finishUp();
         }
     }
 
@@ -227,11 +189,13 @@ public class ResourcePlanningMainFrame extends JFrame
     private void eventSelected(EventDTO event)
     {
         selectedEvent = event;
+        System.out.println("event selected : " + event.getDescription());
         fillTree(selectedEvent.getEventId());
     }
 
     private void manualAssignmentSelected(ManualAssignmentDTO manualAssignment)
     {
+        System.out.println("assignment selected : " + manualAssignment.getHelperName());
         selectedManualAssignment = manualAssignment;
     }
 
@@ -243,6 +207,7 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private void helperSelected(HelperDTO helperDTO)
     {
+        System.out.println("helper selected : " + helperDTO.getLastName());
         selectedHelper = helperDTO;
     }
 
@@ -250,8 +215,8 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (eventId != null)
         {
-            treeTablePositions.setModel(new TreeTableDataModel(ResourcePlanningClientRoutines.createDataStructure(eventId,
-                    chkUnassignedOnly.isSelected(), resourceInfo)));
+            treeTablePositions.setModel(new TreeTableDataModel(ResourcePlanningClientRoutines.createDataStructure(eventId, chkUnassignedOnly.isSelected(),
+                    resourceInfo)));
         }
         else
         {
@@ -301,15 +266,12 @@ public class ResourcePlanningMainFrame extends JFrame
             return;
         }
         String message =
-                "Dem Helfer " +
-                        selectedManualAssignment.getHelperName() + " die freie Position " +
-                        selectedAvailablePosition.getDescription() + " zuweisen?";
+                "Dem Helfer " + selectedManualAssignment.getHelperName() + " die freie Position " + selectedAvailablePosition.getDescription() + " zuweisen?";
         if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, message, "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
         {
             try
             {
-                resourceInfo.completeManualAssignment(selectedManualAssignment.getTaskId(),
-                        selectedAvailablePosition.getPositionId());
+                resourceInfo.completeManualAssignment(selectedManualAssignment.getTaskId(), selectedAvailablePosition.getPositionId());
             }
             catch (Exception e2)
             {
@@ -351,13 +313,21 @@ public class ResourcePlanningMainFrame extends JFrame
         refreshManualAssignments();
     }
 
+    private void btnRefreshTreePressed(ActionEvent e) {
+        if (selectedEvent == null)
+        {
+            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte ein Event wählen!!");
+            return;
+        }
+        fillTree(selectedEvent.getEventId());
+    }
+
     private void initComponents()
     {
         // JFormDesigner - Component initialization - DO NOT MODIFY //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Stefan Schulz
         tbMain = new JToolBar();
         btnFinishProcesses = new JButton();
-        btnCancelAssignment = new JButton();
         tdbMain = new JTabbedPane();
         pnlPositions = new JPanel();
         borderPositions = new JPanel();
@@ -407,16 +377,6 @@ public class ResourcePlanningMainFrame extends JFrame
                 }
             });
             tbMain.add(btnFinishProcesses);
-
-            //---- btnCancelAssignment ----
-            btnCancelAssignment.setText("Absagen");
-            btnCancelAssignment.setIcon(new ImageIcon(getClass().getResource("/img/cancel48px.png")));
-            btnCancelAssignment.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    btnCancelAssignmentPressed(e);
-                }
-            });
-            tbMain.add(btnCancelAssignment);
         }
         contentPane.add(tbMain, new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -466,6 +426,11 @@ public class ResourcePlanningMainFrame extends JFrame
                     //---- btnRefreshTree ----
                     btnRefreshTree.setText("Aktualisieren");
                     btnRefreshTree.setIcon(new ImageIcon(getClass().getResource("/img/reload16px.png")));
+                    btnRefreshTree.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            btnRefreshTreePressed(e);
+                        }
+                    });
                     borderPositions.add(btnRefreshTree, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 5, 0), 0, 0));
@@ -678,7 +643,6 @@ public class ResourcePlanningMainFrame extends JFrame
     // Generated using JFormDesigner Evaluation license - Stefan Schulz
     private JToolBar tbMain;
     private JButton btnFinishProcesses;
-    private JButton btnCancelAssignment;
     private JTabbedPane tdbMain;
     private JPanel pnlPositions;
     private JPanel borderPositions;

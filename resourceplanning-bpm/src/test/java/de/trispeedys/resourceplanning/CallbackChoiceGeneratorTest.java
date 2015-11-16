@@ -15,8 +15,8 @@ import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
+import de.trispeedys.resourceplanning.rule.CallbackChoiceGenerator;
 import de.trispeedys.resourceplanning.service.AssignmentService;
-import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
@@ -41,7 +41,7 @@ public class CallbackChoiceGeneratorTest
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findAll().get(0);
 
         assertTrue(checkChoices(HelperCallback.values(),
-                new CallbackChoiceGenerator().generateChoices(helper, event2016)));
+                new CallbackChoiceGenerator().generate(helper, event2016)));
     }
 
     /**
@@ -71,7 +71,7 @@ public class CallbackChoiceGeneratorTest
         assertTrue(checkChoices(new HelperCallback[]
         {
                 HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME, HelperCallback.ASSIGN_ME_MANUALLY
-        }, new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
+        }, new CallbackChoiceGenerator().generate(helperA, event2016)));
     }
 
     /**
@@ -103,7 +103,7 @@ public class CallbackChoiceGeneratorTest
         assertTrue(checkChoices(new HelperCallback[]
         {
                 HelperCallback.CHANGE_POS, HelperCallback.PAUSE_ME, HelperCallback.ASSIGN_ME_MANUALLY
-        }, new CallbackChoiceGenerator().generateChoices(helperA, event2016)));
+        }, new CallbackChoiceGenerator().generate(helperA, event2016)));
     }
 
     // ---

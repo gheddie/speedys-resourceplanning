@@ -21,12 +21,6 @@ new FormModel {
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/shutdown48px.png" )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnFinishProcessesPressed", true ) )
 				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "btnCancelAssignment"
-					"text": "Absagen"
-					"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/cancel48px.png" )
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnCancelAssignmentPressed", true ) )
-				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 				"gridwidth": 3
 			} )
@@ -64,6 +58,7 @@ new FormModel {
 							name: "btnRefreshTree"
 							"text": "Aktualisieren"
 							"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/reload16px.png" )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnRefreshTreePressed", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 							"gridx": 1
 						} )

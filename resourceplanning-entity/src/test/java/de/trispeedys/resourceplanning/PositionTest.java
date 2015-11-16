@@ -2,6 +2,9 @@ package de.trispeedys.resourceplanning;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.junit.Test;
 
 import de.trispeedys.resourceplanning.entity.Domain;
@@ -9,13 +12,18 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.PositionAggregation;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.entity.misc.SpeedyTestUtil;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
+import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
+import de.trispeedys.resourceplanning.rule.ChoosablePositionGenerator;
+import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
+import de.trispeedys.resourceplanning.test.TestDataGenerator;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 public class PositionTest
@@ -86,9 +94,94 @@ public class PositionTest
         SpeedyRoutines.relatePositionsToEvent(evt2014, posA, posB, posC);
 
         // assign positions
+        // TODO not persisted assignments? -> what does the test do?
         EntityFactory.buildHelperAssignment(helper, evt2013, posA);
         EntityFactory.buildHelperAssignment(helper, evt2014, posC);
+        
         // ...
         PositionService.isPositionAvailable(evt2014, posC);
+    }
+    
+    // TODO check available position querying with with new features 
+    @Test
+    public void testPositionAggregationWithoutGroups()
+    {
+        HibernateUtil.clearAll();
+        
+        Event event2016 =
+                TestDataGenerator.createAggregationEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI, true);
+        
+        HashMap<Integer, Position> posMap = new HashMap<Integer, Position>();
+        for(Position pos : RepositoryProvider.getRepository(PositionRepository.class).findAll())
+        {            
+            posMap.put(pos.getPositionNumber(), pos);
+        }
+        
+        List<Helper> helpers = RepositoryProvider.getRepository(HelperRepository.class).findAll();
+        // we assign one unpriorited...
+        AssignmentService.assignHelper(helpers.get(0), event2016, posMap.get(0));
+        // ...and two prio 1 tasks...
+        AssignmentService.assignHelper(helpers.get(1), event2016, posMap.get(6));
+        AssignmentService.assignHelper(helpers.get(2), event2016, posMap.get(7));
+        // ...and one prio 2 task...
+        AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(11));        
+        
+        // generator must provide 3 unpriorized and 3 PRIO 2 tasks... 
+        assertEquals(6, new ChoosablePositionGenerator().generate(null, event2016).size());
+    }
+    
+    /**
+     * Test priorization, but without any priorization provided on positions
+     */
+    @Test
+    public void testPositionAggregationWithoutGroupsNoPrios()
+    {
+        HibernateUtil.clearAll();
+        
+        Event event2016 =
+                TestDataGenerator.createAggregationEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI, false);
+        
+        HashMap<Integer, Position> posMap = new HashMap<Integer, Position>();
+        for(Position pos : RepositoryProvider.getRepository(PositionRepository.class).findAll())
+        {            
+            posMap.put(pos.getPositionNumber(), pos);
+        }
+        
+        List<Helper> helpers = RepositoryProvider.getRepository(HelperRepository.class).findAll();
+        AssignmentService.assignHelper(helpers.get(0), event2016, posMap.get(0));
+        AssignmentService.assignHelper(helpers.get(1), event2016, posMap.get(6));
+        AssignmentService.assignHelper(helpers.get(2), event2016, posMap.get(7));
+        AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(11));        
+        
+        // this must give 13-4=9 psotions to choose... 
+        assertEquals(9, new ChoosablePositionGenerator().generate(null, event2016).size());
+    }
+    
+    /**
+     * Test priorization with all unpriorized positions already given away...
+     */
+    @Test
+    public void testPositionAggregationWithAllUnpriorizedPositionsAssigned()
+    {
+        HibernateUtil.clearAll();
+        
+        Event event2016 =
+                TestDataGenerator.createAggregationEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI, true);
+        
+        HashMap<Integer, Position> posMap = new HashMap<Integer, Position>();
+        for(Position pos : RepositoryProvider.getRepository(PositionRepository.class).findAll())
+        {            
+            posMap.put(pos.getPositionNumber(), pos);
+        }
+        
+        List<Helper> helpers = RepositoryProvider.getRepository(HelperRepository.class).findAll();
+        // we assign all unpriorited positions...
+        AssignmentService.assignHelper(helpers.get(0), event2016, posMap.get(0));
+        AssignmentService.assignHelper(helpers.get(1), event2016, posMap.get(1));
+        AssignmentService.assignHelper(helpers.get(2), event2016, posMap.get(2));
+        AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(3));
+        
+        // this must give all prio 2 positions (4)... 
+        assertEquals(4, new ChoosablePositionGenerator().generate(null, event2016).size());
     }
 }

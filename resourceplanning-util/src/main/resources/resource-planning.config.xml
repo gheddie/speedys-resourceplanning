@@ -8,5 +8,6 @@
 	<property name="smtp_passwd">trispeedys1234</property>
 	<property name="smtp_host">smtp.gmail.com</property>
 	<property name="smtp_port">587</property>
-	<property name="admin_mail">admin@tri-speedys.de</property>
+	<!-- other stuff -->
+	<property name="admin_mail">stefan.schulz.1976@googlemail.com</property>
 </configuration>

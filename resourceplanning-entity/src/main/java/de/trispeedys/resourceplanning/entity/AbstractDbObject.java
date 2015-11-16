@@ -24,6 +24,7 @@ public abstract class AbstractDbObject
         this.id = id;
     }
     
+    @SuppressWarnings("unchecked")
     public <T> T saveOrUpdate()
     {
         DefaultDatasource<T> datasource = (DefaultDatasource<T>) Datasources.getDatasource(getClass());

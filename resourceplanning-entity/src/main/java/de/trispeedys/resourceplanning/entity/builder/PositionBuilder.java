@@ -14,6 +14,8 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
     private int positionNumber;
 
     private boolean choosable;
+
+    private Integer assignmentPriority;
     
     public PositionBuilder withDomain(Domain aDomain)
     {
@@ -45,6 +47,12 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
         return this;
     }
     
+    public PositionBuilder withAssignmentPriority(Integer aAssignmentPriority)
+    {
+        assignmentPriority = aAssignmentPriority;
+        return this;
+    }
+    
     public Position build()
     {
         Position position = new Position();
@@ -54,6 +62,7 @@ public class PositionBuilder extends AbstractEntityBuilder<Position>
         position.setAuthorityOverride(false);
         position.setPositionNumber(positionNumber);
         position.setChoosable(choosable);
+        position.setAssignmentPriority(assignmentPriority);
         return position;
     }
 }

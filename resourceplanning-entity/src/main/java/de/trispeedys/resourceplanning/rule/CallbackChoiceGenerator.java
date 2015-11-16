@@ -1,4 +1,4 @@
-package de.trispeedys.resourceplanning;
+package de.trispeedys.resourceplanning.rule;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,9 +10,9 @@ import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.service.PositionService;
 
-public class CallbackChoiceGenerator
+public class CallbackChoiceGenerator extends RuleObject<HelperCallback>
 {
-    public List<HelperCallback> generateChoices(Helper helper, Event event)
+    public List<HelperCallback> generate(Helper helper, Event event)
     {
         if (AssignmentService.isFirstAssignment(helper.getId()))
         {

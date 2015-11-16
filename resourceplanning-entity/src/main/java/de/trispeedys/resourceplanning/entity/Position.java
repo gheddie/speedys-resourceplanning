@@ -3,7 +3,6 @@ package de.trispeedys.resourceplanning.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import de.trispeedys.resourceplanning.entity.misc.EnumeratedEventItem;
@@ -36,6 +35,9 @@ public class Position extends AbstractDbObject implements EnumeratedEventItem
     private int positionNumber;
 
     private boolean choosable;
+    
+    @Column(name = "assignment_priority")
+    private Integer assignmentPriority;
 
     public String getDescription()
     {
@@ -95,6 +97,16 @@ public class Position extends AbstractDbObject implements EnumeratedEventItem
     public void setChoosable(boolean choosable)
     {
         this.choosable = choosable;
+    }
+    
+    public Integer getAssignmentPriority()
+    {
+        return assignmentPriority;
+    }
+    
+    public void setAssignmentPriority(Integer assignmentPriority)
+    {
+        this.assignmentPriority = assignmentPriority;
     }
     
     public String toString()

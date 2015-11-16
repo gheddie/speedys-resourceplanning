@@ -13,6 +13,7 @@ import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.HelperHistory;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.PositionAggregation;
 
 public class Datasources
 {
@@ -41,6 +42,7 @@ public class Datasources
         registeredDatasources.put(EventPosition.class, new EventPositionDatasource());
         registeredDatasources.put(HelperAssignment.class, new HelperAssignmentDatasource());
         registeredDatasources.put(DatabaseLogger.class, new DatabaseLoggerDatasource());
+        registeredDatasources.put(PositionAggregation.class, new PositionAggregationDatasource());
     }
 
     private static Datasources getInstance()

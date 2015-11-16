@@ -35,6 +35,8 @@ public class HibernateUtil
 
     public static void clearAll()
     {
+        clearTable("position_aggregation");
+        clearTable("aggregation_relation");
         clearTable("helper_history");
         clearTable("event_position");
         clearTable("helper_assignment");

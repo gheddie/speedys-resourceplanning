@@ -1,6 +1,5 @@
 package de.trispeedys.resourceplanning.test;
 
-import de.trispeedys.resourceplanning.HibernateUtil;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventTemplate;
@@ -18,6 +17,10 @@ public class TestDataGenerator
     public static final int POS_COUNT_SIMPLE_EVENT = 5;
 
     private static final String DEFAULT_MAIL_ADDRESS = "testhelper1.trispeedys@gmail.com";
+
+    private static final Integer PRIO1 = new Integer(1);
+    
+    private static final Integer PRIO2 = new Integer(2);
 
     /**
      * creates an {@link Event} like {@link TestDataGenerator#createMinimalEvent(String, String, int, int, int)}, but
@@ -105,6 +108,49 @@ public class TestDataGenerator
         SpeedyRoutines.assignHelperToPositions(helper5, myLittleEvent, pos5);
 
         return myLittleEvent;
+    }
+    
+    public static Event createAggregationEvent(String description, String eventKey, int day, int month, int year,
+            EventState eventState, String templateName, boolean doPriorize)
+    {
+        EventTemplate template = EntityFactory.buildEventTemplate("123ggg").saveOrUpdate();
+
+        // build event
+        Event event =
+                EntityFactory.buildEvent(description, eventKey, day, month, year, EventState.FINISHED, template, null).saveOrUpdate();
+        // build domains
+        Domain domain1 = EntityFactory.buildDomain("D1", 1).saveOrUpdate();
+        // build positions
+        Position pos1 = EntityFactory.buildPosition("P1", 12, domain1, 0, true).saveOrUpdate();
+        Position pos2 = EntityFactory.buildPosition("P2", 12, domain1, 1, true).saveOrUpdate();
+        Position pos3 = EntityFactory.buildPosition("P3", 12, domain1, 2, true).saveOrUpdate();
+        Position pos4 = EntityFactory.buildPosition("P4", 12, domain1, 3, true).saveOrUpdate();
+        Position pos5 = EntityFactory.buildPosition("P5", 12, domain1, 4, true, doPriorize ? PRIO1 : null).saveOrUpdate();
+        Position pos6 = EntityFactory.buildPosition("P6", 12, domain1, 5, true, doPriorize ? PRIO1 : null).saveOrUpdate();
+        Position pos7 = EntityFactory.buildPosition("P7", 12, domain1, 6, true, doPriorize ? PRIO1 : null).saveOrUpdate();
+        Position pos8 = EntityFactory.buildPosition("P8", 12, domain1, 7, true, doPriorize ? PRIO1 : null).saveOrUpdate();
+        Position pos9 = EntityFactory.buildPosition("P9", 12, domain1, 8, true, doPriorize ? PRIO1 : null).saveOrUpdate();
+        Position pos10 = EntityFactory.buildPosition("P10", 12, domain1, 9, true, doPriorize ? PRIO2 : null).saveOrUpdate();
+        Position pos11 = EntityFactory.buildPosition("P11", 12, domain1, 10, true, doPriorize ? PRIO2 : null).saveOrUpdate();
+        Position pos12 = EntityFactory.buildPosition("P12", 12, domain1, 11, true, doPriorize ? PRIO2 : null).saveOrUpdate();
+        Position pos13 = EntityFactory.buildPosition("P13", 12, domain1, 12, true, doPriorize ? PRIO2 : null).saveOrUpdate();
+        
+        // create helpers
+        Helper helper1 =
+                EntityFactory.buildHelper("H1_First", "H1_Last", "a1@b.de", HelperState.ACTIVE, 1, 2, 1980).saveOrUpdate();
+        Helper helper2 =
+                EntityFactory.buildHelper("H2_First", "H2_Last", "a2@b.de", HelperState.ACTIVE, 2, 2, 1980).saveOrUpdate();
+        Helper helper3 =
+                EntityFactory.buildHelper("H3_First", "H3_Last", "a3@b.de", HelperState.ACTIVE, 3, 2, 1980).saveOrUpdate();
+        Helper helper4 =
+                EntityFactory.buildHelper("H4_First", "H4_Last", "a4@b.de", HelperState.ACTIVE, 4, 2, 1980).saveOrUpdate();
+        Helper helper5 =
+                EntityFactory.buildHelper("H5_First", "H5_Last", "a5@b.de", HelperState.ACTIVE, 5, 2, 1980).saveOrUpdate();
+        
+        // assign positions to event        
+        SpeedyRoutines.relatePositionsToEvent(event, pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9, pos10, pos11, pos12, pos13);
+        
+        return event;
     }
 
     /**

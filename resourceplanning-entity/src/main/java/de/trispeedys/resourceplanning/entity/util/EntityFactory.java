@@ -2,6 +2,7 @@ package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
 
+import de.trispeedys.resourceplanning.entity.AggregationRelation;
 import de.trispeedys.resourceplanning.entity.DatabaseLogger;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.DomainResponsibility;
@@ -14,6 +15,8 @@ import de.trispeedys.resourceplanning.entity.HelperHistory;
 import de.trispeedys.resourceplanning.entity.MessageQueue;
 import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.PositionAggregation;
+import de.trispeedys.resourceplanning.entity.builder.AggregationRelationBuilder;
 import de.trispeedys.resourceplanning.entity.builder.DatabaseLoggerBuilder;
 import de.trispeedys.resourceplanning.entity.builder.DomainBuilder;
 import de.trispeedys.resourceplanning.entity.builder.DomainResponsibilityBuilder;
@@ -24,6 +27,7 @@ import de.trispeedys.resourceplanning.entity.builder.HelperAssignmentBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.entity.builder.HelperHistoryBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
+import de.trispeedys.resourceplanning.entity.builder.PositionAggregationBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
 import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
@@ -82,14 +86,20 @@ public class EntityFactory
                 .withHelperAssignmentState(helperAssignmentState)
                 .build();
     }
-
+    
     public static Position buildPosition(String description, int minimalAge, Domain domain, int positionNumber, boolean choosable)
+    {
+        return buildPosition(description, minimalAge, domain, positionNumber, choosable, null);
+    }
+
+    public static Position buildPosition(String description, int minimalAge, Domain domain, int positionNumber, boolean choosable, Integer assignmentPriority)
     {
         return new PositionBuilder().withDescription(description)
                 .withMinimalAge(minimalAge)
                 .withDomain(domain)
                 .withPositionNumber(positionNumber)
                 .withChoosable(choosable)
+                .withAssignmentPriority(assignmentPriority)
                 .build();
     }
 
@@ -155,5 +165,15 @@ public class EntityFactory
     public static DatabaseLogger buildLog(String businessKey, String message, DbLogLevel logLevel)
     {
         return new DatabaseLoggerBuilder().withBusinessKey(businessKey).withMessage(message).withLogLevel(logLevel).build();
+    }
+
+    public static PositionAggregation buildPositionAggregation(String name)
+    {
+        return new PositionAggregationBuilder().withName(name).build();
+    }
+
+    public static AggregationRelation buildAggregationRelation(Position position, PositionAggregation positionAggregation)
+    {
+        return new AggregationRelationBuilder().withPosition(position).withPositionAggregation(positionAggregation).build();   
     }
 }

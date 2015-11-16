@@ -41,6 +41,7 @@ create table position
 	domain_id bigint,
 	authority_override boolean,
 	choosable boolean,
+	assignment_priority int,
 	primary key (id),
 	constraint pos_unique_desc unique (description),
 	constraint pos_unique_number unique (position_number)
@@ -174,3 +175,28 @@ create table helper_history
 alter table helper_history add constraint fk_hist_helper foreign key (helper_id) references helper (id);
 
 alter table helper_history add constraint fk_hist_event foreign key (event_id) references event (id);
+
+------------------------------------------------ PositionAggregation
+create sequence position_aggregation_id_seq;
+
+create table position_aggregation
+(
+	id bigint not null default nextval('position_aggregation_id_seq'),
+	name varchar(64) not null,
+	primary key (id)
+);
+
+------------------------------------------------ AggregationRelation
+create sequence aggregation_relation_id_seq;
+
+create table aggregation_relation
+(
+	id bigint not null default nextval('aggregation_relation_id_seq'),
+	position_id bigint not null,
+	position_aggregation_id bigint not null,
+	primary key (id)
+);
+
+alter table aggregation_relation add constraint fk_aggr_rel_pos foreign key (position_id) references position (id);
+
+alter table aggregation_relation add constraint fk_aggr_rel_aggr foreign key (position_aggregation_id) references position_aggregation (id);

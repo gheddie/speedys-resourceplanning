@@ -23,7 +23,8 @@ public class CheckAvailabilityDelegate extends RequestHelpDelegate
                 helper + "' and position '" + position + "' in event '" + event + "', position available : " +
                 positionAvailable);
         
-        // set id of the position
+        // set id of the position and the information, if the prior position is avaiablable...
+        execution.setVariable(BpmVariables.RequestHelpHelper.VAR_PRIOR_POS_AVAILABLE, positionAvailable);
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION, position.getId());
     }
 }
