@@ -60,4 +60,8 @@ public abstract class EntityTreeNode<T>
     public abstract String getAssignmentString();
     
     public abstract Long getEntityId();
+
+    public abstract String getPriorization();
+
+    public abstract String getAvailbability();
 }

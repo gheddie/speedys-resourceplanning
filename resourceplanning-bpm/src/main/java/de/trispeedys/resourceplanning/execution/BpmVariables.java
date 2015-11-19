@@ -6,6 +6,8 @@ public class BpmVariables
     {
         public static final String VAR_SUPERVISION_REQUIRED = "supervisionRequired";
         
+        // public static final String VAR_HELPER_CODE = "helperCode";
+        
         public static final String VAR_HELPER_ID = "helperId";
 
         public static final String VAR_HELPER_CALLBACK = "helperCallback";

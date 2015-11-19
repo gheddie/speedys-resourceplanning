@@ -40,4 +40,14 @@ public class DomainTreeNode<T> extends EntityTreeNode<Domain>
     {
         return ((Domain) getPayLoad()).getId();
     }
+
+    public String getPriorization()
+    {
+        return "";
+    }
+
+    public String getAvailbability()
+    {
+        return "";
+    }
 }

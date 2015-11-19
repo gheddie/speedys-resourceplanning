@@ -123,6 +123,10 @@ public class RequestHelpExecutionTest
         // (11)
         processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
+
+        // assignment 'A' must have status 'CONFIRMED'
+        assertEquals(HelperAssignmentState.CONFIRMED,
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).findByHelperAndEvent(helperA, event2016).getHelperAssignmentState());
     }
 
     /**
@@ -302,6 +306,10 @@ public class RequestHelpExecutionTest
         assertEquals(1, RepositoryProvider.getRepository(HelperAssignmentRepository.class).getHelperAssignments(helperA, event2016).size());
         processEngine.getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
         assertEquals(0, processEngine.getRuntimeService().createExecutionQuery().list().size());
+
+        // assignment 'A' must have status 'CONFIRMED'
+        assertEquals(HelperAssignmentState.CONFIRMED,
+                RepositoryProvider.getRepository(HelperAssignmentRepository.class).findByHelperAndEvent(helperA, event2016).getHelperAssignmentState());
     }
 
     /**

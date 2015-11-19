@@ -8,6 +8,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
+import org.apache.log4j.Logger;
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 import org.camunda.bpm.engine.runtime.VariableInstance;
@@ -46,6 +47,8 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 @SOAPBinding(style = Style.RPC)
 public class ResourceInfo
 {
+    private static final Logger logger = Logger.getLogger(ResourceInfo.class);
+    
     public PositionDTO[] queryAvailablePositions(Long eventId)
     {
         if (eventId == null)
@@ -126,6 +129,8 @@ public class ResourceInfo
 
     public HierarchicalEventItemDTO[] getEventNodes(Long eventId, boolean onlyUnassignedPositions)
     {
+        logger.info("getting event nodes...");
+        
         Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
         List<EntityTreeNode> nodes = SpeedyRoutines.flattenedEventNodes(event, onlyUnassignedPositions);
         List<HierarchicalEventItemDTO> dtos = new ArrayList<HierarchicalEventItemDTO>();
@@ -138,6 +143,8 @@ public class ResourceInfo
             dto.setHierarchyLevel(node.getHierarchyLevel());
             dto.setItemKey(node.itemKey());
             dto.setAssignmentString(node.getAssignmentString());
+            dto.setAvailbability(node.getAvailbability());
+            dto.setPriorization(node.getPriorization());
             dto.setEntityId(node.getEntityId());
             dtos.add(dto);
         }

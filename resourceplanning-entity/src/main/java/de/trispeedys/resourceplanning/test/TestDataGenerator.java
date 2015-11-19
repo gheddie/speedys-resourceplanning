@@ -217,8 +217,8 @@ public class TestDataGenerator
 
         // Domain 'Laufstrecke'
         Domain domLauf = EntityFactory.buildDomain("Laufstrecke", 1).saveOrUpdate();
-        Position posAnsageZieleinlauf = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, domLauf, 0, true).saveOrUpdate();
-        Position posVerpflegungPark = EntityFactory.buildPosition("Verpflegung Park", 12, domLauf, 1, true).saveOrUpdate();
+        Position posAnsageZieleinlauf = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, domLauf, 0, true, PRIO1).saveOrUpdate();
+        Position posVerpflegungPark = EntityFactory.buildPosition("Verpflegung Park", 12, domLauf, 1, true, PRIO2).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posAnsageZieleinlauf, posVerpflegungPark);
         SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("SCST13021976"), event, posAnsageZieleinlauf);
@@ -229,9 +229,9 @@ public class TestDataGenerator
         Domain domRad = EntityFactory.buildDomain("Radstrecke", 2).saveOrUpdate();
         Position posKontrolleAbstieg = EntityFactory.buildPosition("Kontrolle Abstieg", 12, domRad, 2, true).saveOrUpdate();
         Position posEinweisungNachStartnummerWZ =
-                EntityFactory.buildPosition("Einweisung nach Startnummer WZ", 12, domRad, 137, true).saveOrUpdate();
+                EntityFactory.buildPosition("Einweisung nach Startnummer WZ", 12, domRad, 137, true, PRIO2).saveOrUpdate();
         Position posSicherungAbzweigRunde =
-                EntityFactory.buildPosition("Sicherung Abzweig Runde 2/Zieleinfahrt", 12, domRad, 398, true).saveOrUpdate();
+                EntityFactory.buildPosition("Sicherung Abzweig Runde 2/Zieleinfahrt", 12, domRad, 398, true, PRIO1).saveOrUpdate();
         Position posMotorrad1 = EntityFactory.buildPosition("Motorrad 1", 12, domRad, 232, true).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posKontrolleAbstieg, posEinweisungNachStartnummerWZ,
                 posSicherungAbzweigRunde, posMotorrad1);
@@ -247,7 +247,7 @@ public class TestDataGenerator
         // Domain 'Zielverpflegung'
         Domain domZiel = EntityFactory.buildDomain("Zielverpflegung", 17).saveOrUpdate();
         Position posAusgabeGetraenke = EntityFactory.buildPosition("Ausgabe Getränke", 12, domZiel, 38, true).saveOrUpdate();
-        Position posObstschneiden = EntityFactory.buildPosition("Obstschneiden", 12, domZiel, 39, true).saveOrUpdate();
+        Position posObstschneiden = EntityFactory.buildPosition("Obstschneiden", 12, domZiel, 39, true, PRIO1).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posAusgabeGetraenke, posObstschneiden);
         SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("MEDA16121961"), event, posAusgabeGetraenke);
@@ -258,7 +258,7 @@ public class TestDataGenerator
         Domain domSieger = EntityFactory.buildDomain("Siegerehrung", 92).saveOrUpdate();
         Position posModeration = EntityFactory.buildPosition("Moderation", 12, domSieger, 93, false).saveOrUpdate();
         Position posAnreichenUrkunden =
-                EntityFactory.buildPosition("Anreichen Urkunden", 12, domSieger, 94, true).saveOrUpdate();
+                EntityFactory.buildPosition("Anreichen Urkunden", 12, domSieger, 94, true, PRIO1).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posModeration, posAnreichenUrkunden);
         SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("UNDO23031992"), event, posModeration);

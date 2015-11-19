@@ -22,6 +22,8 @@ public class HelperAssignment extends AbstractDbObject
 
     public static final String ATTR_POSITION = "position";
     
+    public static final String ATTR_ASSIGNMENT_STATE = "helperAssignmentState";
+    
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "helper_id")

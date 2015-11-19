@@ -146,19 +146,6 @@ create table message_queue
 	primary key (id)
 );
 
------------------------------------------------- DatabaseLogger
-create sequence database_logger_id_seq;
-
-create table database_logger
-(
-	id bigint not null default nextval('database_logger_id_seq'),
-	date timestamp,
-	message text,
-	business_key varchar(128),
-	log_level varchar(64),
-	primary key (id)
-);
-
 ------------------------------------------------ HelperHistory 
 create sequence helper_history_id_seq;
 

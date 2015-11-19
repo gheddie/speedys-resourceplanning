@@ -86,7 +86,7 @@ public class ProposePositionsMailTemplate extends AbstractMailTemplate
         }
         buffer.append("<br>");
         buffer.append("Deine Speedys");
-        buffer.append("<br>");
+        buffer.append("<br><br>");
         buffer.append(HtmlGenerator.MACHINE_MESSAGE);        
         return buffer.toString();
     }

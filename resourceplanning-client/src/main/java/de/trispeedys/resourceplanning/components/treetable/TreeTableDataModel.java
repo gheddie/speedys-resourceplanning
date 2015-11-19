@@ -4,16 +4,24 @@ import java.util.Date;
 
 public class TreeTableDataModel extends AbstractTreeTableModel
 {
+    private static final int COL_DESCRIPTION = 0;
+    
+    private static final int COL_ASSIGNMENT = 1;
+    
+    private static final int COL_PRIORIZATION = 2;
+
+    private static final int COL_AVAILABILITY = 3;
+
     // Spalten Name.
     static protected String[] columnNames =
     {
-            "Beschreibung", "Besetzung"
+            "Beschreibung", "Besetzung", "Priorität", "Wählbar"
     };
 
     // Spalten Typen.
     static protected Class<?>[] columnTypes =
     {
-            MyTreeTableModel.class, String.class, Date.class, Integer.class
+            MyTreeTableModel.class, String.class, String.class, String.class, String.class
     };
 
     public TreeTableDataModel(TreeTableDataNode rootNode)
@@ -51,10 +59,14 @@ public class TreeTableDataModel extends AbstractTreeTableModel
     {
         switch (column)
         {
-            case 0:
+            case COL_DESCRIPTION:
                 return ((TreeTableDataNode) node).getDescription();
-            case 1:
+            case COL_ASSIGNMENT:
                 return ((TreeTableDataNode) node).getAssignment();
+            case COL_PRIORIZATION:
+                return ((TreeTableDataNode) node).getPriorization();                
+            case COL_AVAILABILITY:
+                return ((TreeTableDataNode) node).getAvailability();                
             default:
                 break;
         }

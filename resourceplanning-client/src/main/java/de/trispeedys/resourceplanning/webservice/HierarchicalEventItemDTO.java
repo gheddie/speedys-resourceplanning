@@ -17,11 +17,13 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="assignmentString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="availbability" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="entityId" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="hierarchyLevel" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="infoString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="itemKey" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="itemType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="priorization" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,20 +35,24 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hierarchicalEventItemDTO", propOrder = {
     "assignmentString",
+    "availbability",
     "entityId",
     "hierarchyLevel",
     "infoString",
     "itemKey",
-    "itemType"
+    "itemType",
+    "priorization"
 })
 public class HierarchicalEventItemDTO {
 
     protected String assignmentString;
+    protected String availbability;
     protected Long entityId;
     protected int hierarchyLevel;
     protected String infoString;
     protected String itemKey;
     protected String itemType;
+    protected String priorization;
 
     /**
      * Gets the value of the assignmentString property.
@@ -70,6 +76,30 @@ public class HierarchicalEventItemDTO {
      */
     public void setAssignmentString(String value) {
         this.assignmentString = value;
+    }
+
+    /**
+     * Gets the value of the availbability property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAvailbability() {
+        return availbability;
+    }
+
+    /**
+     * Sets the value of the availbability property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAvailbability(String value) {
+        this.availbability = value;
     }
 
     /**
@@ -182,6 +212,30 @@ public class HierarchicalEventItemDTO {
      */
     public void setItemType(String value) {
         this.itemType = value;
+    }
+
+    /**
+     * Gets the value of the priorization property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPriorization() {
+        return priorization;
+    }
+
+    /**
+     * Sets the value of the priorization property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPriorization(String value) {
+        this.priorization = value;
     }
 
 }

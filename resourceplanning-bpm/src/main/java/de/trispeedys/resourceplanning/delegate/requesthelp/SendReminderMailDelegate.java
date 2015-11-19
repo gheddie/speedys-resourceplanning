@@ -13,6 +13,7 @@ import de.trispeedys.resourceplanning.entity.misc.MessagingFormat;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.messaging.SendReminderMailTemplate;
+import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class SendReminderMailDelegate extends RequestHelpNotificationDelegate
 {
@@ -29,8 +30,8 @@ public class SendReminderMailDelegate extends RequestHelpNotificationDelegate
         int attemptCount = (Integer) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS);
         SendReminderMailTemplate template = new SendReminderMailTemplate(helper, event, position,
                 (Boolean) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_PRIOR_POS_AVAILABLE), attemptCount);
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(),
-                template.constructBody(), getMessagingType(attemptCount), MessagingFormat.HTML).saveOrUpdate();
+        MessagingService.createMessage("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(),
+                template.constructBody(), getMessagingType(attemptCount), MessagingFormat.HTML);
         // increase attempts
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS, (attemptCount + 1));
 

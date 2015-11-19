@@ -15,12 +15,18 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
 import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
+import de.trispeedys.resourceplanning.rule.ChoosablePositionGenerator;
 
 public class PositionRepository extends AbstractDatabaseRepository<Position> implements DatabaseRepository<PositionRepository>
 {
     public Position findPositionByPositionNumber(int positionNumber)
     {
         return (Position) dataSource().findSingle(Position.ATTR_POS_NUMBER, positionNumber);
+    }
+    
+    public List<Position> findUnassignedPositionsInEvent(Event event)
+    {
+        return new ChoosablePositionGenerator().generate(null, event);
     }
 
     /**

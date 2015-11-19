@@ -3,17 +3,16 @@ package de.trispeedys.resourceplanning.interaction;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 
-import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.HelperCallback;
 import de.trispeedys.resourceplanning.entity.misc.HistoryType;
 import de.trispeedys.resourceplanning.execution.BpmMessages;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.repository.HelperHistoryRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
-import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
@@ -21,6 +20,8 @@ import de.trispeedys.resourceplanning.util.configuration.AppConfigurationValues;
 
 public class HelperInteraction
 {
+    private static final Logger logger = Logger.getLogger(HelperInteraction.class);
+    
     /**
      * called from 'HelperCallbackReceiver.jsp'
      * 
@@ -35,21 +36,21 @@ public class HelperInteraction
         switch (callback)
         {
             case ASSIGNMENT_AS_BEFORE:
-                LoggerService.log("the helper wants to be assigned as before...", DbLogLevel.INFO);
+                logger.info("the helper wants to be assigned as before...");
                 variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGNMENT_AS_BEFORE);
                 // write history
                 RepositoryProvider.getRepository(HelperHistoryRepository.class).createEntry(helperId, eventId, HistoryType.CALLBACK_ASSIGNMENT_AS_BEFORE);
                 break;
             case CHANGE_POS:
-                LoggerService.log("the helper wants to change positions...", DbLogLevel.INFO);
+                logger.info("the helper wants to change positions...");
                 variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.CHANGE_POS);
                 break;
             case PAUSE_ME:
-                LoggerService.log("the helper wants to be paused...", DbLogLevel.INFO);
+                logger.info("the helper wants to be paused...");
                 variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.PAUSE_ME);
                 break;
             case ASSIGN_ME_MANUALLY:
-                LoggerService.log("the helper wants to manually assigned...", DbLogLevel.INFO);
+                logger.info("the helper wants to manually assigned...");
                 variables.put(BpmVariables.RequestHelpHelper.VAR_HELPER_CALLBACK, HelperCallback.ASSIGN_ME_MANUALLY);
                 break;
         }

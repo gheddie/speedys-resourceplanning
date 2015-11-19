@@ -7,7 +7,6 @@ import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.service.AssignmentService;
-import de.trispeedys.resourceplanning.service.LoggerService;
 import de.trispeedys.resourceplanning.util.StringUtil;
 import de.trispeedys.resourceplanning.util.configuration.AppConfiguration;
 
@@ -15,6 +14,13 @@ public class CheckHelperConditionDelegate implements JavaDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
+        /*
+        if (execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_CODE) == null)
+        {
+            throw new ResourcePlanningException("helper code must not be NULL!!");
+        }
+        */
+        
         AppConfiguration.getInstance();
         
         Long helperId = (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_HELPER_ID);

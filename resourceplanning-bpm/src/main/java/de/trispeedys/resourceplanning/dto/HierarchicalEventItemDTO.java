@@ -13,6 +13,10 @@ public class HierarchicalEventItemDTO
     private String assignmentString;
 
     private Long entityId;
+
+    private String priorization;
+    
+    private String availbability;
     
     public String getItemType()
     {
@@ -72,5 +76,25 @@ public class HierarchicalEventItemDTO
     public void setEntityId(Long entityId)
     {
         this.entityId = entityId;
+    }
+    
+    public String getPriorization()
+    {
+        return priorization;
+    }
+
+    public void setPriorization(String priorization)
+    {
+        this.priorization = priorization;        
+    }
+    
+    public String getAvailbability()
+    {
+        return availbability;
+    }
+    
+    public void setAvailbability(String availbability)
+    {
+        this.availbability = availbability;
     }
 }

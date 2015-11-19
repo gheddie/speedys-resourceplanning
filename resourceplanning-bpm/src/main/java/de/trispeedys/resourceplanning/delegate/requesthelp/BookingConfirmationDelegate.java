@@ -9,6 +9,7 @@ import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.messaging.BookingConfirmationMailTemplate;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
+import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class BookingConfirmationDelegate extends RequestHelpNotificationDelegate
 {
@@ -19,7 +20,7 @@ public class BookingConfirmationDelegate extends RequestHelpNotificationDelegate
                 new BookingConfirmationMailTemplate(getHelper(execution), getEvent(execution), RepositoryProvider.getRepository(
                         PositionRepository.class).findById(
                         (Long) execution.getVariable(BpmVariables.RequestHelpHelper.VAR_CHOSEN_POSITION)));
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(), template.constructBody(),
-                template.getMessagingType(), template.getMessagingFormat()).saveOrUpdate();
+        MessagingService.createMessage("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(), template.constructBody(),
+                template.getMessagingType(), template.getMessagingFormat());
     }
 }

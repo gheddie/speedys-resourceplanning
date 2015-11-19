@@ -17,16 +17,15 @@ public class ResourcePlanningClientRoutines
         List<TreeTableDataNode> domainNodes = null;
         List<TreeTableDataNode> positionNodes = null;
 
-        List<HierarchicalEventItemDTO> eventNodes = resourceInfo
-                .getEventNodes(eventId, onlyUnassigned)
-                .getItem();
+        List<HierarchicalEventItemDTO> eventNodes = resourceInfo.getEventNodes(eventId, onlyUnassigned).getItem();
         for (HierarchicalEventItemDTO node : eventNodes)
         {
             switch (node.getHierarchyLevel())
             {
                 case HierarchicalEventItem.LEVEL_EVENT:
                     eventNode =
-                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getItemType(), node.getEntityId(), null);
+                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getPriorization(), node.getAvailbability(), node.getItemType(),
+                                    node.getEntityId(), null);
                     domainNodes = new ArrayList<TreeTableDataNode>();
                     break;
                 case HierarchicalEventItem.LEVEL_DOMAIN:
@@ -38,15 +37,17 @@ public class ResourcePlanningClientRoutines
                     }
                     // create new node
                     domainNode =
-                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getItemType(), node.getEntityId(), null);
+                            new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getPriorization(), node.getAvailbability(), node.getItemType(),
+                                    node.getEntityId(), null);
                     positionNodes = new ArrayList<TreeTableDataNode>();
                     break;
                 case HierarchicalEventItem.LEVEL_POSITION:
-                    positionNodes.add(new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getItemType(), node.getEntityId(), null));
+                    positionNodes.add(new TreeTableDataNode(node.getInfoString(), node.getAssignmentString(), node.getPriorization(), node.getAvailbability(), node.getItemType(),
+                            node.getEntityId(), null));
                     break;
             }
         }
-        
+
         // finally add last domain node (with pending children)
         if (domainNode != null)
         {

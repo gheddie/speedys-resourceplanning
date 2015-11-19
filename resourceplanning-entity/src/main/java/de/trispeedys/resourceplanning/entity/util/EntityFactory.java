@@ -3,7 +3,6 @@ package de.trispeedys.resourceplanning.entity.util;
 import java.util.Calendar;
 
 import de.trispeedys.resourceplanning.entity.AggregationRelation;
-import de.trispeedys.resourceplanning.entity.DatabaseLogger;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.DomainResponsibility;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -17,7 +16,6 @@ import de.trispeedys.resourceplanning.entity.MessagingType;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.entity.PositionAggregation;
 import de.trispeedys.resourceplanning.entity.builder.AggregationRelationBuilder;
-import de.trispeedys.resourceplanning.entity.builder.DatabaseLoggerBuilder;
 import de.trispeedys.resourceplanning.entity.builder.DomainBuilder;
 import de.trispeedys.resourceplanning.entity.builder.DomainResponsibilityBuilder;
 import de.trispeedys.resourceplanning.entity.builder.EventBuilder;
@@ -29,7 +27,6 @@ import de.trispeedys.resourceplanning.entity.builder.HelperHistoryBuilder;
 import de.trispeedys.resourceplanning.entity.builder.MessageQueueBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionAggregationBuilder;
 import de.trispeedys.resourceplanning.entity.builder.PositionBuilder;
-import de.trispeedys.resourceplanning.entity.misc.DbLogLevel;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
 import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HelperState;
@@ -155,16 +152,6 @@ public class EntityFactory
     public static Domain buildDomain(String name, int domainNumber)
     {
         return new DomainBuilder().withDomainNumber(domainNumber).withName(name).build();
-    }
-
-    public static DatabaseLogger buildLog(String businessKey, String message)
-    {
-        return buildLog(businessKey, message, DbLogLevel.INFO);
-    }
-
-    public static DatabaseLogger buildLog(String businessKey, String message, DbLogLevel logLevel)
-    {
-        return new DatabaseLoggerBuilder().withBusinessKey(businessKey).withMessage(message).withLogLevel(logLevel).build();
     }
 
     public static PositionAggregation buildPositionAggregation(String name)

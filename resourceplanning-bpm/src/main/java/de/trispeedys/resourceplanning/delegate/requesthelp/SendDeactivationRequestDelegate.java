@@ -4,8 +4,8 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import de.trispeedys.resourceplanning.delegate.requesthelp.misc.RequestHelpNotificationDelegate;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messaging.DeactivationRecoveryMailTemplate;
+import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class SendDeactivationRequestDelegate extends RequestHelpNotificationDelegate
 {
@@ -14,7 +14,7 @@ public class SendDeactivationRequestDelegate extends RequestHelpNotificationDele
         Helper helper = getHelper(execution);
         DeactivationRecoveryMailTemplate template =
                 new DeactivationRecoveryMailTemplate(getHelper(execution), getEvent(execution));
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(), template.constructBody(),
-                template.getMessagingType(), template.getMessagingFormat()).saveOrUpdate();
+        MessagingService.createMessage("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(), template.constructBody(),
+                template.getMessagingType(), template.getMessagingFormat());
     }
 }

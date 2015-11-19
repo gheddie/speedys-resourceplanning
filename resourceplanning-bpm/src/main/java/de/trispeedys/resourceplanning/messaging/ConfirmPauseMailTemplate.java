@@ -15,9 +15,7 @@ public class ConfirmPauseMailTemplate extends AbstractMailTemplate
     public String constructBody()
     {
         return new HtmlGenerator(true).withParagraph("Hallo " + getHelper().getFirstName() + "!")
-                .withLinebreak()
                 .withParagraph("Schade, dass Du uns dieses Mal nicht helfen kannst. Bis zum nächsten Mal (?)!")
-                .withLinebreak()
                 .withParagraph("Deine Tri-Speedys.")
                 .render();
     }

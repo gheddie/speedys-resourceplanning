@@ -170,6 +170,13 @@ public class TestDataProvider
         TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2016, EventState.FINISHED,
                 EventTemplate.TEMPLATE_TRI);
     }
+    
+    public void duplicate2015Unchanged()
+    {
+        // real life event for 2015
+        Event event2015 = RepositoryProvider.getRepository(EventRepository.class).findEventByEventKey("TRI-2015");
+        SpeedyRoutines.duplicateEvent(event2015, "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+    }
 
     public void duplicate2015()
     {

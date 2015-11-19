@@ -4,8 +4,8 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import de.trispeedys.resourceplanning.delegate.requesthelp.misc.RequestHelpNotificationDelegate;
 import de.trispeedys.resourceplanning.entity.Helper;
-import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.messaging.ConfirmPauseMailTemplate;
+import de.trispeedys.resourceplanning.service.MessagingService;
 
 public class ConfirmPauseDelegate extends RequestHelpNotificationDelegate
 {
@@ -15,7 +15,7 @@ public class ConfirmPauseDelegate extends RequestHelpNotificationDelegate
         Helper helper = getHelper(execution);
         ConfirmPauseMailTemplate template =
                 new ConfirmPauseMailTemplate(helper);
-        EntityFactory.buildMessageQueue("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(),
-                template.constructBody(), template.getMessagingType(), template.getMessagingFormat()).saveOrUpdate();
+        MessagingService.createMessage("noreply@tri-speedys.de", helper.getEmail(), template.constructSubject(),
+                template.constructBody(), template.getMessagingType(), template.getMessagingFormat());
     }
 }

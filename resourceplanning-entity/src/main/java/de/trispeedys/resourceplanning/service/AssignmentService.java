@@ -39,9 +39,16 @@ public class AssignmentService
     public static void cancelHelperAssignment(Helper helper, Event event)
     {
         HelperAssignmentRepository repository = RepositoryProvider.getRepository(HelperAssignmentRepository.class);
-        HelperAssignment assignment = repository.findByHelperAndEvent(helper, event);
-        assignment.setHelperAssignmentState(HelperAssignmentState.CANCELLED);
-        repository.saveOrUpdate(assignment);
+        repository.updateSingleValue(repository.findByHelperAndEvent(helper, event), HelperAssignment.ATTR_ASSIGNMENT_STATE, HelperAssignmentState.CANCELLED);
+    }
+    
+    /**
+     * Sets a {@link HelperAssignment} to state {@link HelperAssignmentState#CONFIRMED}.
+     */
+    public static void confirmHelperAssignment(Helper helper, Event event)
+    {
+        HelperAssignmentRepository repository = RepositoryProvider.getRepository(HelperAssignmentRepository.class);
+        repository.updateSingleValue(repository.findByHelperAndEvent(helper, event), HelperAssignment.ATTR_ASSIGNMENT_STATE, HelperAssignmentState.CONFIRMED);
     }
 
     public static HelperAssignment getPriorAssignment(Helper helper, EventTemplate eventTemplate)

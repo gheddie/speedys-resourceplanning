@@ -8,7 +8,8 @@ import de.trispeedys.resourceplanning.delegate.requesthelp.misc.RequestHelpDeleg
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
-import de.trispeedys.resourceplanning.rule.ChoosablePositionGenerator;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 
 public class CheckForAvailablePositionsDelegate extends RequestHelpDelegate
 {
@@ -22,7 +23,7 @@ public class CheckForAvailablePositionsDelegate extends RequestHelpDelegate
         // look up choosable positions via 'ChoosablePositionGenerator', because it is used in following delegate
         // code ('ProposePositionsDelegate'), too...
         List<Position> unassignedPositions =
-                new ChoosablePositionGenerator().generate(null, event);        
+                RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event);        
         // Wenn keine Positionen zum Vorschlagen da sind, zur manuellen Zuweisung abbiegen...
         execution.setVariable(BpmVariables.RequestHelpHelper.VAR_POSITIONS_PROPOSABLE,
                 ((unassignedPositions != null) && (unassignedPositions.size() > 0)));

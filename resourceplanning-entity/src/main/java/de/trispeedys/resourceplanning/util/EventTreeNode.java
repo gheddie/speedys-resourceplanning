@@ -41,4 +41,14 @@ public class EventTreeNode<T> extends EntityTreeNode<Event>
     {
         return ((Event) getPayLoad()).getId();
     }
+    
+    public String getPriorization()
+    {
+        return "";
+    }
+    
+    public String getAvailbability()
+    {
+        return "";
+    }
 }

@@ -221,7 +221,7 @@ public class ResourcePlanningMainFrame extends JFrame
         else
         {
             // show all events
-            TreeTableDataNode root = new TreeTableDataNode("root", "root", null, null, null);
+            TreeTableDataNode root = new TreeTableDataNode("root", "root", "root", "root", null, null, null);
             for (EventDTO dto : events)
             {
                 root.addChild(ResourcePlanningClientRoutines.createDataStructure(dto.getEventId(), false, resourceInfo));

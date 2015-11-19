@@ -3,7 +3,6 @@ package de.trispeedys.resourceplanning.datasource;
 import java.util.HashMap;
 
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.entity.DatabaseLogger;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
@@ -41,7 +40,6 @@ public class Datasources
         registeredDatasources.put(Event.class, new EventDatasource());
         registeredDatasources.put(EventPosition.class, new EventPositionDatasource());
         registeredDatasources.put(HelperAssignment.class, new HelperAssignmentDatasource());
-        registeredDatasources.put(DatabaseLogger.class, new DatabaseLoggerDatasource());
         registeredDatasources.put(PositionAggregation.class, new PositionAggregationDatasource());
     }
 

@@ -127,7 +127,7 @@ public class PositionTest
         AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(11));        
         
         // generator must provide 3 unpriorized and 3 PRIO 2 tasks... 
-        assertEquals(6, new ChoosablePositionGenerator().generate(null, event2016).size());
+        assertEquals(6, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016).size());
     }
     
     /**
@@ -154,7 +154,7 @@ public class PositionTest
         AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(11));        
         
         // this must give 13-4=9 psotions to choose... 
-        assertEquals(9, new ChoosablePositionGenerator().generate(null, event2016).size());
+        assertEquals(9, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016).size());
     }
     
     /**
@@ -182,6 +182,6 @@ public class PositionTest
         AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(3));
         
         // this must give all prio 2 positions (4)... 
-        assertEquals(4, new ChoosablePositionGenerator().generate(null, event2016).size());
+        assertEquals(4, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016).size());
     }
 }

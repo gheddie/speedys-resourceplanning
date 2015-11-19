@@ -76,38 +76,6 @@ public class RequestHelpTest
         RequestHelpTestUtil.startHelperRequestProcess(DEFAULT_HELPER, event, null, rule);
     }
 
-    @Test
-    @Deployment(resources = "RequestHelp.bpmn")
-    public void testReceiveReminderMail()
-    {
-        HibernateUtil.clearAll();
-
-        EventTemplate template = EntityFactory.buildEventTemplate("123").saveOrUpdate();
-
-        Position position =
-                EntityFactory.buildPosition("Moo", 12, SpeedyTestUtil.buildDefaultDomain(1), 0, true)
-                        .saveOrUpdate();
-        Event event =
-                EntityFactory.buildEvent("TRI", "TRI", 21, 6, 2012, EventState.PLANNED, template, null).saveOrUpdate();
-        Helper helper =
-                EntityFactory.buildHelper("Stefan", "Schulz", "a@b.de", HelperState.ACTIVE, 13, 2, 1976)
-                        .saveOrUpdate();
-
-        // assign position to event
-        SpeedyRoutines.relatePositionsToEvent(event, position);
-
-        // create preconditions (this must be a follow up assignment)
-        EntityFactory.buildHelperAssignment(helper, event, position).saveOrUpdate();
-
-        RequestHelpTestUtil.startHelperRequestProcess(helper, event,
-                ResourcePlanningUtil.generateRequestHelpBusinessKey(helper.getId(), event.getId()), rule);
-
-        // mail must have been sent
-        List<MessageQueue> messages = RepositoryProvider.getRepository(MessageQueueRepository.class).findAllUnprocessedMessages();
-        System.out.println(messages.size() + " messages found.");
-        assertEquals(1, messages.size());
-    }
-
     /**
      * For a helper proposed for TRI 2016 without prior assignments, the user task for manual assignment must be
      * generated instantly.
