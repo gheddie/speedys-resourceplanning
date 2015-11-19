@@ -63,5 +63,5 @@ public abstract class EntityTreeNode<T>
 
     public abstract String getPriorization();
 
-    public abstract String getAvailbability();
+    public abstract String getAvailability();
 }

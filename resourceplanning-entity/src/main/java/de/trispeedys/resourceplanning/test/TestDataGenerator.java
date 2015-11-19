@@ -220,9 +220,9 @@ public class TestDataGenerator
         Position posAnsageZieleinlauf = EntityFactory.buildPosition("Ansage Zieleinlauf", 12, domLauf, 0, true, PRIO1).saveOrUpdate();
         Position posVerpflegungPark = EntityFactory.buildPosition("Verpflegung Park", 12, domLauf, 1, true, PRIO2).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posAnsageZieleinlauf, posVerpflegungPark);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("SCST13021976"), event, posAnsageZieleinlauf);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("BELA04041971"), event, posVerpflegungPark);
 
         // Domain 'Radstrecke'
@@ -235,13 +235,13 @@ public class TestDataGenerator
         Position posMotorrad1 = EntityFactory.buildPosition("Motorrad 1", 12, domRad, 232, true).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posKontrolleAbstieg, posEinweisungNachStartnummerWZ,
                 posSicherungAbzweigRunde, posMotorrad1);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("PADE29051964"), event, posKontrolleAbstieg);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("ELCO25071973"), event, posEinweisungNachStartnummerWZ);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("DEIN01081968"), event, posSicherungAbzweigRunde);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("THUL16051983"), event, posMotorrad1);
 
         // Domain 'Zielverpflegung'
@@ -249,9 +249,9 @@ public class TestDataGenerator
         Position posAusgabeGetraenke = EntityFactory.buildPosition("Ausgabe Getränke", 12, domZiel, 38, true).saveOrUpdate();
         Position posObstschneiden = EntityFactory.buildPosition("Obstschneiden", 12, domZiel, 39, true, PRIO1).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posAusgabeGetraenke, posObstschneiden);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("MEDA16121961"), event, posAusgabeGetraenke);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("MUWE22111984"), event, posObstschneiden);
 
         // Domain 'Siegerehrung'
@@ -260,10 +260,13 @@ public class TestDataGenerator
         Position posAnreichenUrkunden =
                 EntityFactory.buildPosition("Anreichen Urkunden", 12, domSieger, 94, true, PRIO1).saveOrUpdate();
         SpeedyRoutines.relatePositionsToEvent(event, posModeration, posAnreichenUrkunden);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("UNDO23031992"), event, posModeration);
-        SpeedyRoutines.assignHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
+        SpeedyRoutines.confirmHelperToPositions(RepositoryProvider.getRepository(HelperRepository.class)
                 .findByCode("GRJI07051991"), event, posAnreichenUrkunden);
+        
+        // do some grouping
+        SpeedyRoutines.createPositionAggregation("some_group", posAnreichenUrkunden, posMotorrad1);
 
         return event;
     }

@@ -16,7 +16,7 @@ public class HtmlRenderer
      * renders success message for {@link HelperCallback} via {@link BpmMessages.RequestHelpHelper#MSG_HELP_CALLBACK}.
      * 
      * @param helperId
-     * @param callback 
+     * @param callback
      * @return
      */
     public static String renderCallbackSuccess(Long helperId, HelperCallback callback)
@@ -24,7 +24,7 @@ public class HtmlRenderer
         Helper helper = (Helper) Datasources.getDatasource(Helper.class).findById(helperId);
         return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
                 .withLinebreak()
-                .withParagraph("Danke, wir haben deine Nachricht erhalten ("+callback.getSummary()+").")
+                .withParagraph("Danke, wir haben deine Nachricht erhalten (" + callback.getSummary() + ").")
                 .withLinebreak()
                 .withParagraph("Deine Tri-Speedys.")
                 .render();
@@ -41,7 +41,7 @@ public class HtmlRenderer
         Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findById(helperId);
         return new HtmlGenerator().withHeader("Hallo " + helper.getFirstName() + "!")
                 .withLinebreak()
-                .withParagraph("Das war ein Fehler. Diese Nachricht haben wir bereits von Dir erhalten.")
+                .withParagraph("Das war ein Fehler. Die Eingabe konnte nicht verarbeitet werden. Hast du vielleicht schon mal aus diesen Link geklickt?")
                 .withLinebreak()
                 .withParagraph("Deine Tri-Speedys.")
                 .render();
@@ -66,8 +66,7 @@ public class HtmlRenderer
                 .withLinebreak()
                 .withParagraph(
                         "Leider ist die von dir gewählte Position (" +
-                                chosenPosition.getDescription() + ") bereits besetzt. " +
-                                "Du wirst in Kürze eine Mail mit Alternativvorschlägen erhalten.")
+                                chosenPosition.getDescription() + ") bereits besetzt. " + "Du wirst in Kürze eine Mail mit Alternativvorschlägen erhalten.")
                 .withLinebreak(2)
                 .withParagraph("Deine Tri-Speedys.")
                 .render();

@@ -47,7 +47,7 @@ public class EventTreeNode<T> extends EntityTreeNode<Event>
         return "";
     }
     
-    public String getAvailbability()
+    public String getAvailability()
     {
         return "";
     }

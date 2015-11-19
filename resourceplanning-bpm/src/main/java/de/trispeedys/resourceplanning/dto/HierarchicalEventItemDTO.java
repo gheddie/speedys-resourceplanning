@@ -16,7 +16,9 @@ public class HierarchicalEventItemDTO
 
     private String priorization;
     
-    private String availbability;
+    private String availability;
+
+    private String group;
     
     public String getItemType()
     {
@@ -88,13 +90,23 @@ public class HierarchicalEventItemDTO
         this.priorization = priorization;        
     }
     
-    public String getAvailbability()
+    public String getAvailability()
     {
-        return availbability;
+        return availability;
     }
     
-    public void setAvailbability(String availbability)
+    public void setAvailability(String availability)
     {
-        this.availbability = availbability;
+        this.availability = availability;
+    }
+    
+    public String getGroup()
+    {
+        return group;
+    }
+
+    public void setGroup(String group)
+    {
+        this.group = group;
     }
 }

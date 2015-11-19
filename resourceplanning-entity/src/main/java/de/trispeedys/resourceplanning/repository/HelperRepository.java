@@ -9,8 +9,7 @@ import de.trispeedys.resourceplanning.entity.misc.HelperState;
 import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
 import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
 
-public class HelperRepository extends AbstractDatabaseRepository<Helper> implements
-        DatabaseRepository<HelperRepository>
+public class HelperRepository extends AbstractDatabaseRepository<Helper> implements DatabaseRepository<HelperRepository>
 {
     protected DefaultDatasource<Helper> createDataSource()
     {

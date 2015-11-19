@@ -14,8 +14,7 @@ import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository
 import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 
-public class HelperHistoryRepository extends AbstractDatabaseRepository<HelperHistory> implements
-        DatabaseRepository<HelperHistoryRepository>
+public class HelperHistoryRepository extends AbstractDatabaseRepository<HelperHistory> implements DatabaseRepository<HelperHistoryRepository>
 {
     protected DefaultDatasource<HelperHistory> createDataSource()
     {
@@ -28,20 +27,18 @@ public class HelperHistoryRepository extends AbstractDatabaseRepository<HelperHi
         variables.put("helper", helper);
         variables.put("event", event);
         return dataSource().find(
-                "FROM " +
-                        HelperHistory.class.getSimpleName() +
-                        " hh WHERE hh.helper = :helper AND hh.event = :event ORDER BY hh.creationTime ASC", variables);
+                "FROM " + HelperHistory.class.getSimpleName() + " hh WHERE hh.helper = :helper AND hh.event = :event ORDER BY hh.creationTime ASC", variables);
     }
 
     public HelperHistory createEntry(Helper helper, Event event, HistoryType historyType)
     {
-        return EntityFactory.buildHelperHistory(helper, event, historyType).saveOrUpdate();       
+        return EntityFactory.buildHelperHistory(helper, event, historyType).saveOrUpdate();
     }
 
     public HelperHistory createEntry(Long helperId, Long eventId, HistoryType historyType)
     {
         Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findById(helperId);
-        Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);        
+        Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
         return createEntry(helper, event, historyType);
     }
 }

@@ -46,7 +46,7 @@ public class DomainTreeNode<T> extends EntityTreeNode<Domain>
         return "";
     }
 
-    public String getAvailbability()
+    public String getAvailability()
     {
         return "";
     }

@@ -28,6 +28,12 @@ import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 
 public class PositionTest
 {
+    private static final Integer PRIO1 = new Integer(1);
+    
+    private static final Integer PRIO2 = new Integer(2);
+    
+    private static final Integer PRIO3 = new Integer(3);
+
     @Test
     public void testEventPositions()
     {
@@ -183,5 +189,60 @@ public class PositionTest
         
         // this must give all prio 2 positions (4)... 
         assertEquals(4, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016).size());
+    }
+    
+    /**
+     * Test choosable position generation with using {@link PositionAggregation} groups.
+     */
+    @Test
+    public void testPositionAggregationWithRelationGroups()
+    {
+        HibernateUtil.clearAll();
+        
+        Helper helper = EntityFactory.buildHelper("Müller", "Peter", "", HelperState.ACTIVE, 1, 1, 1980).saveOrUpdate();
+        
+        EventTemplate template = EntityFactory.buildEventTemplate("999").saveOrUpdate();
+        
+        Event event = EntityFactory.buildEvent("", "", 14, 4, 2016, EventState.PLANNED, template, null).saveOrUpdate();
+                
+        Domain domain = EntityFactory.buildDomain("123", 123).saveOrUpdate();
+        
+        Position posA1 = EntityFactory.buildPosition("posA1", 12, domain, 1, true).saveOrUpdate();
+        Position posA2 = EntityFactory.buildPosition("posA2", 12, domain, 2, true).saveOrUpdate();
+        Position posA3 = EntityFactory.buildPosition("posA3", 12, domain, 3, true).saveOrUpdate();
+        Position posA4 = EntityFactory.buildPosition("posA4", 12, domain, 4, true, PRIO1).saveOrUpdate();
+        
+        Position posB1 = EntityFactory.buildPosition("posB1", 12, domain, 5, true, PRIO2).saveOrUpdate();
+        Position posB2 = EntityFactory.buildPosition("posB2", 12, domain, 6, true, PRIO1).saveOrUpdate();
+        Position posB3 = EntityFactory.buildPosition("posB3", 12, domain, 7, true, PRIO3).saveOrUpdate();
+        Position posB4 = EntityFactory.buildPosition("posB4", 12, domain, 8, true).saveOrUpdate();
+        Position posB5 = EntityFactory.buildPosition("posB5", 12, domain, 9, true, PRIO1).saveOrUpdate();
+        
+        SpeedyRoutines.relatePositionsToEvent(event, posA1, posA2, posA3, posA4, posB1, posB2, posB3, posB4, posB5);
+        
+        SpeedyRoutines.createPositionAggregation("group1", posA4, posB1, posB2);
+        
+        SpeedyRoutines.createPositionAggregation("group2", posA2, posB3, posB4);
+        
+        
+        int expectedNoGroup = 3;
+        
+        int expectedGroup1 = 1;
+        
+        int expectedGroup2 = 3;        
+        
+        // TODO
+        assertEquals((expectedNoGroup + expectedGroup1 + expectedGroup2), RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event).size());
+    }
+    
+    /**
+     * A {@link Position} must only be in no or one {@link PositionAggregation} group.
+     */
+    @Test
+    public void testPositionAggregationDisjunct()
+    {
+        HibernateUtil.clearAll();
+        
+        // TODO
     }
 }

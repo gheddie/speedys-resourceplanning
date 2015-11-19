@@ -17,8 +17,9 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="assignmentString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="availbability" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="availability" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="entityId" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
+ *         &lt;element name="group" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="hierarchyLevel" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="infoString" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="itemKey" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -35,8 +36,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hierarchicalEventItemDTO", propOrder = {
     "assignmentString",
-    "availbability",
+    "availability",
     "entityId",
+    "group",
     "hierarchyLevel",
     "infoString",
     "itemKey",
@@ -46,8 +48,9 @@ import javax.xml.bind.annotation.XmlType;
 public class HierarchicalEventItemDTO {
 
     protected String assignmentString;
-    protected String availbability;
+    protected String availability;
     protected Long entityId;
+    protected String group;
     protected int hierarchyLevel;
     protected String infoString;
     protected String itemKey;
@@ -79,27 +82,27 @@ public class HierarchicalEventItemDTO {
     }
 
     /**
-     * Gets the value of the availbability property.
+     * Gets the value of the availability property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getAvailbability() {
-        return availbability;
+    public String getAvailability() {
+        return availability;
     }
 
     /**
-     * Sets the value of the availbability property.
+     * Sets the value of the availability property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setAvailbability(String value) {
-        this.availbability = value;
+    public void setAvailability(String value) {
+        this.availability = value;
     }
 
     /**
@@ -124,6 +127,30 @@ public class HierarchicalEventItemDTO {
      */
     public void setEntityId(Long value) {
         this.entityId = value;
+    }
+
+    /**
+     * Gets the value of the group property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getGroup() {
+        return group;
+    }
+
+    /**
+     * Sets the value of the group property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setGroup(String value) {
+        this.group = value;
     }
 
     /**

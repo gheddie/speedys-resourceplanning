@@ -1,27 +1,27 @@
 package de.trispeedys.resourceplanning.components.treetable;
 
-import java.util.Date;
-
 public class TreeTableDataModel extends AbstractTreeTableModel
 {
     private static final int COL_DESCRIPTION = 0;
     
     private static final int COL_ASSIGNMENT = 1;
     
-    private static final int COL_PRIORIZATION = 2;
+    private static final int COL_GROUP = 2;
+    
+    private static final int COL_PRIORIZATION = 3;
 
-    private static final int COL_AVAILABILITY = 3;
+    private static final int COL_AVAILABILITY = 4;
 
     // Spalten Name.
     static protected String[] columnNames =
     {
-            "Beschreibung", "Besetzung", "Priorität", "Wählbar"
+            "Beschreibung", "Besetzung", "Gruppe", "Priorität", "Wählbar"
     };
 
     // Spalten Typen.
     static protected Class<?>[] columnTypes =
     {
-            MyTreeTableModel.class, String.class, String.class, String.class, String.class
+            MyTreeTableModel.class, String.class, String.class, String.class, String.class, String.class
     };
 
     public TreeTableDataModel(TreeTableDataNode rootNode)
@@ -63,6 +63,8 @@ public class TreeTableDataModel extends AbstractTreeTableModel
                 return ((TreeTableDataNode) node).getDescription();
             case COL_ASSIGNMENT:
                 return ((TreeTableDataNode) node).getAssignment();
+            case COL_GROUP:
+                return ((TreeTableDataNode) node).getGroup();
             case COL_PRIORIZATION:
                 return ((TreeTableDataNode) node).getPriorization();                
             case COL_AVAILABILITY:

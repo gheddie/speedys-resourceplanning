@@ -22,7 +22,9 @@ import de.trispeedys.resourceplanning.entity.EventTemplate;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.PositionAggregation;
 import de.trispeedys.resourceplanning.entity.misc.EventState;
+import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.entity.misc.HierarchicalEventItem;
 import de.trispeedys.resourceplanning.entity.util.EntityFactory;
 import de.trispeedys.resourceplanning.repository.EventRepository;
@@ -111,6 +113,18 @@ public class SpeedyRoutines
 
     public static String createHelperCode(Helper helper)
     {
+        if (helper == null)
+        {
+            throw new ResourcePlanningException("helper must not be NULL!!");
+        }
+        if ((StringUtil.isBlank(helper.getLastName())) || (helper.getLastName().length() < 2))
+        {
+            throw new ResourcePlanningException("helpers last name must be at least 2 digits long!!");
+        }
+        if ((StringUtil.isBlank(helper.getFirstName())) || (helper.getFirstName().length() < 2))
+        {
+            throw new ResourcePlanningException("helpers first name must be at least 2 digits long!!");
+        }        
         Calendar cal = Calendar.getInstance();
         cal.setTime(helper.getDateOfBirth());
         StringBuffer result = new StringBuffer();
@@ -145,6 +159,27 @@ public class SpeedyRoutines
             EntityFactory.buildEventPosition(event, position).saveOrUpdate();
         }
     }
+    
+    public static void createPositionAggregation(String groupName, Position... positions)
+    {
+        if (StringUtil.isBlank(groupName))
+        {
+            throw new ResourcePlanningException("group name must be set for creating a position aggregation!!");
+        }
+        if ((positions == null) || (positions.length == 0))
+        {
+            throw new ResourcePlanningException("at least one position must be provided for creating a position aggregation!!");
+        }   
+        PositionAggregation aggregation = EntityFactory.buildPositionAggregation(groupName).saveOrUpdate();
+        for (Position pos : positions)
+        {
+            if (pos == null)
+            {
+                throw new ResourcePlanningException("can not build a position aggregation on a NULL position!!");
+            }
+            EntityFactory.buildAggregationRelation(pos, aggregation).saveOrUpdate();
+        }
+    }
 
     public static void relateEventsToPosition(Position position, Event... events)
     {
@@ -160,6 +195,14 @@ public class SpeedyRoutines
         {
             EntityFactory.buildHelperAssignment(helper, event, position).saveOrUpdate();
         }
+    }
+    
+    public static void confirmHelperToPositions(Helper helper, Event event, Position... positions)
+    {
+        for (Position position : positions)
+        {
+            EntityFactory.buildHelperAssignment(helper, event, position, HelperAssignmentState.CONFIRMED).saveOrUpdate();
+        }        
     }
 
     public static EntityTreeNode eventAsTree(Long eventId, boolean onlyUnassigned)

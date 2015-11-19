@@ -21,6 +21,7 @@ import de.trispeedys.resourceplanning.dto.HelperDTO;
 import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.dto.ManualAssignmentDTO;
 import de.trispeedys.resourceplanning.dto.PositionDTO;
+import de.trispeedys.resourceplanning.entity.AggregationRelation;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
@@ -31,12 +32,15 @@ import de.trispeedys.resourceplanning.execution.BpmSignals;
 import de.trispeedys.resourceplanning.execution.BpmTaskDefinitionKeys;
 import de.trispeedys.resourceplanning.execution.BpmVariables;
 import de.trispeedys.resourceplanning.interaction.EventManager;
+import de.trispeedys.resourceplanning.repository.AggregationRelationRepository;
 import de.trispeedys.resourceplanning.repository.EventRepository;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.util.EntityTreeNode;
+import de.trispeedys.resourceplanning.util.HierarchicalEventItemType;
+import de.trispeedys.resourceplanning.util.PositionTreeNode;
 import de.trispeedys.resourceplanning.util.ResourcePlanningUtil;
 import de.trispeedys.resourceplanning.util.SpeedyRoutines;
 import de.trispeedys.resourceplanning.util.StringUtil;
@@ -48,7 +52,7 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 public class ResourceInfo
 {
     private static final Logger logger = Logger.getLogger(ResourceInfo.class);
-    
+
     public PositionDTO[] queryAvailablePositions(Long eventId)
     {
         if (eventId == null)
@@ -62,8 +66,7 @@ public class ResourceInfo
         }
         List<PositionDTO> dtos = new ArrayList<PositionDTO>();
         PositionDTO dto = null;
-        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event,
-                false))
+        for (Position pos : RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event, false))
         {
             dto = new PositionDTO();
             dto.setDescription(pos.getDescription());
@@ -91,9 +94,7 @@ public class ResourceInfo
 
     public void finishUp()
     {
-        BpmPlatform.getDefaultProcessEngine()
-                .getRuntimeService()
-                .signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
+        BpmPlatform.getDefaultProcessEngine().getRuntimeService().signalEventReceived(BpmSignals.RequestHelpHelper.SIG_EVENT_STARTED);
     }
 
     public EventDTO[] queryEvents()
@@ -127,14 +128,21 @@ public class ResourceInfo
         SpeedyRoutines.duplicateEvent(event, description, eventKey, day, month, year, null, null);
     }
 
+    @SuppressWarnings("rawtypes")
     public HierarchicalEventItemDTO[] getEventNodes(Long eventId, boolean onlyUnassignedPositions)
     {
         logger.info("getting event nodes...");
-        
+        // key : position id, value : aggregation relation
+        HashMap<Long, AggregationRelation> relationHash = new HashMap<Long, AggregationRelation>();
+        for (AggregationRelation relation : RepositoryProvider.getRepository(AggregationRelationRepository.class).findAll())
+        {
+            relationHash.put(relation.getPositionId(), relation);
+        }
         Event event = RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
         List<EntityTreeNode> nodes = SpeedyRoutines.flattenedEventNodes(event, onlyUnassignedPositions);
         List<HierarchicalEventItemDTO> dtos = new ArrayList<HierarchicalEventItemDTO>();
         HierarchicalEventItemDTO dto = null;
+        PositionTreeNode positionNode = null;
         for (EntityTreeNode node : nodes)
         {
             dto = new HierarchicalEventItemDTO();
@@ -143,8 +151,15 @@ public class ResourceInfo
             dto.setHierarchyLevel(node.getHierarchyLevel());
             dto.setItemKey(node.itemKey());
             dto.setAssignmentString(node.getAssignmentString());
-            dto.setAvailbability(node.getAvailbability());
+            dto.setAvailability(node.getAvailability());
             dto.setPriorization(node.getPriorization());
+            if (node.getItemType().equals(HierarchicalEventItemType.POSITION))
+            {
+                positionNode = (PositionTreeNode) node;
+                dto.setGroup(relationHash.get(positionNode.getPositionId()) != null
+                        ? relationHash.get(positionNode.getPositionId()).getPositionAggregation().getName()
+                        : "");
+            }
             dto.setEntityId(node.getEntityId());
             dtos.add(dto);
         }
@@ -219,9 +234,7 @@ public class ResourceInfo
         try
         {
             businessKey = ResourcePlanningUtil.generateRequestHelpBusinessKey(helperId, eventId);
-            BpmPlatform.getDefaultProcessEngine()
-                    .getRuntimeService()
-                    .correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED, businessKey);
+            BpmPlatform.getDefaultProcessEngine().getRuntimeService().correlateMessage(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED, businessKey);
         }
         catch (MismatchingMessageCorrelationException e)
         {
@@ -247,9 +260,7 @@ public class ResourceInfo
 
     public void createHelper(String lastName, String firstName, String email, int dayOfBirth, int monthOfBirth, int yearOfBirth)
     {
-        Helper helper =
-                EntityFactory.buildHelper(lastName, firstName, email, HelperState.ACTIVE, dayOfBirth, monthOfBirth, yearOfBirth)
-                        .saveOrUpdate();
+        Helper helper = EntityFactory.buildHelper(lastName, firstName, email, HelperState.ACTIVE, dayOfBirth, monthOfBirth, yearOfBirth).saveOrUpdate();
         // start a request help process for every event which is initiated in this moment...
         for (Event event : RepositoryProvider.getRepository(EventRepository.class).findInitiatedEvents())
         {

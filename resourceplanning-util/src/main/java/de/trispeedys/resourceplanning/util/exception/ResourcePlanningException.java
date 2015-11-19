@@ -8,4 +8,9 @@ public class ResourcePlanningException extends RuntimeException
     {
         super(message);
     }
+
+    public ResourcePlanningException(String message, Throwable t)
+    {
+        super(message, t);
+    }
 }

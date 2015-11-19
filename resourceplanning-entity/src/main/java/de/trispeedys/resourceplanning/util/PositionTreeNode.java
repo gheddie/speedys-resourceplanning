@@ -67,7 +67,7 @@ public class PositionTreeNode<T> extends EntityTreeNode<Position>
         }
     }
     
-    public String getAvailbability()
+    public String getAvailability()
     {
         Position position = ((AssignmentContainer) getPayLoad()).getPosition();
         if (position != null)
@@ -85,6 +85,14 @@ public class PositionTreeNode<T> extends EntityTreeNode<Position>
         Helper helper = ((AssignmentContainer) getPayLoad()).getHelper();
         return (helper != null
                 ? helper.getId()
+                : null);
+    }
+
+    public Long getPositionId()
+    {
+        Position position = ((AssignmentContainer) getPayLoad()).getPosition();
+        return (position != null
+                ? position.getId()
                 : null);
     }
 }

@@ -1,74 +1,65 @@
 package de.trispeedys.resourceplanning.rule;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import de.trispeedys.resourceplanning.entity.AggregationRelation;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.PositionAggregation;
+import de.trispeedys.resourceplanning.repository.AggregationRelationRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.trispeedys.resourceplanning.repository.base.PositionAggregationRepository;
 import de.trispeedys.resourceplanning.repository.base.RepositoryProvider;
 
 /**
- * TODO use it in delegate code which provides choosable positions!!
- * 
  * @author Stefan.Schulz
- *
  */
 public class ChoosablePositionGenerator extends RuleObject<Position>
 {
+    private static final String NO_GROUP = "NO_GROUP";
+
     public List<Position> generate(Helper helper, Event event)
     {
-        // TODO take care of aggregation groups!!
-        List<Position> unassignedPositionsInEvent = RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event, true);
-        return new PosAggregationContainer(unassignedPositionsInEvent).collect();
-    }
-
-    private static class PosAggregationContainer
-    {
-        private static final Integer UNPRIORIZED = new Integer(-1);
-
-        // contains all given positions grouped by priority (as key), unpriorized positions get key '-1'
-        private HashMap<Integer, List<Position>> positionsByPriority = new HashMap<Integer, List<Position>>();
-
-        private List<Integer> prioKeys = null;
-
-        public PosAggregationContainer(List<Position> positions)
+        List<PositionAggregation> groups = RepositoryProvider.getRepository(PositionAggregationRepository.class).findAll();
+        PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
+        List<Position> unassignedPositionsInEvent = positionRepository.findUnassignedPositionsInEvent(event, true);
+        if ((groups == null) || (groups.size() == 0))
         {
-            super();
-            Integer prioKey = Integer.MIN_VALUE;
-            for (Position pos : positions)
-            {
-                prioKey = pos.getAssignmentPriority() != null
-                        ? pos.getAssignmentPriority()
-                        : UNPRIORIZED;
-                if (positionsByPriority.get(prioKey) == null)
-                {
-                    positionsByPriority.put(prioKey, new ArrayList<Position>());
-                }
-                positionsByPriority.get(prioKey).add(pos);
-            }
-            ArrayList<Integer> tmpKeys = new ArrayList<Integer>(positionsByPriority.keySet());
-            Collections.sort(tmpKeys);
-            prioKeys = tmpKeys;
+            // we take all positions as one group...
+            return new PosAggregationContainer(unassignedPositionsInEvent).collect();
         }
-
-        public List<Position> collect()
+        else
         {
-            // no arms, no cookies...
-            if (prioKeys.size() == 0)
+            // cache unassigned positions...
+            HashMap<Long, Position> positionHash = new HashMap<Long, Position>();
+            for (Position pos : unassignedPositionsInEvent)
             {
-                return new ArrayList<Position>();
+                positionHash.put(pos.getId(), pos);
             }
-            // return the positions with the highest prio only...
-            Integer highestPriorityKey = prioKeys.get(prioKeys.size()-1);
-            List<Position> result = positionsByPriority.get(highestPriorityKey);
-            if ((!(highestPriorityKey.equals(UNPRIORIZED))) && (positionsByPriority.get(UNPRIORIZED) != null))
+            // all relations between position and aggregation...
+            HashMap<String, List<Position>> positionsByGroup = new HashMap<String, List<Position>>();
+            for (AggregationRelation relation : RepositoryProvider.getRepository(AggregationRelationRepository.class).findAll())
             {
-                // the highest prio is not 'UNPRIORIZED', so we add it, too...
-                result.addAll(positionsByPriority.get(UNPRIORIZED));
+                String key = relation.getPositionAggregation().getName();
+                if (positionsByGroup.get(key) == null)
+                {
+                    positionsByGroup.put(key, new ArrayList<Position>());
+                }
+                positionsByGroup.get(key).add(positionHash.get(relation.getPositionId()));
+                // remove used position
+                positionHash.remove(relation.getPositionId());
+            }
+            // add remaining positions to group 'no group'...
+            positionsByGroup.put(NO_GROUP, new ArrayList<Position>(positionHash.values()));
+            List<Position> result = new ArrayList<Position>();
+            for (String name : positionsByGroup.keySet())
+            {
+                result.addAll(new PosAggregationContainer(positionsByGroup.get(name)).collect());
             }
             return result;
         }

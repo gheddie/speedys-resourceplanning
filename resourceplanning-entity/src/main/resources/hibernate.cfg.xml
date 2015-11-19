@@ -31,6 +31,7 @@
 		<mapping class="de.trispeedys.resourceplanning.entity.EventTemplate" />
 		<mapping class="de.trispeedys.resourceplanning.entity.HelperHistory" />
 		<mapping class="de.trispeedys.resourceplanning.entity.PositionAggregation" />
+		<mapping class="de.trispeedys.resourceplanning.entity.AggregationRelation" />
 		
 	</session-factory>
 </hibernate-configuration>

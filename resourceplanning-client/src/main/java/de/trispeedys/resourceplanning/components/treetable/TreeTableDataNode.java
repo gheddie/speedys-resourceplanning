@@ -13,6 +13,8 @@ public class TreeTableDataNode
 
     private String assignment;
     
+    private String group;
+    
     private String priorization;
     
     private String availability;
@@ -21,13 +23,14 @@ public class TreeTableDataNode
 
     private String itemType;
 
-    private Long entityId;     
+    private Long entityId;    
 
-    public TreeTableDataNode(String description, String assignment, String priorization, String availability, String itemType, Long entityId,
+    public TreeTableDataNode(String description, String assignment, String group, String priorization, String availability, String itemType, Long entityId,
             List<TreeTableDataNode> children)
     {
         this.description = description;
         this.assignment = assignment;
+        this.group = group;
         this.priorization = priorization;
         this.availability = availability;
         this.itemType = itemType;
@@ -48,6 +51,11 @@ public class TreeTableDataNode
     public String getAssignment()
     {
         return assignment;
+    }
+    
+    public String getGroup()
+    {
+        return group;
     }
     
     public String getPriorization()

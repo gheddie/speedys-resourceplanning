@@ -35,8 +35,9 @@ public class HibernateUtil
 
     public static void clearAll()
     {
-        clearTable("position_aggregation");
+        clearTable("domain_responsibility");
         clearTable("aggregation_relation");
+        clearTable("position_aggregation");        
         clearTable("helper_history");
         clearTable("event_position");
         clearTable("helper_assignment");
@@ -46,7 +47,6 @@ public class HibernateUtil
         clearTable("event");
         clearTable("event_template");
         clearTable("message_queue");
-        clearTable("database_logger");        
     }
 
     private static void clearTable(String tableName)

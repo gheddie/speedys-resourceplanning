@@ -3,6 +3,7 @@ package de.trispeedys.resourceplanning.repository.base;
 import java.util.HashMap;
 
 import de.trispeedys.resourceplanning.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.repository.AggregationRelationRepository;
 import de.trispeedys.resourceplanning.repository.DomainRepository;
 import de.trispeedys.resourceplanning.repository.EventPositionRepository;
 import de.trispeedys.resourceplanning.repository.EventRepository;
@@ -36,6 +37,8 @@ public class RepositoryProvider
         registerRepository(HelperAssignmentRepository.class);
         registerRepository(HelperRepository.class);
         registerRepository(HelperHistoryRepository.class);
+        registerRepository(PositionAggregationRepository.class);
+        registerRepository(AggregationRelationRepository.class);
     }
 
     @SuppressWarnings("rawtypes")

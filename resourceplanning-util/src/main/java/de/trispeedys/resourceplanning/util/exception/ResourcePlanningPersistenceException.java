@@ -8,4 +8,9 @@ public class ResourcePlanningPersistenceException extends ResourcePlanningExcept
     {
         super(message);
     }
+
+    public ResourcePlanningPersistenceException(String message, Throwable t)
+    {
+        super(message, t);
+    }
 }

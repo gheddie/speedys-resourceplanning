@@ -12,6 +12,7 @@ import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.HelperAssignment;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.PositionAggregation;
 import de.trispeedys.resourceplanning.entity.misc.HelperAssignmentState;
 import de.trispeedys.resourceplanning.repository.base.AbstractDatabaseRepository;
 import de.trispeedys.resourceplanning.repository.base.DatabaseRepository;
@@ -23,7 +24,7 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
     {
         return (Position) dataSource().findSingle(Position.ATTR_POS_NUMBER, positionNumber);
     }
-    
+
     public List<Position> findUnassignedPositionsInEvent(Event event)
     {
         return new ChoosablePositionGenerator().generate(null, event);
@@ -59,9 +60,12 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
                 "FROM " +
                         EventPosition.class.getSimpleName() + " ep WHERE ep." + EventPosition.ATTR_EVENT +
                         " = :event AND ep.position.id NOT IN (SELECT ec.position.id FROM " +
-                        HelperAssignment.class.getSimpleName() + " ec WHERE ec.event = :event AND ec.helperAssignmentState = '" +
-                        HelperAssignmentState.PLANNED + "' OR ec.helperAssignmentState = '" + HelperAssignmentState.CONFIRMED +
-                        "')";
+                        HelperAssignment.class.getSimpleName() +
+                        " ec WHERE ec.event = :event AND" +
+                        // helper assignments must from both states 'PLANNED' and 'CONFIRMED' must be
+                        // regarded (and grouped) as exclusions
+                        " (ec.helperAssignmentState = '" + HelperAssignmentState.PLANNED + "' OR ec.helperAssignmentState = '" +
+                        HelperAssignmentState.CONFIRMED + "'))";
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("event", event);
         List<EventPosition> eventPositions = Datasources.getDatasource(EventPosition.class).find(qryString, parameters);
@@ -91,8 +95,7 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
     {
         List<EventPosition> list =
                 Datasources.getDatasource(EventPosition.class).find(
-                        "FROM " + EventPosition.class.getSimpleName() + " ep INNER JOIN ep.position pos WHERE ep.event = :event",
-                        "event", event);
+                        "FROM " + EventPosition.class.getSimpleName() + " ep INNER JOIN ep.position pos WHERE ep.event = :event", "event", event);
         List<Position> result = new ArrayList<Position>();
         Object[] tuple = null;
         for (Object obj : list)
