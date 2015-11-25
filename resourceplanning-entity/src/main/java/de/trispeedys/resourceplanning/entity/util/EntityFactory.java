@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning.entity.util;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import de.trispeedys.resourceplanning.entity.AggregationRelation;
 import de.trispeedys.resourceplanning.entity.Domain;
@@ -38,8 +39,20 @@ import de.trispeedys.resourceplanning.util.exception.ResourcePlanningException;
 
 public class EntityFactory
 {
-    public static Helper buildHelper(String lastName, String firstName, String email, HelperState helperState, int dayOfBirth,
-            int monthOfBirth, int yearOfBirth)
+    public static Helper buildHelper(String lastName, String firstName, String email, HelperState helperState, Date dateOfBirth)
+    {
+        Helper result =
+                new HelperBuilder().withFirstName(firstName)
+                        .withLastName(lastName)
+                        .withDateOfBirth(dateOfBirth)
+                        .withEmail(email)
+                        .withHelperState(helperState)
+                        .build();
+        result.setCode(SpeedyRoutines.createHelperCode(result));
+        return result;
+    }
+
+    public static Helper buildHelper(String lastName, String firstName, String email, HelperState helperState, int dayOfBirth, int monthOfBirth, int yearOfBirth)
     {
         Calendar dateOfBirth = Calendar.getInstance();
         dateOfBirth.set(Calendar.DAY_OF_MONTH, dayOfBirth);
@@ -58,8 +71,7 @@ public class EntityFactory
 
     public static HelperHistory buildHelperHistory(Helper helper, Event event, HistoryType historyType)
     {
-        HelperHistory result =
-                new HelperHistoryBuilder().withHelper(helper).withEvent(event).withHistoryType(historyType).build();
+        HelperHistory result = new HelperHistoryBuilder().withHelper(helper).withEvent(event).withHistoryType(historyType).build();
         return result;
     }
 
@@ -68,14 +80,12 @@ public class EntityFactory
         return buildHelperAssignment(helper, event, position, HelperAssignmentState.PLANNED);
     }
 
-    public static HelperAssignment buildHelperAssignment(Helper helper, Event event, Position position,
-            HelperAssignmentState helperAssignmentState)
+    public static HelperAssignment buildHelperAssignment(Helper helper, Event event, Position position, HelperAssignmentState helperAssignmentState)
     {
         if (!(PositionService.isPositionPresentInEvent(position, event)))
         {
             throw new ResourcePlanningException("helper '" +
-                    helper + "' can not be commited to position '" + position + "' as it is not present in event '" + event +
-                    "'.");
+                    helper + "' can not be commited to position '" + position + "' as it is not present in event '" + event + "'.");
         }
         return new HelperAssignmentBuilder().withHelper(helper)
                 .withPosition(position)
@@ -83,7 +93,7 @@ public class EntityFactory
                 .withHelperAssignmentState(helperAssignmentState)
                 .build();
     }
-    
+
     public static Position buildPosition(String description, int minimalAge, Domain domain, int positionNumber, boolean choosable)
     {
         return buildPosition(description, minimalAge, domain, positionNumber, choosable, null);
@@ -105,8 +115,8 @@ public class EntityFactory
         return new EventTemplateBuilder().withDescription(description).build();
     }
 
-    public static Event buildEvent(String description, String eventKey, int day, int month, int year, EventState eventState,
-            EventTemplate eventTemplate, Event parentEvent)
+    public static Event buildEvent(String description, String eventKey, int day, int month, int year, EventState eventState, EventTemplate eventTemplate,
+            Event parentEvent)
     {
         Calendar eventDate = Calendar.getInstance();
         eventDate.set(Calendar.DAY_OF_MONTH, day);
@@ -121,14 +131,13 @@ public class EntityFactory
                 .build();
     }
 
-    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body,
-            MessagingFormat messagingFormat)
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingFormat messagingFormat)
     {
         return buildMessageQueue(fromAddress, toAddress, subject, body, MessagingType.NONE, messagingFormat);
     }
 
-    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body,
-            MessagingType messagingType, MessagingFormat messagingFormat)
+    public static MessageQueue buildMessageQueue(String fromAddress, String toAddress, String subject, String body, MessagingType messagingType,
+            MessagingFormat messagingFormat)
     {
         return new MessageQueueBuilder().withFromAddress(fromAddress)
                 .withToAddress(toAddress)
@@ -161,6 +170,6 @@ public class EntityFactory
 
     public static AggregationRelation buildAggregationRelation(Position position, PositionAggregation positionAggregation)
     {
-        return new AggregationRelationBuilder().withPosition(position).withPositionAggregation(positionAggregation).build();   
+        return new AggregationRelationBuilder().withPosition(position).withPositionAggregation(positionAggregation).build();
     }
 }

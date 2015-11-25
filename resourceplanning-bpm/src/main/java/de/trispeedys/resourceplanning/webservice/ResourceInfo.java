@@ -70,6 +70,7 @@ public class ResourceInfo
         {
             dto = new PositionDTO();
             dto.setDescription(pos.getDescription());
+            dto.setMinimalAge(pos.getMinimalAge());
             dto.setDomain(pos.getDomain().getName());
             dto.setPositionId(pos.getId());
             dtos.add(dto);

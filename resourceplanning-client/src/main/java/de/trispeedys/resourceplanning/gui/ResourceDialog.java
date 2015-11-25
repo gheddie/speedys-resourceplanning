@@ -17,14 +17,11 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -38,7 +35,6 @@ import de.trispeedys.resourceplanning.components.treetable.TreeTable;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataModel;
 import de.trispeedys.resourceplanning.components.treetable.TreeTableDataNode;
 import de.trispeedys.resourceplanning.gui.builder.TableModelBuilder;
-import de.trispeedys.resourceplanning.util.HierarchicalEventItemType;
 import de.trispeedys.resourceplanning.webservice.EventDTO;
 import de.trispeedys.resourceplanning.webservice.HelperDTO;
 import de.trispeedys.resourceplanning.webservice.ManualAssignmentDTO;
@@ -62,7 +58,7 @@ import de.trispeedys.resourceplanning.webservice.ResourceInfoService;
  * 
  *         + debug conf + proj --> res....-bpm + socket attach + localhost:8000 + no termination
  */
-public class ResourcePlanningMainFrame extends JFrame
+public class ResourceDialog extends SpeedyFrame
 {
     private static final long serialVersionUID = 2338002273562986827L;
 
@@ -82,8 +78,9 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private ResourceInfo resourceInfo = null;
 
-    public ResourcePlanningMainFrame()
+    public ResourceDialog(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable, SpeedyView parentFrame)
     {
+        super(title, resizable, closable, maximizable, iconifiable, parentFrame);
         initComponents();
         resourceInfo = new ResourceInfoService().getResourceInfoPort();
         setSize(800, 600);
@@ -153,7 +150,7 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private void btnFinishProcessesPressed(ActionEvent e)
     {
-        if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, "Planungen abschliessen?", "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+        if (JOptionPane.showConfirmDialog(ResourceDialog.this, "Planungen abschliessen?", "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
         {
             resourceInfo.finishUp();
         }
@@ -241,11 +238,11 @@ public class ResourcePlanningMainFrame extends JFrame
             try
             {
                 resourceInfo.startProcessesForActiveHelpersByEventId(selectedEvent.getEventId());
-                JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Planung wurde gestartet!!");
+                JOptionPane.showMessageDialog(ResourceDialog.this, "Planung wurde gestartet!!");
             }
             catch (Exception exc)
             {
-                JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, exc.getMessage());
+                JOptionPane.showMessageDialog(ResourceDialog.this, exc.getMessage());
             }
         }
     }
@@ -254,17 +251,17 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (selectedManualAssignment == null)
         {
-            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte einen Helfer wählen!!");
+            JOptionPane.showMessageDialog(ResourceDialog.this, "Bitte einen Helfer wählen!!");
             return;
         }
         if (selectedAvailablePosition == null)
         {
-            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte eine Position wählen!!");
+            JOptionPane.showMessageDialog(ResourceDialog.this, "Bitte eine Position wählen!!");
             return;
         }
         String message =
                 "Dem Helfer " + selectedManualAssignment.getHelperName() + " die freie Position " + selectedAvailablePosition.getDescription() + " zuweisen?";
-        if (JOptionPane.showConfirmDialog(ResourcePlanningMainFrame.this, message, "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+        if (JOptionPane.showConfirmDialog(ResourceDialog.this, message, "Bestätigung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
         {
             try
             {
@@ -272,7 +269,7 @@ public class ResourcePlanningMainFrame extends JFrame
             }
             catch (Exception e2)
             {
-                JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, e2.getMessage());
+                JOptionPane.showMessageDialog(ResourceDialog.this, e2.getMessage());
             }
         }
         refreshManualAssignments();
@@ -287,7 +284,7 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (selectedEvent == null)
         {
-            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte ein Event wählen!!");
+            JOptionPane.showMessageDialog(ResourceDialog.this, "Bitte ein Event wählen!!");
             return;
         }
         // TODO ignore canceled asignments !!
@@ -314,10 +311,15 @@ public class ResourcePlanningMainFrame extends JFrame
     {
         if (selectedEvent == null)
         {
-            JOptionPane.showMessageDialog(ResourcePlanningMainFrame.this, "Bitte ein Event wählen!!");
+            JOptionPane.showMessageDialog(ResourceDialog.this, "Bitte ein Event wählen!!");
             return;
         }
         fillTree(selectedEvent.getEventId());
+    }
+
+    private void btnCreateHelperPressed(ActionEvent e)
+    {
+        publishFrame(new HelperEditor("Dokument 1", true, true, true, true, this));
     }
 
     private void initComponents()
@@ -343,6 +345,7 @@ public class ResourcePlanningMainFrame extends JFrame
         scHelpers = new JScrollPane();
         tbHelpers = new ResourcePlanningTable();
         btnRefreshHelpers = new JButton();
+        btnCreateHelper = new JButton();
         pnlManualAssignments = new JPanel();
         borderManualAssignments = new JPanel();
         scManualAssignments = new JScrollPane();
@@ -355,6 +358,7 @@ public class ResourcePlanningMainFrame extends JFrame
         btnReloadAvailablePositions = new JButton();
 
         // ======== this ========
+        setVisible(true);
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         ((GridBagLayout) contentPane.getLayout()).columnWidths = new int[]
@@ -584,7 +588,7 @@ public class ResourcePlanningMainFrame extends JFrame
                     };
                     ((GridBagLayout) borderHelpers.getLayout()).rowHeights = new int[]
                     {
-                            0, 0, 0
+                            0, 0, 0, 0
                     };
                     ((GridBagLayout) borderHelpers.getLayout()).columnWeights = new double[]
                     {
@@ -592,14 +596,14 @@ public class ResourcePlanningMainFrame extends JFrame
                     };
                     ((GridBagLayout) borderHelpers.getLayout()).rowWeights = new double[]
                     {
-                            0.0, 1.0, 1.0E-4
+                            0.0, 0.0, 1.0, 1.0E-4
                     };
 
                     // ======== scHelpers ========
                     {
                         scHelpers.setViewportView(tbHelpers);
                     }
-                    borderHelpers.add(scHelpers, new GridBagConstraints(0, 0, 1, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,
+                    borderHelpers.add(scHelpers, new GridBagConstraints(0, 0, 1, 3, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,
                             0, 0, 5), 0, 0));
 
                     // ---- btnRefreshHelpers ----
@@ -613,6 +617,19 @@ public class ResourcePlanningMainFrame extends JFrame
                         }
                     });
                     borderHelpers.add(btnRefreshHelpers, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 5, 0), 0, 0));
+
+                    // ---- btnCreateHelper ----
+                    btnCreateHelper.setText("Neu");
+                    btnCreateHelper.setIcon(new ImageIcon(getClass().getResource("/img/new16px.png")));
+                    btnCreateHelper.addActionListener(new ActionListener()
+                    {
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            btnCreateHelperPressed(e);
+                        }
+                    });
+                    borderHelpers.add(btnCreateHelper, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                             new Insets(0, 0, 5, 0), 0, 0));
                 }
                 pnlHelper.add(borderHelpers, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0,
@@ -744,8 +761,6 @@ public class ResourcePlanningMainFrame extends JFrame
             tdbMain.addTab("Manuelle Zuweisungen", pnlManualAssignments);
         }
         contentPane.add(tdbMain, new GridBagConstraints(0, 1, 3, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        pack();
-        setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization //GEN-END:initComponents
     }
 
@@ -789,6 +804,8 @@ public class ResourcePlanningMainFrame extends JFrame
 
     private JButton btnRefreshHelpers;
 
+    private JButton btnCreateHelper;
+
     private JPanel pnlManualAssignments;
 
     private JPanel borderManualAssignments;
@@ -808,28 +825,5 @@ public class ResourcePlanningMainFrame extends JFrame
     private ResourcePlanningTable tbAvailablePositions;
 
     private JButton btnReloadAvailablePositions;
-
     // JFormDesigner - End of variables declaration //GEN-END:variables
-
-    // ---
-
-    public static void main(String[] args)
-    {
-        Runnable gui = new Runnable()
-        {
-            public void run()
-            {
-                try
-                {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                new ResourcePlanningMainFrame().setVisible(true);
-            }
-        };
-        SwingUtilities.invokeLater(gui);
-    }
 }

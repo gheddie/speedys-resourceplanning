@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="domain" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="minimalAge" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="positionId" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -31,12 +32,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "positionDTO", propOrder = {
     "description",
     "domain",
+    "minimalAge",
     "positionId"
 })
 public class PositionDTO {
 
     protected String description;
     protected String domain;
+    protected int minimalAge;
     protected Long positionId;
 
     /**
@@ -85,6 +88,22 @@ public class PositionDTO {
      */
     public void setDomain(String value) {
         this.domain = value;
+    }
+
+    /**
+     * Gets the value of the minimalAge property.
+     * 
+     */
+    public int getMinimalAge() {
+        return minimalAge;
+    }
+
+    /**
+     * Sets the value of the minimalAge property.
+     * 
+     */
+    public void setMinimalAge(int value) {
+        this.minimalAge = value;
     }
 
     /**

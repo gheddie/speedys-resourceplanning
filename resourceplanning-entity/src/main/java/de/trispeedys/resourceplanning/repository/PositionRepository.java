@@ -25,9 +25,9 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
         return (Position) dataSource().findSingle(Position.ATTR_POS_NUMBER, positionNumber);
     }
 
-    public List<Position> findUnassignedPositionsInEvent(Event event)
+    public List<Position> findUnassignedPositionsByGenerator(Helper helper, Event event)
     {
-        return new ChoosablePositionGenerator().generate(null, event);
+        return new ChoosablePositionGenerator().generate(helper, event);
     }
 
     /**
@@ -35,11 +35,11 @@ public class PositionRepository extends AbstractDatabaseRepository<Position> imp
      * checked.
      * 
      * @param event
-     * @param onlyChooseable
      * @param helper
+     * @param onlyChooseable
      * @return
      */
-    public List<Position> findUnassignedPositionsInEvent(Event event, boolean onlyChooseable, Helper helper)
+    public List<Position> findUnassignedPositionsInEvent(Event event, Helper helper, boolean onlyChooseable)
     {
         List<Position> result = new ArrayList<Position>();
         // get all unassigned positions

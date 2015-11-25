@@ -107,6 +107,14 @@ public class HelperTest
         assertTrue(helper.isAssignableTo(pos, makeDate(15, 6, 2016)));
         assertTrue(helper.isAssignableTo(pos, makeDate(15, 6, 2018)));
     }
+    
+    @Test
+    public void testCreateUserTestEvent()
+    {
+        HibernateUtil.clearAll();
+        
+        TestDataGenerator.createUserTestEvent("Test-Duathlon 2015", "DU-TEST-2015", 1, 3, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
+    }
 
     private Date makeDate(int day, int month, int year)
     {

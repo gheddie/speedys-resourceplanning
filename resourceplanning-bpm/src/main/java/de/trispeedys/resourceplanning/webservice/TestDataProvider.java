@@ -60,8 +60,9 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
-                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         List<Helper> helpers = Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         for (Helper helper : helpers)
         {
@@ -78,20 +79,16 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
-                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
         // block one of the positions with a new helper
-        Helper blockingHelper =
-                EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).saveOrUpdate();
-        AssignmentService.assignHelper(blockingHelper, event2016, (Position) Datasources.getDatasource(Position.class)
-                .findAll()
-                .get(0));
+        Helper blockingHelper = EntityFactory.buildHelper("New1", "New1", "a@b.de", HelperState.ACTIVE, 5, 5, 1980).saveOrUpdate();
+        AssignmentService.assignHelper(blockingHelper, event2016, (Position) Datasources.getDatasource(Position.class).findAll().get(0));
 
         // start process for the created helper 'H2_Last'
-        startHelperRequestProcess(
-                ((Helper) Datasources.getDatasource(Helper.class).find(Helper.ATTR_LAST_NAME, "H2_Last").get(0)).getId(),
-                event2016.getId());
+        startHelperRequestProcess(((Helper) Datasources.getDatasource(Helper.class).find(Helper.ATTR_LAST_NAME, "H2_Last").get(0)).getId(), event2016.getId());
     }
 
     /**
@@ -106,8 +103,9 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
-                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
 
         startHelperRequestProcess(((Helper) Datasources.getDatasource(Helper.class).findAll().get(0)).getId(), event2016.getId());
 
@@ -125,8 +123,9 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
-                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         List<Helper> activeHelpers = RepositoryProvider.getRepository(HelperRepository.class).findActiveHelpers();
         List<Position> positions = Datasources.getDatasource(Position.class).findAll();
         // new helper 1 with assignment
@@ -146,8 +145,9 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         Event event2016 =
-                SpeedyRoutines.duplicateEvent(TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015,
-                        EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+                SpeedyRoutines.duplicateEvent(
+                        TestDataGenerator.createSimpleEvent("Triathlon 2015", "TRI-2015", 21, 6, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
+                        "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
         List<Helper> helpers = Datasources.getDatasource(Helper.class).find(Helper.ATTR_HELPER_STATE, HelperState.ACTIVE);
         startHelperRequestProcess(helpers.get(0).getId(), event2016.getId());
     }
@@ -158,8 +158,20 @@ public class TestDataProvider
         HibernateUtil.clearAll();
 
         // there is a new event (with 7 active helpers)...
-        SpeedyRoutines.duplicateEvent(TestDataGenerator.createRealLifeEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016,
-                EventState.FINISHED, EventTemplate.TEMPLATE_TRI), "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+        SpeedyRoutines.duplicateEvent(
+                TestDataGenerator.createRealLifeEvent("Triathlon 2016", "TRI-2016", 21, 6, 2016, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
+                "Triathlon 2016", "TRI-2016", 21, 6, 2016, null, null);
+    }
+
+    public void prepareUserTest()
+    {
+        // clear db
+        HibernateUtil.clearAll();
+
+        // there is a new event (with 7 active helpers)...
+        SpeedyRoutines.duplicateEvent(
+                TestDataGenerator.createUserTestEvent("Test-Duathlon 2015", "DU-TEST-2015", 1, 3, 2015, EventState.FINISHED, EventTemplate.TEMPLATE_TRI),
+                "Test-Duathlon 2016", "DU-TEST-2016", 1, 3, 2016, null, null);
     }
 
     // --- Real life test
@@ -167,10 +179,9 @@ public class TestDataProvider
     public void finish2015()
     {
         HibernateUtil.clearAll();
-        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2016, EventState.FINISHED,
-                EventTemplate.TEMPLATE_TRI);
+        TestDataGenerator.createRealLifeEvent("Triathlon 2015", "TRI-2015", 21, 6, 2016, EventState.FINISHED, EventTemplate.TEMPLATE_TRI);
     }
-    
+
     public void duplicate2015Unchanged()
     {
         // real life event for 2015
@@ -222,14 +233,13 @@ public class TestDataProvider
         List<ProcessInstance> executions = processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceBusinessKey(businessKey).list();
         if ((executions == null) || (executions.size() != 1))
         {
-            throw new ResourcePlanningException("none or more than one executions found for business key '"+businessKey+"'!!");
-        }        
-        Execution execution =
-                executions.get(0);
+            throw new ResourcePlanningException("none or more than one executions found for business key '" + businessKey + "'!!");
+        }
+        Execution execution = executions.get(0);
         List<Job> jobs = processEngine.getManagementService().createJobQuery().processInstanceId(execution.getId()).list();
         if ((jobs == null) || (jobs.size() == 0))
         {
-            throw new ResourcePlanningException("no jobs found for execution with business key '"+businessKey+"'!!");
+            throw new ResourcePlanningException("no jobs found for execution with business key '" + businessKey + "'!!");
         }
         for (Job job : jobs)
         {

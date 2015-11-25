@@ -9,6 +9,7 @@ public class PositionDTOColumnDefinition extends TableColumnDefinition
     {
         List<TranslationItem> map = new ArrayList<TranslationItem>();
         map.add(new TranslationItem("description", "Beschreibung"));
+        map.add(new TranslationItem("minimalAge", "Mindestalter"));
         map.add(new TranslationItem("domain", "Bereich"));
         return map;
     }

@@ -3,7 +3,7 @@ JFDML JFormDesigner: "5.2.0.3.124" Java: "1.7.0_67" encoding: "UTF-8"
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.GridBagLayout ) {
+		add( new FormContainer( "javax.swing.JInternalFrame", new FormLayoutManager( class java.awt.GridBagLayout ) {
 			"$columnSpecs": "0, 44, 0:1.0"
 			"$rowSpecs": "0, 0:1.0, 0:1.0"
 			"$hGap": 5
@@ -12,6 +12,7 @@ new FormModel {
 			"$alignTop": true
 		} ) {
 			name: "this"
+			"visible": true
 			add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
 				name: "tbMain"
 				"floatable": false
@@ -124,7 +125,7 @@ new FormModel {
 					name: "pnlHelper"
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 						"$columnSpecs": "0:1.0, 0"
-						"$rowSpecs": "0, 0:1.0"
+						"$rowSpecs": "0, 0, 0:1.0"
 						"$hGap": 5
 						"$vGap": 5
 						"$alignTop": true
@@ -138,7 +139,7 @@ new FormModel {
 								name: "tbHelpers"
 							} )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-							"gridheight": 2
+							"gridheight": 3
 						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "btnRefreshHelpers"
@@ -147,6 +148,15 @@ new FormModel {
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnRefreshHelpersPressed", true ) )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 							"gridx": 1
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "btnCreateHelper"
+							"text": "Neu"
+							"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/new16px.png" )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnCreateHelperPressed", true ) )
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+							"gridx": 1
+							"gridy": 1
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 				}, new FormLayoutConstraints( null ) {

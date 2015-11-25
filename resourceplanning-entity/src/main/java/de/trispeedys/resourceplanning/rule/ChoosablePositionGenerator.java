@@ -2,9 +2,7 @@ package de.trispeedys.resourceplanning.rule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.trispeedys.resourceplanning.entity.AggregationRelation;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -25,9 +23,14 @@ public class ChoosablePositionGenerator extends RuleObject<Position>
 
     public List<Position> generate(Helper helper, Event event)
     {
-        List<PositionAggregation> groups = RepositoryProvider.getRepository(PositionAggregationRepository.class).findAll();
         PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
-        List<Position> unassignedPositionsInEvent = positionRepository.findUnassignedPositionsInEvent(event, true);
+        List<Position> unassignedPositionsInEvent = positionRepository.findUnassignedPositionsInEvent(event, helper, true);
+        if ((unassignedPositionsInEvent == null) || (unassignedPositionsInEvent.size() == 0))
+        {
+            // no positions available, so...
+            return new ArrayList<Position>();
+        }
+        List<PositionAggregation> groups = RepositoryProvider.getRepository(PositionAggregationRepository.class).findAll();
         if ((groups == null) || (groups.size() == 0))
         {
             // we take all positions as one group...
@@ -43,6 +46,7 @@ public class ChoosablePositionGenerator extends RuleObject<Position>
             }
             // all relations between position and aggregation...
             HashMap<String, List<Position>> positionsByGroup = new HashMap<String, List<Position>>();
+            Position pos = null;
             for (AggregationRelation relation : RepositoryProvider.getRepository(AggregationRelationRepository.class).findAll())
             {
                 String key = relation.getPositionAggregation().getName();
@@ -50,9 +54,15 @@ public class ChoosablePositionGenerator extends RuleObject<Position>
                 {
                     positionsByGroup.put(key, new ArrayList<Position>());
                 }
-                positionsByGroup.get(key).add(positionHash.get(relation.getPositionId()));
-                // remove used position
-                positionHash.remove(relation.getPositionId());
+                pos = positionHash.get(relation.getPositionId());
+                if (pos != null)
+                {
+                    // pos may be null if it is in a aggregation
+                    // but not available at this point of time...
+                    positionsByGroup.get(key).add(pos);
+                    // remove used position
+                    positionHash.remove(relation.getPositionId());   
+                }
             }
             // add remaining positions to group 'no group'...
             positionsByGroup.put(NO_GROUP, new ArrayList<Position>(positionHash.values()));

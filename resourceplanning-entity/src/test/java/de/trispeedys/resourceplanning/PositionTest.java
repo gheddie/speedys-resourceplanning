@@ -133,7 +133,7 @@ public class PositionTest
         AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(11));        
         
         // generator must provide 3 unpriorized and 3 PRIO 2 tasks... 
-        assertEquals(6, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016).size());
+        assertEquals(6, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsByGenerator(helpers.get(0), event2016).size());
     }
     
     /**
@@ -160,7 +160,7 @@ public class PositionTest
         AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(11));        
         
         // this must give 13-4=9 psotions to choose... 
-        assertEquals(9, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016).size());
+        assertEquals(9, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsByGenerator(helpers.get(0), event2016).size());
     }
     
     /**
@@ -188,7 +188,7 @@ public class PositionTest
         AssignmentService.assignHelper(helpers.get(3), event2016, posMap.get(3));
         
         // this must give all prio 2 positions (4)... 
-        assertEquals(4, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event2016).size());
+        assertEquals(4, RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsByGenerator(helpers.get(0), event2016).size());
     }
     
     /**
@@ -232,7 +232,7 @@ public class PositionTest
         int expectedGroup2 = 3;        
         
         // TODO
-        assertEquals((expectedNoGroup + expectedGroup1 + expectedGroup2), RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event).size());
+        assertEquals((expectedNoGroup + expectedGroup1 + expectedGroup2), RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsByGenerator(helper, event).size());
     }
     
     /**

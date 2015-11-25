@@ -21,18 +21,16 @@ public class ProposePositionsDelegate extends RequestHelpNotificationDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
-        //PositionRepository positionRepository = RepositoryProvider.getRepository(PositionRepository.class);
         // send a mail with all unassigned positions in the current event
         Event event = getEvent(execution);
-        //List<Position> unassignedPositions = positionRepository.findUnassignedPositionsInEvent(event, true);
-        List<Position> unassignedPositions = RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsInEvent(event);
+        Helper helper = getHelper(execution);
+        List<Position> unassignedPositions = RepositoryProvider.getRepository(PositionRepository.class).findUnassignedPositionsByGenerator(helper, event);
         if ((unassignedPositions == null) || (unassignedPositions.size() == 0))
         {
             throw new ResourcePlanningException(
                     "can not propose any unassigned positions as there are none!!");
         }
         // send mail
-        Helper helper = getHelper(execution);
         boolean isReentrant = false;
         Object varReentrant = execution.getVariable(BpmVariables.RequestHelpHelper.VAR_POS_CHOOSING_REENTRANT);
         if (varReentrant != null)
