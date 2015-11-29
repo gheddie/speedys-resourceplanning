@@ -25,84 +25,21 @@ public interface ResourceInfo {
 
     /**
      * 
-     * @param arg0
      * @return
-     *     returns de.trispeedys.resourceplanning.webservice.PositionDTOArray
+     *     returns de.trispeedys.resourceplanning.webservice.EventDTOArray
      */
     @WebMethod
     @WebResult(partName = "return")
-    public PositionDTOArray queryAvailablePositions(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0);
-
-    /**
-     * 
-     * @param arg1
-     * @param arg0
-     */
-    @WebMethod
-    public void cancelAssignment(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        long arg1);
+    public EventDTOArray queryEvents();
 
     /**
      * 
      * @return
-     *     returns de.trispeedys.resourceplanning.webservice.ManualAssignmentDTOArray
+     *     returns de.trispeedys.resourceplanning.webservice.HelperDTOArray
      */
     @WebMethod
     @WebResult(partName = "return")
-    public ManualAssignmentDTOArray queryManualAssignments();
-
-    /**
-     * 
-     * @param arg1
-     * @param arg0
-     */
-    @WebMethod
-    public void completeManualAssignment(
-        @WebParam(name = "arg0", partName = "arg0")
-        String arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        long arg1);
-
-    /**
-     * 
-     * @param arg5
-     * @param arg4
-     * @param arg3
-     * @param arg2
-     * @param arg1
-     * @param arg0
-     */
-    @WebMethod
-    public void duplicateEvent(
-        @WebParam(name = "arg0", partName = "arg0")
-        long arg0,
-        @WebParam(name = "arg1", partName = "arg1")
-        String arg1,
-        @WebParam(name = "arg2", partName = "arg2")
-        String arg2,
-        @WebParam(name = "arg3", partName = "arg3")
-        int arg3,
-        @WebParam(name = "arg4", partName = "arg4")
-        int arg4,
-        @WebParam(name = "arg5", partName = "arg5")
-        int arg5);
-
-    /**
-     * 
-     */
-    @WebMethod
-    public void sendAllMessages();
-
-    /**
-     * 
-     */
-    @WebMethod
-    public void finishUp();
+    public HelperDTOArray queryHelpers();
 
     /**
      * 
@@ -121,21 +58,9 @@ public interface ResourceInfo {
 
     /**
      * 
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.HelperDTOArray
      */
     @WebMethod
-    @WebResult(partName = "return")
-    public HelperDTOArray queryHelpers();
-
-    /**
-     * 
-     * @return
-     *     returns de.trispeedys.resourceplanning.webservice.EventDTOArray
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    public EventDTOArray queryEvents();
+    public void finishUp();
 
     /**
      * 
@@ -178,5 +103,89 @@ public interface ResourceInfo {
     public void startProcessesForActiveHelpersByEventId(
         @WebParam(name = "arg0", partName = "arg0")
         long arg0);
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.PositionDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public PositionDTOArray queryAvailablePositions(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0);
+
+    /**
+     * 
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.ExecutionDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public ExecutionDTOArray queryExecutions();
+
+    /**
+     * 
+     * @return
+     *     returns de.trispeedys.resourceplanning.webservice.ManualAssignmentDTOArray
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    public ManualAssignmentDTOArray queryManualAssignments();
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void cancelAssignment(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        long arg1);
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void completeManualAssignment(
+        @WebParam(name = "arg0", partName = "arg0")
+        String arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        long arg1);
+
+    /**
+     * 
+     * @param arg5
+     * @param arg4
+     * @param arg3
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     */
+    @WebMethod
+    public void duplicateEvent(
+        @WebParam(name = "arg0", partName = "arg0")
+        long arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        String arg1,
+        @WebParam(name = "arg2", partName = "arg2")
+        String arg2,
+        @WebParam(name = "arg3", partName = "arg3")
+        int arg3,
+        @WebParam(name = "arg4", partName = "arg4")
+        int arg4,
+        @WebParam(name = "arg5", partName = "arg5")
+        int arg5);
+
+    /**
+     * 
+     */
+    @WebMethod
+    public void sendAllMessages();
 
 }

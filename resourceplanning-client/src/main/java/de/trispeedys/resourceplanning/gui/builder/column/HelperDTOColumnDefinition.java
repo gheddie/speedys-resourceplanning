@@ -3,6 +3,8 @@ package de.trispeedys.resourceplanning.gui.builder.column;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.trispeedys.resourceplanning.webservice.HelperDTO;
+
 public class HelperDTOColumnDefinition extends TableColumnDefinition
 {
     protected List<TranslationItem> translations()

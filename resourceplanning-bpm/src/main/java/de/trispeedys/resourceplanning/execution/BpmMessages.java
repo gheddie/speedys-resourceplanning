@@ -15,9 +15,6 @@ public class BpmMessages
         // helper has chosen a position
         public static final String MSG_POS_CHOSEN = "MSG_POS_CHOSEN";
         
-        // Event starts --> e.g. no more cancellations possible
-        public static final String MSG_EVENT_START = "MSG_EVENT_START";
-        
         // assigment cancelled by helper
         public static final String MSG_ASSIG_CANCELLED = "MSG_ASSIG_CANCELLED";
     }

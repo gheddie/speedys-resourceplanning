@@ -94,11 +94,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ExecutionDTO }
+     * 
+     */
+    public ExecutionDTO createExecutionDTO() {
+        return new ExecutionDTO();
+    }
+
+    /**
      * Create an instance of {@link PositionDTO }
      * 
      */
     public PositionDTO createPositionDTO() {
         return new PositionDTO();
+    }
+
+    /**
+     * Create an instance of {@link ExecutionDTOArray }
+     * 
+     */
+    public ExecutionDTOArray createExecutionDTOArray() {
+        return new ExecutionDTOArray();
     }
 
     /**
