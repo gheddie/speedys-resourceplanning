@@ -62,4 +62,11 @@ public class TreeTable extends JTable
     {
         this.pathComponent = pathComponent;
     }
+    
+    @Override
+    public boolean isCellEditable(int row, int column)
+    {
+        // TODO Blätter unbeartbeitbat machen --> nicht andere --> sonst kein Ausklappen möglich
+        return super.isCellEditable(row, column);
+    }
 }

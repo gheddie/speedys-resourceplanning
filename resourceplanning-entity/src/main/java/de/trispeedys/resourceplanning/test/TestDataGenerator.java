@@ -296,13 +296,11 @@ public class TestDataGenerator
 
         SpeedyRoutines.relatePositionsToEvent(event, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17);
 
-        /*---------------------------------------------------------------------------------------------------------
-        LN
-        FN
-        MAIL
-        BIRTH
-        ---------------------------------------------------------------------------------------------------------*/
-
+        Helper patrickHarms = EntityFactory.buildHelper("Harms", "Patrick", "info@patrick-harms.de", HelperState.ACTIVE, 13, 9, 1985).saveOrUpdate();
+        /*
+         * Harms Patrick info@patrick-harms.de 13.09.1985 
+         */
+               
         Helper ralfSchareina = EntityFactory.buildHelper("Schareina", "Ralf", "rascha65@arcor.de", HelperState.ACTIVE, 27, 8, 1965).saveOrUpdate();
         /*
          * Schareina Ralf rascha65@arcor.de 27.08.1965

@@ -115,6 +115,34 @@ new FormModel {
 					"title": "Positionen"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0:1.0, 0"
+					"$rowSpecs": "0, 0:1.0"
+					"$hGap": 5
+					"$vGap": 5
+					"$alignLeft": true
+					"$alignTop": true
+				} ) {
+					name: "pnlExecutions"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scExecutions"
+						add( new FormComponent( "de.trispeedys.resourceplanning.components.ResourcePlanningTable" ) {
+							name: "tbExecutions"
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridheight": 2
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnRefreshExecutions"
+						"text": "Aktualisieren"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/reload16px.png" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnRefreshExecutionsPressed", true ) )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridx": 1
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "Prozesse"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0:1.0"
 					"$rowSpecs": "0:1.0"
 					"$hGap": 5

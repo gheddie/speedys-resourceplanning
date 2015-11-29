@@ -8,6 +8,12 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+/**
+ * http://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven
+ * 
+ * @author Stefan.Schulz
+ *
+ */
 public class AppStarter extends JFrame implements SpeedyView
 {
     private static final long serialVersionUID = 6808396399202990435L;

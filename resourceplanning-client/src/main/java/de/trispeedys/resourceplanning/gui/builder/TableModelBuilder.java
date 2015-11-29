@@ -8,12 +8,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import de.trispeedys.resourceplanning.gui.builder.column.EventDTOColumnDefinition;
+import de.trispeedys.resourceplanning.gui.builder.column.ExecutionDTOColumnDefinition;
 import de.trispeedys.resourceplanning.gui.builder.column.HelperDTOColumnDefinition;
 import de.trispeedys.resourceplanning.gui.builder.column.ManualAssignmentDTOColumnDefinition;
 import de.trispeedys.resourceplanning.gui.builder.column.PositionDTOColumnDefinition;
 import de.trispeedys.resourceplanning.gui.builder.column.TableColumnDefinition;
 import de.trispeedys.resourceplanning.util.converter.ConverterUtil;
 import de.trispeedys.resourceplanning.webservice.EventDTO;
+import de.trispeedys.resourceplanning.webservice.ExecutionDTO;
 import de.trispeedys.resourceplanning.webservice.HelperDTO;
 import de.trispeedys.resourceplanning.webservice.ManualAssignmentDTO;
 import de.trispeedys.resourceplanning.webservice.PositionDTO;
@@ -27,6 +29,7 @@ public class TableModelBuilder
         columnDefinitions.put(HelperDTO.class, new HelperDTOColumnDefinition());
         columnDefinitions.put(PositionDTO.class, new PositionDTOColumnDefinition());
         columnDefinitions.put(ManualAssignmentDTO.class, new ManualAssignmentDTOColumnDefinition());
+        columnDefinitions.put(ExecutionDTO.class, new ExecutionDTOColumnDefinition());
     }
 
     public static TableModel createGenericTableModel(List<?> objects)

@@ -7,3 +7,7 @@ log4j.appender.R.MaxFileSize=10MB
 log4j.appender.R.MaxBackupIndex=10 
 log4j.appender.R.layout=org.apache.log4j.PatternLayout 
 log4j.appender.R.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss.SSS 'GMT'Z}(%F:%L) %-5p %c - %m%n
+
++ build client
+
+http://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven

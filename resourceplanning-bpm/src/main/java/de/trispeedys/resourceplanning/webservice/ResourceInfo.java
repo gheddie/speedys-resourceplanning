@@ -11,12 +11,15 @@ import javax.jws.soap.SOAPBinding.Style;
 import org.apache.log4j.Logger;
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.runtime.VariableInstanceQuery;
 import org.camunda.bpm.engine.task.Task;
 
 import de.trispeedys.resourceplanning.datasource.Datasources;
 import de.trispeedys.resourceplanning.dto.EventDTO;
+import de.trispeedys.resourceplanning.dto.ExecutionDTO;
 import de.trispeedys.resourceplanning.dto.HelperDTO;
 import de.trispeedys.resourceplanning.dto.HierarchicalEventItemDTO;
 import de.trispeedys.resourceplanning.dto.ManualAssignmentDTO;
@@ -203,6 +206,59 @@ public class ResourceInfo
             dtos.add(dto);
         }
         return dtos.toArray(new ManualAssignmentDTO[dtos.size()]);
+    }
+
+    public ExecutionDTO[] queryExecutions()
+    {
+        List<ExecutionDTO> dtos = new ArrayList<ExecutionDTO>();        
+        dtos.addAll(queryExecutionsByMessageName(BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK, "Option wählen"));
+        dtos.addAll(queryExecutionsByMessageName(BpmMessages.RequestHelpHelper.MSG_POS_CHOSEN, "Position wählen"));
+        dtos.addAll(queryExecutionsByMessageName(BpmMessages.RequestHelpHelper.MSG_ASSIG_CANCELLED, "Übernahme Planung"));
+        dtos.addAll(queryExecutionsByMessageName(BpmMessages.RequestHelpHelper.MSG_DEACT_RESP, "Deaktivierung"));
+        return dtos.toArray(new ExecutionDTO[dtos.size()]);
+    }
+    
+    private List<ExecutionDTO> queryExecutionsByMessageName(String messageName, String waitState)
+    {
+        List<ExecutionDTO> dtos = new ArrayList<ExecutionDTO>();
+        Helper helper = null;
+        ExecutionDTO dto;
+        RuntimeService runtimeService = BpmPlatform.getDefaultProcessEngine()
+                .getRuntimeService();
+        for (Execution execution : runtimeService
+                .createExecutionQuery()
+                .messageEventSubscriptionName(messageName)
+                .list())
+        {
+            List<VariableInstance> variables = runtimeService
+                    .createVariableInstanceQuery()
+                    .processInstanceIdIn(execution.getProcessInstanceId())
+                    .variableName(BpmVariables.RequestHelpHelper.VAR_HELPER_ID)
+                    .list();
+            helper = RepositoryProvider.getRepository(HelperRepository.class).findById(
+                    (Long) variables
+                            .get(0)
+                            .getValue());
+            dto = new ExecutionDTO();
+            dto.setHelperFirstName(helper.getFirstName());
+            dto.setHelperLastName(helper.getLastName());
+            dto.setWaitState(waitState);
+            switch (messageName)
+            {
+                case BpmMessages.RequestHelpHelper.MSG_HELP_CALLBACK:
+                    dto.setAdditionalInfo(String.valueOf(runtimeService
+                            .createVariableInstanceQuery()
+                            .processInstanceIdIn(execution.getProcessInstanceId())
+                            .variableName(BpmVariables.RequestHelpHelper.VAR_MAIL_ATTEMPTS)
+                            .list().get(0).getValue()));
+                    break;
+                default:
+                    dto.setAdditionalInfo(null);
+                    break;
+            }
+            dtos.add(dto);                        
+        }
+        return dtos;
     }
 
     private Helper getHelper(Task task)

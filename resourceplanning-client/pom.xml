@@ -26,7 +26,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.trispeedys.resourceplanning.gui.ResourcePlanningMainFrame</mainClass>
+							<mainClass>de.trispeedys.resourceplanning.gui.AppStarter</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

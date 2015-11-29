@@ -15,6 +15,10 @@ public class ConverterUtil
 
     public static <T> Object convert(Object object)
     {
+        if (object == null)
+        {
+            return null;
+        }
         Class<? extends Object> clazz = object.getClass();
         AbstractValueConverter<?> converter = converters.get(clazz);
         if (converter != null)
